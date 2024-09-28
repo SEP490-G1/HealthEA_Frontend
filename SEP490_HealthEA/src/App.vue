@@ -1,0 +1,46 @@
+<!-- @author: thuyht -->
+<script setup>
+// import { RouterLink, RouterView } from 'vue-router'
+import TheHeader from '@/components/common/TheHeader'
+</script>
+
+<template>
+  <a-layout>
+    <!-- Header -->
+    <TheHeader />
+    <!-- End Header -->
+    <RouterView class="layout" />
+  </a-layout>
+</template>
+<script>
+export default {
+  components: {
+    TheHeader
+  }
+}
+</script>
+<style scoped>
+.layout {
+  height: calc(100vh - 64px);
+}
+.site-layout-content {
+  min-height: 280px;
+  padding: 24px;
+  background: #fff;
+}
+#components-layout-demo-top .logo {
+  float: left;
+  width: 120px;
+  height: 31px;
+  margin: 16px 24px 16px 0;
+  background: rgba(255, 255, 255, 0.3);
+}
+.ant-row-rtl #components-layout-demo-top .logo {
+  float: right;
+  margin: 16px 0 16px 24px;
+}
+
+[data-theme='dark'] .site-layout-content {
+  background: #141414;
+}
+</style>
