@@ -9,6 +9,9 @@ import { RouterLink } from 'vue-router'
         <a-menu-item key="1"><RouterLink to="/">Home</RouterLink></a-menu-item>
         <a-menu-item key="2"><RouterLink to="/client/login">Client View</RouterLink></a-menu-item>
         <a-menu-item key="3"><RouterLink to="/about">About</RouterLink></a-menu-item>
+        <a-menu-item key="4"
+          ><RouterLink to="/profileHealth">Hồ Sơ sức khỏe</RouterLink></a-menu-item
+        >
       </a-menu>
     </a-layout-header>
   </div>

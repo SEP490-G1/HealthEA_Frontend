@@ -6,6 +6,7 @@ import PageNotFound from '@/views/common/NotFoundView'
 import ClientView from '@/views/ClientView'
 import LoginFrom from '@/components/login/LoginFrom'
 import RegisterFrom from '@/components/login/RegisterFrom'
+import ProfileHealth from '@/views/ProfileHealthView'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -39,7 +40,11 @@ const router = createRouter({
         }
       ]
     },
-
+    {
+      path: '/profileHealth',
+      name: 'Profile hearlth',
+      component: ProfileHealth
+    },
     {
       path: '/about',
       name: 'about',
