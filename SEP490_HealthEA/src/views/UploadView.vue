@@ -1,5 +1,6 @@
 <template>
-    <div class="clearfix">
+    <div class="upload-container">
+      <h2 class="upload-title">Upload Your Images</h2>
       <a-upload
         v-model:file-list="fileList"
         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
@@ -14,8 +15,11 @@
       <a-modal :open="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
         <img alt="example" style="width: 100%" :src="previewImage" />
       </a-modal>
+  
+      <a-button type="primary" class="submit-button" @click="handleSubmit">Submit</a-button>
     </div>
   </template>
+  
   <script lang="ts" setup>
   import { PlusOutlined } from '@ant-design/icons-vue';
   import { ref } from 'vue';
@@ -34,49 +38,13 @@
   const previewImage = ref('');
   const previewTitle = ref('');
   
-  const fileList = ref<UploadProps['fileList']>([
-    {
-      uid: '-1',
-      name: 'image.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-      uid: '-2',
-      name: 'image.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-      uid: '-3',
-      name: 'image.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-      uid: '-4',
-      name: 'image.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-      uid: '-xxx',
-      percent: 50,
-      name: 'image.png',
-      status: 'uploading',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-      uid: '-5',
-      name: 'image.png',
-      status: 'error',
-    },
-  ]);
+  const fileList = ref<UploadProps['fileList']>([]);
   
   const handleCancel = () => {
     previewVisible.value = false;
     previewTitle.value = '';
   };
+  
   const handlePreview = async (file: UploadProps['fileList'][number]) => {
     if (!file.url && !file.preview) {
       file.preview = (await getBase64(file.originFileObj)) as string;
@@ -85,17 +53,31 @@
     previewVisible.value = true;
     previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
   };
+  
+  const handleSubmit = () => {
+    //TODO add logic
+  };
   </script>
+  
   <style scoped>
-  /* you can make up upload button and sample style by using stylesheets */
-  .ant-upload-select-picture-card i {
-    font-size: 32px;
-    color: #999;
+  .upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    margin-top: 50px;
   }
   
-  .ant-upload-select-picture-card .ant-upload-text {
-    margin-top: 8px;
-    color: #666;
+  .upload-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .submit-button {
+    margin-top: 20px;
   }
   </style>
   
