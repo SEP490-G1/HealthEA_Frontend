@@ -41,9 +41,51 @@ const router = createRouter({
       ]
     },
     {
+      path: '/profileHealth/medical_record',
+      name: 'medicalrecord',
+      component: ProfileHealth,
+      children: [
+        {
+          path: 'diagnostic_image',
+          name: 'Diagnostic Imageing',
+          component: () => import('@/components/medical/DiagnosticImaging')
+        },
+        {
+          path: 'history_examination',
+          name: 'History Examination',
+          component: () => import('@/components/medical/HistoryExamination')
+        },
+        {
+          path: 'information',
+          name: 'Information Page',
+          component: () => import('@/components/medical/InformationPage')
+        },
+        {
+          path: 'prehistoric',
+          name: 'Prehistoric',
+          component: () => import('@/components/medical/PrehistoricPage')
+        },
+        {
+          path: 'prescription',
+          name: 'prescription',
+          component: () => import('@/components/medical/PrescriptionPage')
+        },
+        {
+          path: 'testing',
+          name: 'tesing result',
+          component: () => import('@/components/medical/TestingPage')
+        },
+        {
+          path: 'vaccination',
+          name: 'Vaccination',
+          component: () => import('@/components/medical/VaccinationPage')
+        }
+      ]
+    },
+    {
       path: '/profileHealth',
       name: 'Profile hearlth',
-      component: ProfileHealth
+      component: () => import('@/components/medical/ListMedicalRecord')
     },
     {
       path: '/about',

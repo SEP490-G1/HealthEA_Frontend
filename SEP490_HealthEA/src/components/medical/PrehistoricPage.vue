@@ -1,5 +1,5 @@
 <template lang="">
-  <div></div>
+  <div>Tiền Sử bệnh Prehistoric Page</div>
 </template>
 <script>
 export default {}
