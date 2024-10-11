@@ -37,6 +37,7 @@
         </a-form-item>
       </a-form>
     </div>
+    <a-button type="primary" @click="onLoginEvent">Login Test User</a-button>
   </div>
 </template>
 <script>
@@ -54,6 +55,14 @@ export default {
     }
   },
   methods: {
+    onLoginEvent: () => {
+      console.log('click login')
+
+      // this.storeUser.Login(
+      //   'handsome',
+      //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSmFuZVNtaXRoIiwianRpIjoiNWVmZDdjOWItNDI5NS00NjM4LThiOWYtMmQwY2ZlMTI4NjY0IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MjMyODQxNjA4OSwiaXNzIjoiUTEiLCJhdWQiOiJRMSJ9.LtsIsOniGTKAP1Lv_s0IpmRBot8XeOVzon4gI8KanTc'
+      // )
+    },
     onFinish: (values) => {
       console.log('Success:', values)
       console.log('formState:', this.formState)
