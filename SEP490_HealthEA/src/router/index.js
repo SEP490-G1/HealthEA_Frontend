@@ -4,8 +4,6 @@ import FeatureOne from '@/views/home/FeatureOne'
 import FeatureTwo from '@/views/home/FeatureTwo'
 import PageNotFound from '@/views/common/NotFoundView'
 import ClientView from '@/views/ClientView'
-import LoginFrom from '@/components/login/LoginFrom'
-import RegisterFrom from '@/components/login/RegisterFrom'
 import ProfileHealth from '@/views/ProfileHealthView'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,11 +30,16 @@ const router = createRouter({
       children: [
         {
           path: 'login',
-          component: LoginFrom
+          component: () => import('@/components/login/LoginForm')
         },
         {
           path: 'register',
-          component: RegisterFrom
+          component: () => import('@/components/login/RegisterForm')
+        },
+        {
+          path: 'verifyEmail:email',
+          name: 'verifyEmail',
+          component: () => import('@/components/login/VerifyEmailForm')
         }
       ]
     },
