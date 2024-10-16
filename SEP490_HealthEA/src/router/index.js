@@ -4,9 +4,9 @@ import FeatureOne from '@/views/home/FeatureOne'
 import FeatureTwo from '@/views/home/FeatureTwo'
 import PageNotFound from '@/views/common/NotFoundView'
 import ClientView from '@/views/ClientView'
-import LoginFrom from '@/components/login/LoginFrom'
-import RegisterFrom from '@/components/login/RegisterFrom'
+import AdminView from '@/views/AdminView.vue'
 import ProfileHealth from '@/views/ProfileHealthView'
+import UserProfile from '@/views/UserProfile.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -32,12 +32,42 @@ const router = createRouter({
       children: [
         {
           path: 'login',
-          component: LoginFrom
+          component: () => import('@/components/login/LoginForm')
         },
         {
           path: 'register',
-          component: RegisterFrom
+          component: () => import('@/components/login/RegisterForm')
+        },
+        {
+          path: 'verifyEmail:email',
+          name: 'verifyEmail',
+          component: () => import('@/components/login/VerifyEmailForm')
+        },
+        {
+            path: 'verify', 
+            name: 'verifyToken',
+            component: () => import('@/components/login/VerifyToken'),
+            props: (route) => ({ token: route.query.token })
         }
+      ]
+    },
+    {
+      path: '/userProfile',
+      name: 'User Profile',
+      component: UserProfile,
+      children:[
+        {
+          path: '', 
+          redirect: '/userProfile/profile'
+        },
+        {
+          path: 'profile',
+          component: () => import('@/components/userProfile/Profile')
+        },
+        {
+          path: 'password',
+          component: () => import('@/components/userProfile/ChangePassword')
+        },
       ]
     },
     {
@@ -46,11 +76,29 @@ const router = createRouter({
       component: ProfileHealth
     },
     {
+      path: '/admin',
+      name: 'admin',
+      component: AdminView,
+      children:[
+        {
+          path: '', 
+          redirect: '/admin/userList'
+        },
+        {
+          path: 'userList',
+          name: 'userList',
+          component: () => import('@/components/userManage/UserListView')
+        },
+        {
+          path: 'createUser',
+          name: 'createUser',
+          component: () => import('@/components/userManage/CreateUserForm')
+        },
+      ]
+    },
+    {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue')
     },
     { path: '/:pathMatch(.*)*', component: PageNotFound }

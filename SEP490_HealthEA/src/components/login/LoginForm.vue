@@ -2,7 +2,7 @@
   <div class="container">
     <h1>Login</h1>
     <RouterLink to="register">register</RouterLink>
-    <div>
+    <div class="form-group"  >
       <a-form
         :model="formState"
         name="basic"
@@ -33,7 +33,7 @@
         </a-form-item>
 
         <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-          <a-button type="primary" html-type="submit">Submit</a-button>
+          <a-button type="primary" html-type="submit">Login</a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -41,22 +41,44 @@
 </template>
 <script>
 import { reactive } from 'vue'
+import { login } from '@/service/main'
+import { getMyInfo } from '@/service/main'
+import { useUserStore } from '@/stores/user'
+
 export default {
-  setup() {},
+  setup() { },
   data() {
     return {
-      // Tạo 1 reactive state có thuộc tính username pasword remember
       formState: reactive({
         username: '',
         password: '',
+        role: '',
         remember: true
       })
     }
   },
   methods: {
-    onFinish: (values) => {
-      console.log('Success:', values)
-      console.log('formState:', this.formState)
+    async onFinish() {
+      console.log('Login formState:', this.formState)
+
+      const linkLogin = 'http://localhost:9090/identity/auth/token'
+      const bodyLogin = {
+        username: this.formState.username,
+        password: this.formState.password
+      }
+      try {
+        const loginResponse = await login(linkLogin, bodyLogin)
+
+        const userStore = useUserStore()
+        userStore.login(this.formState.username, loginResponse.data.result.token, true)
+
+        const infoResponse = await getMyInfo('http://localhost:9090/identity/users/myinfo')
+        userStore.getInfo(infoResponse.data.result.id, infoResponse.data.result.role)
+
+        alert('Login successful')
+      } catch (error) {
+        console.log('Login failed:', error)
+      }
     },
     onFinishFailed: (errorInfo) => {
       console.log('Failed:', errorInfo)
@@ -70,5 +92,9 @@ export default {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+}
+
+.form-group {
+  margin-top: 20px;
 }
 </style>
