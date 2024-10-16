@@ -88,7 +88,8 @@ export async function logout(link) {
     const response = await axios.post(link, {
       headers: {
         Authorization: `Bearer ${token}`
-      }
+      },
+      token: token
     })
     return response
   } catch (error) {
