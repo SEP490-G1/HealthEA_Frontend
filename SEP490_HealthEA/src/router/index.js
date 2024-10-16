@@ -4,6 +4,7 @@ import FeatureOne from '@/views/home/FeatureOne'
 import FeatureTwo from '@/views/home/FeatureTwo'
 import PageNotFound from '@/views/common/NotFoundView'
 import ClientView from '@/views/ClientView'
+import AdminView from '@/views/AdminView.vue'
 import ProfileHealth from '@/views/ProfileHealthView'
 import UserProfile from '@/views/UserProfile.vue'
 const router = createRouter({
@@ -75,11 +76,29 @@ const router = createRouter({
       component: ProfileHealth
     },
     {
+      path: '/admin',
+      name: 'admin',
+      component: AdminView,
+      children:[
+        {
+          path: '', 
+          redirect: '/admin/userList'
+        },
+        {
+          path: 'userList',
+          name: 'userList',
+          component: () => import('@/components/userManage/UserListView')
+        },
+        {
+          path: 'createUser',
+          name: 'createUser',
+          component: () => import('@/components/userManage/CreateUserForm')
+        },
+      ]
+    },
+    {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue')
     },
     { path: '/:pathMatch(.*)*', component: PageNotFound }

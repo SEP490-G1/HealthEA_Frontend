@@ -140,3 +140,95 @@ export async function updatePassword(link, bodyParameters) {
   }
 }
 
+export async function getTotalUsers(link) {
+  try {
+    const userStore = useUserStore()
+    const token = userStore.token
+
+    const response = await axios.get(link,
+      {
+        headers: {
+          Authorization: `Bearer ` + token
+        }
+      })
+    return response
+  } catch (error) {
+    if (error.response && error.response.data) {
+      alert(error.response.data.message);
+    } else {
+      alert("Internal server error");
+    }
+    return error
+  }
+}
+
+export async function getAllUsers(link, bodyParameters) {
+  try {
+    const userStore = useUserStore()
+    const token = userStore.token
+
+    const response = await axios.get(link,
+      {
+        headers: {
+          Authorization: `Bearer ` + token
+        },
+        params: bodyParameters
+      })
+    return response
+  } catch (error) {
+    if (error.response && error.response.data) {
+      alert(error.response.data.message);
+    } else {
+      alert("Internal server error");
+    }
+    return error
+  }
+}
+
+export async function searchUsers(link, bodyParameters) {
+  try {
+    const userStore = useUserStore()
+    const token = userStore.token
+    console.log(token)
+    console.log(bodyParameters)
+
+    const response = await axios.get(link,
+      {
+        params: bodyParameters,
+        headers: {
+          Authorization: `Bearer ` + token
+        }
+      })
+    return response
+  } catch (error) {
+    if (error.response && error.response.data) {
+      alert(error.response.data.message);
+    } else {
+      alert("Internal server error");
+    }
+    return error
+  }
+}
+
+export async function createUser(link, bodyParameters) {
+  try {
+    const userStore = useUserStore()
+    const token = userStore.token
+
+    const response = await axios.post(link,
+      bodyParameters,
+      {
+        headers: {
+          Authorization: `Bearer ` + token
+        }
+      })
+    return response
+  } catch (error) {
+    if (error.response && error.response.data) {
+      alert(error.response.data.message);
+    } else {
+      alert("Internal server error");
+    }
+    return error
+  }
+}

@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 export const useUserStore = defineStore('user', {
   state: () => ({
     id: '',
-    name: '',
+    username: '',
     token: '',
     role: '',
     auth: false
@@ -12,14 +12,14 @@ export const useUserStore = defineStore('user', {
   actions: {
     async logout() {
       this.id = ''
-      this.name = ''
+      this.username = ''
       this.token = ''
       this.role = ''
       this.auth = false
     },
     async login(name, token, auth) {
       try {
-        this.name = name
+        this.username = name
         this.token = token
         this.auth = auth
       } catch (error) {

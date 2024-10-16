@@ -16,7 +16,7 @@ const userStore = useUserStore()
           <RouterLink to="/profileHealth" v-if="userStore.auth">Hồ Sơ sức khỏe</RouterLink>
         </a-menu-item>
         <a-menu-item key="5" v-if="userStore.auth">
-          <RouterLink to="/profileHealth">Admin View</RouterLink>
+          <RouterLink to="/admin">Admin View</RouterLink>
         </a-menu-item>
         <a-menu-item key="6" v-if="userStore.auth">
           <RouterLink to="/userProfile">Profile</RouterLink>
