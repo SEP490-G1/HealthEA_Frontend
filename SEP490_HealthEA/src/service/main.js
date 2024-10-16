@@ -38,7 +38,17 @@ export async function verifyEmail(link) {
     const response = await axios.post(link)
     return response
   } catch (error) {
-    console.log('Error login: ', error)
+    console.log('Error send email: ', error)
+    return error
+  }
+}
+
+export async function verifyToken(link) {
+  try {
+    const response = await axios.post(link)
+    return response
+  } catch (error) {
+    console.log('Error verify token: ', error)
     return error
   }
 }
@@ -82,7 +92,7 @@ export async function logout(link) {
     })
     return response
   } catch (error) {
-    console.log('Error get user info: ', error)
+    console.log('Error logout: ', error)
     return error
   }
 }

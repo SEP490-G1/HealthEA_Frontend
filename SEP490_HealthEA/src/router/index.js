@@ -40,7 +40,13 @@ const router = createRouter({
           path: 'verifyEmail:email',
           name: 'verifyEmail',
           component: () => import('@/components/login/VerifyEmailForm')
-        }
+        },
+        {
+            path: 'verify', 
+            name: 'verifyToken',
+            component: () => import('@/components/login/VerifyToken'),
+            props: (route) => ({ token: route.query.token })
+        },
       ]
     },
     {
