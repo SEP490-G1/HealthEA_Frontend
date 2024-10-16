@@ -98,3 +98,45 @@ export async function logout(link) {
   }
 }
 
+export async function updateUserProfile(link, bodyParameters) {
+  try {
+    const userStore = useUserStore()
+    const token = userStore.token
+
+    const response = await axios.put(link,
+      bodyParameters,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+    return response
+  } catch (error) {
+    console.log('Error logout: ', error)
+    return error
+  }
+}
+
+export async function updatePassword(link, bodyParameters) {
+  try {
+    const userStore = useUserStore()
+    const token = userStore.token
+
+    const response = await axios.put(link,
+      bodyParameters,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+    return response
+  } catch (error) {
+    if (error.response && error.response.data) {
+      alert(error.response.data.message);
+    } else {
+      alert("Internal server error");
+    }
+    return error
+  }
+}
+

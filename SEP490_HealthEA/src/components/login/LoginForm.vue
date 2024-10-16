@@ -44,8 +44,9 @@ import { reactive } from 'vue'
 import { login } from '@/service/main'
 import { getMyInfo } from '@/service/main'
 import { useUserStore } from '@/stores/user'
+
 export default {
-  setup() {},
+  setup() { },
   data() {
     return {
       formState: reactive({
@@ -59,24 +60,24 @@ export default {
   methods: {
     async onFinish() {
       console.log('Login formState:', this.formState)
-      
-      const linkLogin = 'http://localhost:9090/identity/auth/token'  
+
+      const linkLogin = 'http://localhost:9090/identity/auth/token'
       const bodyLogin = {
         username: this.formState.username,
         password: this.formState.password
       }
-      try{
+      try {
         const loginResponse = await login(linkLogin, bodyLogin)
-        
+
         const userStore = useUserStore()
         userStore.login(this.formState.username, loginResponse.data.result.token, true)
 
         const infoResponse = await getMyInfo('http://localhost:9090/identity/users/myinfo')
-        userStore.getInfo(infoResponse.data.result.role)
+        userStore.getInfo(infoResponse.data.result.id, infoResponse.data.result.role)
 
         alert('Login successful')
-      } catch(error){
-        console.log('Login failed:', error )
+      } catch (error) {
+        console.log('Login failed:', error)
       }
     },
     onFinishFailed: (errorInfo) => {
@@ -92,7 +93,8 @@ export default {
   justify-content: center;
   flex-direction: column;
 }
-.form-group{
+
+.form-group {
   margin-top: 20px;
 }
 </style>

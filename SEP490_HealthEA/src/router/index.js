@@ -5,6 +5,7 @@ import FeatureTwo from '@/views/home/FeatureTwo'
 import PageNotFound from '@/views/common/NotFoundView'
 import ClientView from '@/views/ClientView'
 import ProfileHealth from '@/views/ProfileHealthView'
+import UserProfile from '@/views/UserProfile.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -46,6 +47,25 @@ const router = createRouter({
             name: 'verifyToken',
             component: () => import('@/components/login/VerifyToken'),
             props: (route) => ({ token: route.query.token })
+        }
+      ]
+    },
+    {
+      path: '/userProfile',
+      name: 'User Profile',
+      component: UserProfile,
+      children:[
+        {
+          path: '', 
+          redirect: '/userProfile/profile'
+        },
+        {
+          path: 'profile',
+          component: () => import('@/components/userProfile/Profile')
+        },
+        {
+          path: 'password',
+          component: () => import('@/components/userProfile/ChangePassword')
         },
       ]
     },

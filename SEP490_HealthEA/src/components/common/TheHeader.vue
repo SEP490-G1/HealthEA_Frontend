@@ -1,20 +1,8 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import { logout } from '@/service/main'
 
-const userStore = useUserStore() // Lấy Pinia store từ setup
-
-const handleLogout = async () => {
-  try {
-    await logout('http://localhost:9090/identity/auth/logout')
-    userStore.logout()
-    console.log(userStore)
-    alert('Logout successful')
-  } catch (error) {
-    console.log('Logout failed:', error)
-  }
-}
+const userStore = useUserStore()
 </script>
 <template lang="">
   <div>
@@ -31,38 +19,11 @@ const handleLogout = async () => {
           <RouterLink to="/profileHealth">Admin View</RouterLink>
         </a-menu-item>
         <a-menu-item key="6" v-if="userStore.auth">
-          <a @click="handleLogout">Logout</a>
+          <RouterLink to="/userProfile">Profile</RouterLink>
         </a-menu-item>
       </a-menu>
     </a-layout-header>
   </div>
 </template>
-<!-- <script>
-import { logout } from '@/service/main'
-
-
-export default {
-  name: 'TheHeader',
-  created(){
-    const userStore = useUserStore()
-  },
-  methods: {
-    async logout() {
-      try {
-        const logoutResponse = await logout('http://localhost:9090/identity/auth/logout')
-
-        const userStore = useUserStore()
-        userStore.logout()
-        console.log(userStore)
-
-        alert('Logout successful')
-      } catch (error) {
-        console.log('Login failed:', error)
-      }
-    },
-  }
-}
-</script> -->
-
 
 <style lang=""></style>

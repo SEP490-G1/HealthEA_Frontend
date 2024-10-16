@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
+    id: '',
     name: '',
     token: '',
     role: '',
@@ -10,6 +11,7 @@ export const useUserStore = defineStore('user', {
 
   actions: {
     async logout() {
+      this.id = ''
       this.name = ''
       this.token = ''
       this.role = ''
@@ -25,8 +27,9 @@ export const useUserStore = defineStore('user', {
         return error
       }
     },
-    async getInfo(role) {
+    async getInfo(id, role) {
       try {
+        this.id = id
         this.role = role
       } catch (error) {
         console.error(error)
