@@ -34,6 +34,7 @@ import { ref } from 'vue'
 import type { UploadProps } from 'ant-design-vue'
 import axios from 'axios'
 import { message } from 'ant-design-vue'
+import { useRouter } from 'vue-router'
 
 function getBase64(file: File) {
   return new Promise((resolve, reject) => {
