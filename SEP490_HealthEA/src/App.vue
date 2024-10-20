@@ -1,8 +1,6 @@
 <!-- @author: thuyht -->
 <script setup>
-// import { RouterLink, RouterView } from 'vue-router'
 import TheHeader from '@/components/common/TheHeader'
-// import { theme } from 'ant-design-vue'
 </script>
 
 <template>
@@ -17,6 +15,10 @@ import TheHeader from '@/components/common/TheHeader'
 export default {
   components: {
     TheHeader
+  },
+  data() {
+    return {
+    }
   }
 }
 </script>

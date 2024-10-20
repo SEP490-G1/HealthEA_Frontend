@@ -1,28 +1,79 @@
 import { defineStore } from 'pinia'
+// import { getData } from '@/service/main'
+import { message } from 'ant-design-vue'
+import {  clearToken, postData, getData, setCookieToken } from '@/service/main'
 
+const API_URL = 'http://localhost:9090/identity'
+const headers = {
+  // Các tùy chọn cấu hình khác
+  headers: {
+    'Content-Type': 'application/json'
+    // Các tiêu đề khác nếu cần
+  }
+}
 export const useUserStore = defineStore('user', {
   state: () => ({
-    name: '',
-    token:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSmFuZVNtaXRoIiwianRpIjoiNWVmZDdjOWItNDI5NS00NjM4LThiOWYtMmQwY2ZlMTI4NjY0IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MjMyODQxNjA4OSwiaXNzIjoiUTEiLCJhdWQiOiJRMSJ9.LtsIsOniGTKAP1Lv_s0IpmRBot8XeOVzon4gI8KanTc',
+    userFirstName: '',
+    userLastName: '',
+    userName: '',
+    imageSrc: '',
     role: '',
-    auth: true
+    token: '',
+    status: false,
+    auth: false,
   }),
-
+  getters: {
+    async setUpUser() {
+      return this.userName
+    }
+  },
   actions: {
     async Logout() {
       this.name = ''
       this.token = ''
       this.auth = false
+      clearToken();
+      message.success('Đã đăng xuất!')
     },
-    async Login(name, token) {
+    async Register(bodyParameters) {
       try {
-        this.name = name
-        this.token = token
+        const response = await postData(API_URL + '/users', bodyParameters, {})
+        console.log('rs' + response)
+        message.success('đăng ký thành công!')
+      } catch (error) {
+        message.error('Error login: ' + error, 3)
+        return error
+      }
+    },
+    async getUser() {
+      try {
+        headers.headers.Authorization = `Bearer ${this.token}`
+        const response = await getData(API_URL + '/users/myinfo', headers)
+        this.userName = response.data.result.userName
+        this.userFirstName = response.data.result.firstName
+        this.userLastName = response.data.result.lastName
+        this.role = response.data.result.role
+        this.status = response.data.result.status == 'ACTIVE' ? true : false
         this.auth = true
       } catch (error) {
-        console.error(error)
-        // let the form component display the error
+        message.error('Error get info: ' + error, 3)
+      }
+    },
+    async Login(bodyParameters) {
+      try {
+        const response = await postData(API_URL + '/auth/token', bodyParameters)
+        ///
+        if (response.status == 404) {
+          throw 'Đăng nhập thất bại kiểm tra lại tài khoản mật khẩu'
+        }
+        //success
+        this.token = response.data.result.token
+        setCookieToken(this.token)
+        message.success('Đăng nhập thành công!')
+        this.auth = true
+        this.getUser()
+      } catch (error) {
+        message.error('Error login: ' + error, 3)
         return error
       }
     }

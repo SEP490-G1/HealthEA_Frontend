@@ -9,8 +9,6 @@
         :label-col="{ span: 8 }"
         :wrapper-col="{ span: 16 }"
         autocomplete="off"
-        @finish="onFinish"
-        @finishFailed="onFinishFailed"
       >
         <a-form-item
           label="Username"
@@ -33,21 +31,32 @@
         </a-form-item>
 
         <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-          <a-button type="primary" html-type="submit">Submit</a-button>
+          <a-button
+            type="primary"
+            @click="onLoginEvent(this.formState.username, this.formState.password)"
+            html-type="submit"
+            >Login</a-button
+          >
         </a-form-item>
       </a-form>
     </div>
-    <a-button type="primary" @click="onLoginEvent">Login Test User</a-button>
   </div>
 </template>
 <script>
-import { reactive } from 'vue'
+import { ref } from 'vue'
+import { useUserStore } from '@/stores/user'
+import { getCookieToken } from '@/service/main'
 export default {
-  setup() {},
+  async mounted() {
+    if ((await getCookieToken()) == null) {
+      return
+    }
+    console.log('Tài khoản đã đăng nhập', this.$router.replace('/'))
+  },
   data() {
     return {
       // Tạo 1 reactive state có thuộc tính username pasword remember
-      formState: reactive({
+      formState: ref({
         username: '',
         password: '',
         remember: true
@@ -55,17 +64,11 @@ export default {
     }
   },
   methods: {
-    onLoginEvent: () => {
-      console.log('click login')
+    onLoginEvent: (username, password) => {
 
-      // this.storeUser.Login(
-      //   'handsome',
-      //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiSmFuZVNtaXRoIiwianRpIjoiNWVmZDdjOWItNDI5NS00NjM4LThiOWYtMmQwY2ZlMTI4NjY0IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MjMyODQxNjA4OSwiaXNzIjoiUTEiLCJhdWQiOiJRMSJ9.LtsIsOniGTKAP1Lv_s0IpmRBot8XeOVzon4gI8KanTc'
-      // )
-    },
-    onFinish: (values) => {
-      console.log('Success:', values)
-      console.log('formState:', this.formState)
+      var userStoreLogin = useUserStore()
+      var obj = { username: username, password: password }
+      userStoreLogin.Login(obj)
     },
     onFinishFailed: (errorInfo) => {
       console.log('Failed:', errorInfo)

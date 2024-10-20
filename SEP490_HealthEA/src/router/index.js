@@ -98,17 +98,20 @@ const routes = [
   { path: '/:pathMatch(.*)*', component: PageNotFound }
 ]
 
-const history = createWebHistory()
+const history = createWebHistory(import.meta.env.BASE_URL)
 
 const router = createRouter({
   history,
   routes
 })
 
-router.beforeEach((to) => {
+router.beforeEach(async (to) => {
   const mainTest = useUserStore()
-  if (to.path == '/profileHealth' && mainTest.auth == false) {
+  if (to.path.includes('/profileHealth') && mainTest.auth == false) {
     return '/client/login'
+  }
+  if (to.path.includes('/client') && mainTest.auth == true) {
+    return '/'
   }
 })
 export default router
