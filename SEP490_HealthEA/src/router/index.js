@@ -7,6 +7,11 @@ import ClientView from '@/views/ClientView'
 import LoginFrom from '@/components/login/LoginFrom'
 import RegisterFrom from '@/components/login/RegisterFrom'
 import ProfileHealth from '@/views/ProfileHealthView'
+
+import UploadView from '@/views/UploadView.vue'
+import AddDailyMetricView from '@/views/AddDailyMetricView.vue'
+
+
 import { useUserStore } from '@/stores/user'
 
 const routes = [
@@ -39,7 +44,17 @@ const routes = [
         component: RegisterFrom
       }
     ]
-  },
+  },{
+      path: '/dailymetric',
+      name: 'upload',
+      component: HomeView,
+      children: [
+        {
+          path: 'add',
+          component: AddDailyMetricView
+        },
+      ]
+    },
   {
     path: '/profileHealth/medical_record/',
     name: 'medicalrecord',
