@@ -4,7 +4,6 @@ import { useUserStore } from '@/stores/user'
 export async function getData(link, bodyParameters, config) {
   try {
     if (bodyParameters == {}) {
-      console.log('body', null)
       return await axios.get(link, config)
     } else {
       return await axios.get(link, bodyParameters, config)

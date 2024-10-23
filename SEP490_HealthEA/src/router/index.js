@@ -101,17 +101,17 @@ const routes = [
 const history = createWebHistory(import.meta.env.BASE_URL)
 
 const router = createRouter({
-  history,
+  history: history,
   routes
 })
 
-router.beforeEach(async (to) => {
-  const mainTest = useUserStore()
-  if (to.path.includes('/profileHealth') && mainTest.auth == false) {
-    return '/client/login'
-  }
-  if (to.path.includes('/client') && mainTest.auth == true) {
-    return '/'
-  }
-})
+// router.beforeEach(async (to) => {
+//   const mainTest = useUserStore()
+//   if (to.path.includes('/profileHealth') && mainTest.auth == false) {
+//     return '/client/login'
+//   }
+//   if (to.path.includes('/client') && mainTest.auth == true) {
+//     return '/'
+//   }
+// })
 export default router

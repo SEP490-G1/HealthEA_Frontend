@@ -5,10 +5,8 @@ import {  clearToken, postData, getData, setCookieToken } from '@/service/main'
 
 const API_URL = 'http://localhost:9090/identity'
 const headers = {
-  // Các tùy chọn cấu hình khác
   headers: {
     'Content-Type': 'application/json'
-    // Các tiêu đề khác nếu cần
   }
 }
 export const useUserStore = defineStore('user', {
@@ -18,7 +16,7 @@ export const useUserStore = defineStore('user', {
     userName: '',
     imageSrc: '',
     role: '',
-    token: '',
+    token: window.localStorage.getItem('TokenUser'),
     status: false,
     auth: false,
   }),
@@ -69,9 +67,10 @@ export const useUserStore = defineStore('user', {
         //success
         this.token = response.data.result.token
         setCookieToken(this.token)
-        message.success('Đăng nhập thành công!')
+        message.success('Đăng nhập thành công!', 3)
         this.auth = true
         this.getUser()
+        return this.auth;
       } catch (error) {
         message.error('Error login: ' + error, 3)
         return error
