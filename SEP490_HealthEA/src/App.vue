@@ -1,6 +1,5 @@
 <!-- @author: thuyht -->
 <script setup>
-// import { RouterLink, RouterView } from 'vue-router'
 import TheHeader from '@/components/common/TheHeader'
 </script>
 
@@ -16,6 +15,10 @@ import TheHeader from '@/components/common/TheHeader'
 export default {
   components: {
     TheHeader
+  },
+  data() {
+    return {
+    }
   }
 }
 </script>

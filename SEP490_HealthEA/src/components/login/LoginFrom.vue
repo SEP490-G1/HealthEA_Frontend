@@ -9,8 +9,6 @@
         :label-col="{ span: 8 }"
         :wrapper-col="{ span: 16 }"
         autocomplete="off"
-        @finish="onFinish"
-        @finishFailed="onFinishFailed"
       >
         <a-form-item
           label="Username"
@@ -33,20 +31,32 @@
         </a-form-item>
 
         <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-          <a-button type="primary" html-type="submit">Submit</a-button>
+          <a-button
+            type="primary"
+            @click="onLoginEvent(this.formState.username, this.formState.password)"
+            html-type="submit"
+            >Login</a-button
+          >
         </a-form-item>
       </a-form>
     </div>
   </div>
 </template>
 <script>
-import { reactive } from 'vue'
+import { ref } from 'vue'
+import { useUserStore } from '@/stores/user'
+import { getCookieToken } from '@/service/main'
 export default {
-  setup() {},
+  async mounted() {
+    if ((await getCookieToken()) == null) {
+      return
+    }
+    console.log('Tài khoản đã đăng nhập', this.$router.replace('/'))
+  },
   data() {
     return {
       // Tạo 1 reactive state có thuộc tính username pasword remember
-      formState: reactive({
+      formState: ref({
         username: '',
         password: '',
         remember: true
@@ -54,9 +64,11 @@ export default {
     }
   },
   methods: {
-    onFinish: (values) => {
-      console.log('Success:', values)
-      console.log('formState:', this.formState)
+    onLoginEvent: (username, password) => {
+
+      var userStoreLogin = useUserStore()
+      var obj = { username: username, password: password }
+      userStoreLogin.Login(obj)
     },
     onFinishFailed: (errorInfo) => {
       console.log('Failed:', errorInfo)
