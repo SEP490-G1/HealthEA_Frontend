@@ -37,7 +37,6 @@ export async function clearToken() {
 //config users
 export async function setUpToken() {
   const token = await getCookieToken()
-  console.log(token)
   if (token == null) {
     return token
   }
@@ -57,5 +56,6 @@ export async function setUpToken() {
   user.userLastName = response.data.result.lastName
   user.role = response.data.result.role
   user.auth = true
+  user.token = token
   return token
 }

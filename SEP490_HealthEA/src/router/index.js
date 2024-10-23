@@ -7,7 +7,6 @@ import ClientView from '@/views/ClientView'
 import LoginFrom from '@/components/login/LoginFrom'
 import RegisterFrom from '@/components/login/RegisterFrom'
 import ProfileHealth from '@/views/ProfileHealthView'
-import { useUserStore } from '@/stores/user'
 
 const routes = [
   {
@@ -106,11 +105,11 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to) => {
-  const mainTest = useUserStore()
-  if (to.path.includes('/profileHealth') && mainTest.auth == false) {
+  var token = window.localStorage.getItem('TokenUser')
+  if (to.path.includes('/profileHealth') && token == null) {
     return '/client/login'
   }
-  if (to.path.includes('/client') && mainTest.auth == true) {
+  if (to.path.includes('/client') && token != null) {
     return '/'
   }
 })
