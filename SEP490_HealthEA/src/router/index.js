@@ -8,6 +8,7 @@ import LoginFrom from '@/components/login/LoginFrom'
 import RegisterFrom from '@/components/login/RegisterFrom'
 import ProfileHealth from '@/views/ProfileHealthView'
 import UploadView from '@/views/UploadView.vue'
+import AddDailyMetricView from '@/views/AddDailyMetricView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -46,6 +47,17 @@ const router = createRouter({
       name: 'upload',
       component: UploadView,
       children: [
+        
+      ]
+    },{
+      path: '/dailymetric',
+      name: 'upload',
+      component: HomeView,
+      children: [
+        {
+          path: 'add',
+          component: AddDailyMetricView
+        },
       ]
     },
     {
