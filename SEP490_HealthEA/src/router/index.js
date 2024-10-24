@@ -7,7 +7,6 @@ import ClientView from '@/views/ClientView'
 import LoginFrom from '@/components/login/LoginFrom'
 import RegisterFrom from '@/components/login/RegisterFrom'
 import ProfileHealth from '@/views/ProfileHealthView'
-import { useUserStore } from '@/stores/user'
 
 const routes = [
   {
@@ -114,4 +113,5 @@ const router = createRouter({
 //     return '/'
 //   }
 // })
+
 export default router

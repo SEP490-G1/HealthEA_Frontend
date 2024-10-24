@@ -12,11 +12,21 @@ export async function getData(link, bodyParameters, config) {
     return error
   }
 }
+//delete axios
+export async function deleteData(link, config) {
+  try {
+    return await axios.delete(link, config)
+  } catch (error) {
+    console.log(error)
+    return error
+  }
+}
 //post axios
 export async function postData(link, bodyParameters, config) {
   try {
     return await axios.post(link, bodyParameters, config)
   } catch (error) {
+    console.log(error)
     return error
   }
 }
@@ -36,7 +46,6 @@ export async function clearToken() {
 //config users
 export async function setUpToken() {
   const token = await getCookieToken()
-  console.log(token)
   if (token == null) {
     return token
   }
@@ -56,5 +65,6 @@ export async function setUpToken() {
   user.userLastName = response.data.result.lastName
   user.role = response.data.result.role
   user.auth = true
+  user.token = token
   return token
 }

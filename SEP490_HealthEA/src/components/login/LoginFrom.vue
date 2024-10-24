@@ -42,19 +42,16 @@
     </div>
   </div>
 </template>
-<script >
+<script>
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { getCookieToken } from '@/service/main'
 
-
 export default {
   async mounted() {
-    if ((await getCookieToken()) == null) {
-      return
+    if ((await getCookieToken()) != null) {
+      this.$router.push('/')
     }
-    // console.log("moooooooooooooooo",this.$router)
-    // console.log('Tài khoản đã đăng nhập', this.$router.replace('/'))
   },
   data() {
     return {
@@ -67,13 +64,11 @@ export default {
     }
   },
   methods: {
-    onLoginEvent(username, password){
+    onLoginEvent(username, password) {
       var userStoreLogin = useUserStore()
       var obj = { username: username, password: password }
       if (userStoreLogin.Login(obj)) {
-        console.log('routerwwork')
-        console.log(this.$router.push('/'));  
-        
+        this.$router.push('/')
       }
     },
     onFinishFailed: (errorInfo) => {
