@@ -13,12 +13,12 @@ import TheHeader from '@/components/common/TheHeader'
 </template>
 <script>
 export default {
+  
   components: {
     TheHeader
   },
   data() {
-    return {
-    }
+    return {}
   }
 }
 </script>

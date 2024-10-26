@@ -1,14 +1,14 @@
 <template lang="">
   <div>
-    <div v-if="userStore.auth">
+    <div v-if="userStore.user.auth">
       <a-dropdown :trigger="['click']">
         <a class="ant-dropdown-link" @click.prevent>
           <a-avatar
-            :src="userStore.imageSrc"
+            :src="userStore.user.imageSrc"
             size="large"
             :style="{ backgroundColor: color, verticalAlign: 'middle' }"
           >
-            {{ userStore.userLastName == '' ? userStore.userName : userStore.userLastName }}
+            {{ userStore.user.userLastName == '' ? userStore.user.userName : userStore.user.userLastName }}
           </a-avatar>
         </a>
         <template #overlay>
@@ -23,10 +23,11 @@
         </template>
       </a-dropdown>
     </div>
-    <div v-if="!userStore.auth">
+    <div v-if="userStore.user.auth == false">
       <a-button type="primary" shape="round" style="margin-right: 10px" @click="gotoLogin">
         Login now
       </a-button>
+      This is {{ userStore.user.userLastName }}
       <a-button shape="round" @click="gotoRegister"> Register </a-button>
     </div>
   </div>
@@ -36,14 +37,16 @@ import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { LoginOutlined } from '@ant-design/icons-vue'
 const colorList = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae']
+
 export default {
+  setup() {
+    const userStore = useUserStore()
+    return { userStore }
+  },
   data() {
     return {
-      userStore: useUserStore(),
       color: ref(colorList[0])
     }
-  },
-  mounted() {
   },
   components() {
     LoginOutlined

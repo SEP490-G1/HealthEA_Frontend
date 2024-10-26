@@ -1,128 +1,112 @@
-<template>
-  <div class="auth-wrapper">
-    <div class="auth-inner">
-      <form @submit.prevent="register">
-        <h3>Đăng ký</h3>
-        <RouterLink to="login">Login now</RouterLink>
-
-        <div class="form-group">
-          <label>Tên</label>
-          <input
-            type="text"
-            class="form-control"
-            v-model="user.first_name"
-            placeholder="First Name"
-            required
-          />
-        </div>
-
-        <div class="form-group">
-          <label>Họ</label>
-          <input
-            type="text"
-            class="form-control"
-            v-model="user.last_name"
-            placeholder="Last Name"
-            required
-          />
-        </div>
-
-        <div class="form-group">
-          <label>Username</label>
-          <input
-            type="text"
-            class="form-control"
-            v-model="user.username"
-            placeholder="User Name"
-            required
-          />
-        </div>
-
-        <div class="form-group">
-          <label>Email</label>
-          <input
-            type="email"
-            class="form-control"
-            v-model="user.email"
-            placeholder="Email"
-            required
-          />
-        </div>
-
-        <div class="form-group">
-          <label>Số điện thoại</label>
-          <input
-            type="text"
-            class="form-control"
-            v-model="user.phone"
-            placeholder="Phone"
-            required
-            @blur="validatePhoneNumber()"
-            v-bind:class="{ 'is-invalid': error.phoneNumber }"
-          />
-          <div class="invalid-feedback" v-if="error.phoneNumber">
-            {{ error.phoneNumber }}
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Mật khẩu</label>
-          <input
-            type="password"
-            class="form-control"
-            v-model="user.password"
-            placeholder="Password"
-            required
-          />
-        </div>
-
-        <div class="form-group" style="margin-bottom: 20px">
-          <label>Xác nhận mật khẩu</label>
-          <input
-            type="password"
-            class="form-control"
-            v-model="password_confirm"
-            placeholder="Confirm Password"
-            required
-            @blur="validatePassword()"
-            v-bind:class="{ 'is-invalid': error.confirm_pass }"
-          />
-          <div class="invalid-feedback" v-if="error.confirm_pass">
-            {{ error.confirm_pass }}
-          </div>
-        </div>
-        <a-form-item :wrapper-col="{ offset: 9, span: 18 }">
-          <a-button type="primary" html-type="submit">Đăng ký</a-button>
+<template lang="">
+  <div class="container">
+    <a-typography-title>Đăng ký</a-typography-title>
+    <a-typography-title style="margin-top: 0px; margin-bottom: 50px" :level="5"
+      >Bạn đã có tài khoản? Đăng nhập ngay
+      <RouterLink to="login">tại đây</RouterLink></a-typography-title
+    >
+    <a-row style="width: 100%; display: flex; flex-direction: column; align-content: center">
+      <a-form
+        :label-col="this.labelCol"
+        :wrapper-col="this.wrapperCol"
+        style="width: 35%"
+        :model="formState"
+        name="basic"
+        autocomplete="off"
+      >
+        <a-form-item
+          label="Tên của bạn"
+          name="lastname"
+          :rules="[{ required: true, message: 'Tên không được để trống!' }]"
+        >
+          <a-input v-model:value="this.formState.lastname" />
         </a-form-item>
-      </form>
-    </div>
+        <a-form-item
+          label="Họ của bạn"
+          name="firstname"
+          :rules="[{ required: true, message: 'Họ không được để trống!' }]"
+        >
+          <a-input v-model:value="this.formState.firstName" />
+        </a-form-item>
+        <a-form-item
+          label="Tên đăng nhập"
+          name="user_name"
+          :rules="[{ required: true, message: 'Tên đăng nhập không được để trống!' }]"
+        >
+          <a-input v-model:value="this.formState.username" />
+        </a-form-item>
+        <a-form-item
+          label="Email"
+          name="email"
+          :rules="[{ required: true, message: 'Email không được để trống!' }]"
+        >
+          <a-input v-model:value="this.formState.email" />
+        </a-form-item>
+        <a-form-item
+          label="Số điện thoại"
+          name="username"
+          @blur="validatePhoneNumber()"
+          :rules="[{ required: true, message: 'Số điện thoại không được để trống!' }]"
+        >
+          <a-input v-model:value="this.formState.phoneNumber" />
+        </a-form-item>
+
+        <a-form-item
+          label="Mật khẩu"
+          name="pass_word"
+          :rules="[{ required: true, message: 'Mật khẩu không được để trống!' }]"
+        >
+          <a-input-password v-model:value="this.formState.password" />
+        </a-form-item>
+        <a-form-item
+          label="Xác nhận mật khẩu"
+          name="password"
+          :rules="[{ required: true, message: 'Mật khẩu không được để trống!' }]"
+        >
+          <a-input-password v-model:value="this.formState.re_password" />
+        </a-form-item>
+      </a-form>
+      <a-form-item name="remember">
+        <a-checkbox
+          style="width: 100%; display: flex; justify-content: center"
+          v-model:checked="this.formState.acp"
+          >Tôi chấp nhận điều khoản dịch vụ</a-checkbox
+        >
+      </a-form-item>
+      <a-form-item style="width: 100%; background-color: aqua; margin: 0; display: flex">
+        <a-button size="large" style="width: 100%" type="primary" @click="register()"
+          >Đăng ký ngay</a-button
+        >
+      </a-form-item>
+    </a-row>
   </div>
 </template>
+
 <script>
 import { useUserStore } from '@/stores/user'
-import { getCookieToken } from '@/service/main'
+import { ref } from 'vue'
+
 export default {
-  async beforeUpdate() {
-    if ((await getCookieToken()) == null) {
-      return
-    }
-    console.log('Tài khoản đã đăng nhập', this.$router.replace('/'))
-  },
   data() {
     return {
-      user: {
-        first_name: '',
-        last_name: '',
-        username: '',
-        password: '',
-        email: '',
-        phone: ''
+      labelCol: {
+        style: {
+          width: '150px'
+        }
       },
-      password_confirm: '',
-      error: {
+      wrapperCol: {
+        span: 15
+      },
+      formState: ref({
+        firstName: '',
+        lastName: '',
+        username: '',
+        email: '',
         phoneNumber: '',
-        confirm_pass: ''
-      }
+        password: '',
+        re_password: '',
+        acp: false
+      })
     }
   },
   methods: {
@@ -166,44 +150,12 @@ export default {
 }
 </script>
 
-<style>
-@import url('https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700,800');
-
-.auth-wrapper {
+<style scope>
+.container {
   display: flex;
+  align-items: center;
   justify-content: center;
   flex-direction: column;
-  text-align: left;
 }
 
-.auth-inner {
-  width: 450px;
-  margin: auto;
-  background: #ffffff;
-  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
-  padding: 40px 55px 45px 55px;
-  border-radius: 15px;
-  transition: all 0.3s;
-}
-
-.auth-wrapper .form-control:focus {
-  border-color: #167bff;
-  box-shadow: none;
-}
-
-.auth-wrapper h3 {
-  text-align: center;
-  margin: 0;
-  line-height: 1;
-  padding-bottom: 20px;
-}
-
-.auth-wrapper label {
-  display: block;
-  font-weight: 400;
-  margin: 5px 0px;
-  /* Khoảng cách giữa label và input */
-  font-size: 16px;
-  color: #333;
-}
 </style>

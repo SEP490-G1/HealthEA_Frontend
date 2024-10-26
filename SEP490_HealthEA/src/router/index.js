@@ -8,17 +8,21 @@ import LoginFrom from '@/components/login/LoginFrom'
 import RegisterFrom from '@/components/login/RegisterFrom'
 import ProfileHealth from '@/views/ProfileHealthView'
 
+
 import UploadView from '@/views/UploadView.vue'
 import AddDailyMetricView from '@/views/AddDailyMetricView.vue'
 
-
 import { useUserStore } from '@/stores/user'
+
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView,
+    meta: {
+      headerClass: '1'
+    },
     children: [
       {
         path: 'function1',
@@ -116,17 +120,33 @@ const routes = [
 const history = createWebHistory(import.meta.env.BASE_URL)
 
 const router = createRouter({
-  history,
+  history: history,
   routes
 })
 
+import { message } from 'ant-design-vue'
+import { useUserStore } from '@/stores/user'
+
 router.beforeEach(async (to) => {
-  const mainTest = useUserStore()
-  if (to.path.includes('/profileHealth') && mainTest.auth == false) {
-    return '/client/login'
+  // gọi store 
+  const userStore = useUserStore()
+  //nếu đã đăng nhập và truy cập vào trang login register sẽ bị đuổi sang home
+  if (to.path.includes('/client')) {
+    if (userStore.user.auth == true) {
+      message.info('Bạn đã đăng nhập!')
+      return '/'
+    }
   }
-  if (to.path.includes('/client') && mainTest.auth == true) {
-    return '/'
+  // nếu không đăng nhập thì chỉ vào được home và client
+  else if (userStore.user.auth == false) {
+    if (to.path == '/') {
+      // continue
+    } else if (!to.path.includes('/client')) {
+      message.info('Bạn phải đăng nhập!')
+      return '/client/login'
+    }
   }
 })
+
+
 export default router
