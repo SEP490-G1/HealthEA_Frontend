@@ -1,78 +1,94 @@
 <template lang="">
   <div class="container">
-    <h1>Login</h1>
-    <RouterLink to="register">register</RouterLink>
-    <div>
+    <a-typography-title>Đăng nhập</a-typography-title>
+    <a-typography-title style="margin-top: 0px; margin-bottom: 50px" :level="5"
+      >Hoặc bạn có thể đăng ký <RouterLink to="register">tại đây</RouterLink></a-typography-title
+    >
+    <a-row style="width: 100%; display: flex; flex-direction: column; align-content: center">
       <a-form
+        :label-col="this.labelCol"
+        :wrapper-col="this.wrapperCol"
+        style="width: 35%"
         :model="formState"
         name="basic"
-        :label-col="{ span: 8 }"
-        :wrapper-col="{ span: 16 }"
         autocomplete="off"
       >
         <a-form-item
-          label="Username"
+          label="Tên đăng nhập"
           name="username"
-          :rules="[{ required: true, message: 'Please input your username!' }]"
+          :rules="[{ required: true, message: 'Tài khoản không được để trống!' }]"
         >
-          <a-input v-model:value="this.formState.username" />
+          <a-input :status="status.username" v-model:value="this.formState.username" />
         </a-form-item>
 
         <a-form-item
-          label="Password"
+          label="Mật khẩu"
           name="password"
-          :rules="[{ required: true, message: 'Please input your password!' }]"
+          :rules="[{ required: true, message: 'Mật khẩu không được để trống!' }]"
         >
-          <a-input-password v-model:value="this.formState.password" />
-        </a-form-item>
-
-        <a-form-item name="remember" :wrapper-col="{ offset: 8, span: 16 }">
-          <a-checkbox v-model:checked="this.formState.remember">Remember me</a-checkbox>
-        </a-form-item>
-
-        <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-          <a-button
-            type="primary"
-            @click="onLoginEvent(this.formState.username, this.formState.password)"
-            html-type="submit"
-            >Login</a-button
-          >
+          <a-input-password :status="status.password" v-model:value="this.formState.password" />
         </a-form-item>
       </a-form>
-    </div>
+      <a-form-item name="remember">
+        <a-checkbox
+          style="width: 100%; display: flex; justify-content: center"
+          v-model:checked="this.formState.remember"
+          >Ghi nhớ đăng nhập trên thiết bị này</a-checkbox
+        >
+      </a-form-item>
+      <a-form-item style="width: 100%; background-color: aqua; margin: 0; display: flex">
+        <a-button
+          size="large"
+          style="width: 100%"
+          type="primary"
+          @click="
+            onLoginEvent(this.formState.username, this.formState.password, this.formState.remember)
+          "
+          >Đăng nhập</a-button
+        >
+      </a-form-item>
+    </a-row>
   </div>
 </template>
+
 <script>
-import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { getCookieToken } from '@/service/main'
+import { ref } from 'vue'
 
 export default {
-  async mounted() {
-    if ((await getCookieToken()) != null) {
-      this.$router.push('/')
-    }
-  },
   data() {
     return {
-      // Tạo 1 reactive state có thuộc tính username pasword remember
+      labelCol: {
+        style: {
+          width: '120px'
+        }
+      },
+      wrapperCol: {
+        span: 18
+      },
       formState: ref({
         username: '',
         password: '',
-        remember: true
-      })
+        remember: false
+      }),
+      status: {
+        username: '',
+        password: ''
+      }
     }
   },
   methods: {
-    onLoginEvent(username, password) {
+    async onLoginEvent(username, password, remember) {
       var userStoreLogin = useUserStore()
-      var obj = { username: username, password: password }
-      if (userStoreLogin.Login(obj)) {
-        this.$router.push('/')
+      var obj = { username, password, remember }
+      var response = await userStoreLogin.Login(obj)
+      if (!response) {
+        this.status.password = 'error'
+        this.status.username = 'error'
+        return
       }
-    },
-    onFinishFailed: (errorInfo) => {
-      console.log('Failed:', errorInfo)
+      // this.$router.push('/')
+      return
     }
   }
 }

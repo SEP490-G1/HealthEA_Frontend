@@ -13,6 +13,9 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView,
+    meta: {
+      headerClass: '1'
+    },
     children: [
       {
         path: 'function1',
@@ -104,14 +107,29 @@ const router = createRouter({
   routes
 })
 
-// router.beforeEach(async (to) => {
-//   const mainTest = useUserStore()
-//   if (to.path.includes('/profileHealth') && mainTest.auth == false) {
-//     return '/client/login'
-//   }
-//   if (to.path.includes('/client') && mainTest.auth == true) {
-//     return '/'
-//   }
-// })
+import { message } from 'ant-design-vue'
+import { useUserStore } from '@/stores/user'
+
+router.beforeEach(async (to) => {
+  // gọi store 
+  const userStore = useUserStore()
+  //nếu đã đăng nhập và truy cập vào trang login register sẽ bị đuổi sang home
+  if (to.path.includes('/client')) {
+    if (userStore.user.auth == true) {
+      message.info('Bạn đã đăng nhập!')
+      return '/'
+    }
+  }
+  // nếu không đăng nhập thì chỉ vào được home và client
+  else if (userStore.user.auth == false) {
+    if (to.path == '/') {
+      // continue
+    } else if (!to.path.includes('/client')) {
+      message.info('Bạn phải đăng nhập!')
+      return '/client/login'
+    }
+  }
+})
+
 
 export default router
