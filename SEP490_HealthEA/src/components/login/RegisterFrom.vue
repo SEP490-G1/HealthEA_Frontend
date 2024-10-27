@@ -140,7 +140,6 @@ export default {
       try {
         const registerResponse = await userStoreLogin.Register(bodyRegister)
         console.log(registerResponse)
-        // this.$router.push({ name: 'verifyEmail', params: { email: this.user.email } });
         alert('Đăng ký thành công')
       } catch (error) {
         console.log('Đăng ký thất bại:', error)

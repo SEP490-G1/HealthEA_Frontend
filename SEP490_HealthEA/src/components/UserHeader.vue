@@ -27,7 +27,6 @@
       <a-button type="primary" shape="round" style="margin-right: 10px" @click="gotoLogin">
         Login now
       </a-button>
-      This is {{ userStore.user.userLastName }}
       <a-button shape="round" @click="gotoRegister"> Register </a-button>
     </div>
   </div>
