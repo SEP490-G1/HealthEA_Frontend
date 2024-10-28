@@ -4,17 +4,18 @@ import { RouterLink } from 'vue-router'
 <template lang="">
   <div>
     <a-layout-header class="header">
-      <a-menu
-        v-model:selectedKeys="selected"
-        theme="dark"
-        mode="horizontal"
-        :style="{ lineHeight: '64px' }"
-      >
+      <a-menu theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
         <a-flex style="padding: 0 10px; width: 100%" justify="space-between">
           <div>
-            <a-menu-item :class="item.path == pathActive ? 'ant-menu-item-selected' : ''" v-for="(item, index) in listHeaderCustomer" :key="index"><RouterLink :to="item.path">{{item.text}}</RouterLink></a-menu-item>
+            <a-menu-item
+              v-for="(item, index) in listHeader"
+              :class="item.path == pathActive ? 'ant-menu-item-selected' : ''"
+              :key="index"
+            >
+              <RouterLink :to="item.path">{{ item.text }}</RouterLink>
+            </a-menu-item>
           </div>
-          <UserHeader />
+          <UserHeader v-model:role="role" />
         </a-flex>
       </a-menu>
     </a-layout-header>
@@ -22,44 +23,51 @@ import { RouterLink } from 'vue-router'
 </template>
 <script>
 import UserHeader from '../UserHeader.vue'
+import { ref } from 'vue'
+// import { useUserStore } from '@/stores/user'
+
 export default {
   name: 'TheHeader',
+
   data() {
     return {
-      pathActive: 1,
-      listHeaderAdmin: [
-        { key: 1, path: '/' },
-        { key: 1, path: '/' },
-        { key: 1, path: '/' },
-        { key: 1, path: '/' }
-      ],
-      listHeaderCustomer: [
-        { path: '/', text: 'Trang chủ' },
-        { path: '/profileHealth',text: 'Hồ sơ sức khỏe' },
-        { path: '/about' , text: 'Về chúng tôi'},
-        { path: '/profile', text: 'Hồ sơ của bạn' }
-      ],
-      listHeaderDoctor: [
-        { key: 1, path: '/' },
-        { key: 1, path: '/' },
-        { key: 1, path: '/' },
-        { key: 1, path: '/' }
-      ]
+      pathActive: '',
+      role: ref(''),
+      listHeader: ref( [
+          { path: '/', text: 'Trang chủ' },
+          { path: '/profileHealth', text: 'Hồ sơ sức khỏe' },
+          { path: '/about', text: 'Về chúng tôi' },
+          { path: '/admin/UserManagement', text: 'Quản lý người dùng' }
+        ])
     }
   },
   mounted() {
-    this.findSelectedKey()
+    // switch (this.role) {
+    //   case 'CUSTOMER':
+    //     this.listHeader = [
+    //       { path: '/', text: 'Trang chủ' },
+    //       { path: '/profileHealth', text: 'Hồ sơ sức khỏe' },
+    //       { path: '/about', text: 'Về chúng tôi' },
+    //       { path: '/profile', text: 'Hồ sơ của bạn' }
+    //     ]
+    //     break
+    //   default:
+    //     this.listHeader = [
+    //       { path: '/', text: 'Trang chủ' },
+    //       { path: '/', text: 'Chức năng chính' },
+    //       { path: '/', text: 'Về chúng tôi' },
+    //       { path: '/', text: 'Liên hệ' }
+    //     ]
+    //     break
+    // }
   },
   watch: {
     $route(to) {
       this.pathActive = to.path
-      console.log('path', to.path)
     }
   },
   methods: {
-    findSelectedKey() {
-      // this.selected = this.$route.meta.headerClass
-    }
+    onClicks() {}
   }
 }
 </script>

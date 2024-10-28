@@ -21,7 +21,6 @@ const MEMORY_STOGARE = 'USERTOKEN'
 const MEMORY_STOGARE_USER = 'USEROBJECT'
 export const useUserStore = defineStore('user', {
   state: () =>  ({
-    //user: JSON.parse(getLocalStogare(MEMORY_STOGARE_USER)),
     user: getLocalStogare(MEMORY_STOGARE_USER) ? JSON.parse(getLocalStogare(MEMORY_STOGARE_USER)) : {auth: false},
     token: getLocalStogare(MEMORY_STOGARE)
       ? getLocalStogare(MEMORY_STOGARE)

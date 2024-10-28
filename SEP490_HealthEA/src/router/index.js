@@ -41,6 +41,10 @@ const routes = [
         component: RegisterFrom
       }
     ]
+  },  {
+    path: '/admin/UserManagement',
+    name: 'UserManagement',
+    component: UserManagementView,
   },
   {
     path: '/profileHealth/medical_record/',
@@ -109,17 +113,25 @@ const router = createRouter({
 
 import { message } from 'ant-design-vue'
 import { useUserStore } from '@/stores/user'
+import UserManagementView from '@/views/admin/UserManagementView.vue'
 
 router.beforeEach(async (to) => {
-  // gọi store 
+  // gọi store
   const userStore = useUserStore()
   //nếu đã đăng nhập và truy cập vào trang login register sẽ bị đuổi sang home
-  if (to.path.includes('/client')) {
-    if (userStore.user.auth == true) {
+  if (userStore.user.auth == true) {
+    if (to.path.includes('/client')) {
       message.info('Bạn đã đăng nhập!')
       return '/'
     }
+    if(userStore.user.role != 'ADMIN'){
+      if (to.path.includes('/admin')) {
+        message.info('Bạn phải có quyền admin!')
+        return '/'
+      }
+    }
   }
+  // Nếu là role là admin thì sẽ truy cập
   // nếu không đăng nhập thì chỉ vào được home và client
   else if (userStore.user.auth == false) {
     if (to.path == '/') {
@@ -130,6 +142,5 @@ router.beforeEach(async (to) => {
     }
   }
 })
-
 
 export default router
