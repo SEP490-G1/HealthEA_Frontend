@@ -10,7 +10,7 @@ import { ref } from 'vue'
       @back="() => null"
     />
     <a-table :columns="columns" :data-source="dataSource" bordered>
-      <template #bodyCell="{ column, text, record }">
+      <template #bodyCell="{ text, record }">
         <template v-if="['name', 'age', 'address'].includes(colum.dataIndex)">
           <div>
             <a-input

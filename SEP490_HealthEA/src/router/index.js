@@ -58,6 +58,21 @@ const routes = [
     ]
   },
   {
+    path: '/dailymetric',
+    name: 'DailyMetric',
+    component: DailyMetricView,
+    children: [
+      {
+        path: 'UserManagement',
+        component: UserManagementView
+      },
+      {
+        path: 'register',
+        component: RegisterFrom
+      }
+    ]
+  },
+  {
     path: '/profileHealth/medical_record/',
     name: 'medicalrecord',
     component: ProfileHealth,
@@ -126,6 +141,7 @@ import { message } from 'ant-design-vue'
 import { useUserStore } from '@/stores/user'
 import UserManagementView from '@/views/admin/UserManagementView.vue'
 import AdminView from '@/views/AdminView.vue'
+import DailyMetricView from '@/views/DailyMetricView.vue'
 
 router.beforeEach(async (to) => {
   // gọi store
