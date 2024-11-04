@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <a-form style="margin: 30px">
     <a-form-item label="Tên đầy đủ">
       <a-input v-model:value="userData.name" />
@@ -53,4 +53,4 @@ export default {
     })
   }
 }
-</script>
+</script> -->

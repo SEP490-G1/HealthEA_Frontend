@@ -4,11 +4,6 @@ import { reactive, h, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import TheMenu from '@/components/common/TheMenu.vue'
 import CommonLayout from '@/components/medical/CommonLayout'
-/**
- * This view for medical report management module
- * @date: 10/05/2024
- * @author: thuyht/gitzno
- */
 </script>
 
 <template>

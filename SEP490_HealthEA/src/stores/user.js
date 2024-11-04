@@ -21,7 +21,6 @@ const MEMORY_STOGARE = 'USERTOKEN'
 const MEMORY_STOGARE_USER = 'USEROBJECT'
 export const useUserStore = defineStore('user', {
   state: () =>  ({
-    //user: JSON.parse(getLocalStogare(MEMORY_STOGARE_USER)),
     user: getLocalStogare(MEMORY_STOGARE_USER) ? JSON.parse(getLocalStogare(MEMORY_STOGARE_USER)) : {auth: false},
     token: getLocalStogare(MEMORY_STOGARE)
       ? getLocalStogare(MEMORY_STOGARE)
@@ -42,16 +41,16 @@ export const useUserStore = defineStore('user', {
       this.user = {}
       this.token = ''
     },
-    // async Register(bodyParameters) {
-    //   try {
-    //     const response = await postData(API_URL + '/users', bodyParameters, {})
-    //     console.log('rs' + response)
-    //     message.success('đăng ký thành công!')
-    //   } catch (error) {
-    //     message.error('Error login: ' + error, 3)
-    //     return error
-    //   }
-    // },
+    async Register(bodyParameters) {
+      try {
+        const response = await postData(API_URL + '/users', bodyParameters, {})
+        console.log('rs' + response)
+        message.success('đăng ký thành công!')
+      } catch (error) {
+        message.error('Error login: ' + error, 3)
+        return error
+      }
+    },
     async getUser() {
       try {
         headers.headers.Authorization = `Bearer ${await this.token}`

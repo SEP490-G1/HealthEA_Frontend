@@ -1,7 +1,7 @@
 <script setup>
 import ContentFooter from '@/components/layout/ContentFooter'
 </script>
-<template lang="">
+<template>
   <ContentFooter>
     <a-layout-content :style="{ margin: '24px 16px 0', overflow: 'initial' }">
       <RouterView />

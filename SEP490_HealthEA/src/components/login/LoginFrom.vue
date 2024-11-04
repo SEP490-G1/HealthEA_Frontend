@@ -87,7 +87,7 @@ export default {
         this.status.username = 'error'
         return
       }
-      // this.$router.push('/')
+      this.$router.push('/')
       return
     }
   }

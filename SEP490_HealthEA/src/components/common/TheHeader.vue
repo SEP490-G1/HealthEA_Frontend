@@ -4,56 +4,72 @@ import { RouterLink } from 'vue-router'
 <template lang="">
   <div>
     <a-layout-header class="header">
-      <a-menu
-      v-model:selectedKeys="selected"
-      theme="dark"
-      mode="horizontal"
-      :style="{ lineHeight: '64px' }"
-      >
+      <a-menu theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
         <a-flex style="padding: 0 10px; width: 100%" justify="space-between">
           <div>
-            <a-menu-item key="1"><RouterLink to="/">Home</RouterLink></a-menu-item>
-            <a-menu-item key="2"
-              ><RouterLink to="/client/login">Client View</RouterLink></a-menu-item
+            <a-menu-item
+              v-for="(item, index) in listHeader"
+              :class="item.path == pathActive ? 'ant-menu-item-selected' : ''"
+              :key="index"
             >
-            <a-menu-item key="3"><RouterLink to="/about">About</RouterLink></a-menu-item>
-            <a-menu-item key="4"
-              ><RouterLink to="/profileHealth">Hồ Sơ sức khỏe</RouterLink></a-menu-item
-            >
-            {{selected}}
+              <RouterLink :to="item.path">{{ item.text }}</RouterLink>
+            </a-menu-item>
           </div>
-          <UserHeader />
+          <UserHeader v-model:role="role" />
         </a-flex>
       </a-menu>
     </a-layout-header>
   </div>
 </template>
 <script>
-import UserHeader from '../UserHeader.vue';
+import UserHeader from '../UserHeader.vue'
+import { ref } from 'vue'
+// import { useUserStore } from '@/stores/user'
+
 export default {
   name: 'TheHeader',
+
   data() {
     return {
+      pathActive: '',
+      role: ref(''),
+      listHeader: ref( [
+          { path: '/', text: 'Trang chủ' },
+          { path: '/profileHealth', text: 'Hồ sơ sức khỏe' },
+          { path: '/about', text: 'Về chúng tôi' },
+          { path: '/admin/UserManagement', text: 'Quản lý người dùng' },
+          { path: '/dailymetric', text: 'Chỉ số sức khỏe định kỳ' }
+        ])
     }
   },
-  mounted(){
-    this.findSelectedKey()
+  mounted() {
+    // switch (this.role) {
+    //   case 'CUSTOMER':
+    //     this.listHeader = [
+    //       { path: '/', text: 'Trang chủ' },
+    //       { path: '/profileHealth', text: 'Hồ sơ sức khỏe' },
+    //       { path: '/about', text: 'Về chúng tôi' },
+    //       { path: '/profile', text: 'Hồ sơ của bạn' }
+    //     ]
+    //     break
+    //   default:
+    //     this.listHeader = [
+    //       { path: '/', text: 'Trang chủ' },
+    //       { path: '/', text: 'Chức năng chính' },
+    //       { path: '/', text: 'Về chúng tôi' },
+    //       { path: '/', text: 'Liên hệ' }
+    //     ]
+    //     break
+    // }
   },
-  setup(){
-    var selected = "helko"
-    
-    console.log(selected())
-    // expose to template and other options API hooks
-    return {
-      selected
+  watch: {
+    $route(to) {
+      this.pathActive = to.path
     }
   },
   methods: {
-    findSelectedKey(){
-      // this.selected = this.$route.meta.headerClass
-    }
+    onClicks() {}
   }
-
 }
 </script>
 <style lang=""></style>
