@@ -1,6 +1,6 @@
 <script setup>
 import ContentFooter from '@/components/layout/ContentFooter'
-import CommonLayout from '@/components/medical/ModalCommon'
+import CommonLayout from '@/components/common/TheModal'
 </script>
 <template lang="">
   <ContentFooter>
