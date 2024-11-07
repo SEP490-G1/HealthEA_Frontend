@@ -31,6 +31,14 @@ export async function postData(link, bodyParameters, config) {
     return err
   }
 }
+export async function patchData(link, bodyParameters, config) {
+  try {
+    var response = await axios.patch(link, bodyParameters, config)
+    return response
+  } catch (err) {
+    return err
+  }
+}
 ///////////////////////////
 ///Session stogare
 ////////////////
@@ -107,7 +115,7 @@ export async function clearLocalStogare(role) {
       break
   }
 }
-export function clearUser(){
+export function clearUser() {
   localStorage.clear()
   sessionStorage.clear()
 }
