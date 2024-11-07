@@ -60,17 +60,12 @@ const routes = [
   {
     path: '/dailymetric',
     name: 'DailyMetric',
-    component: DailyMetricView,
-    children: [
-      {
-        path: 'UserManagement',
-        component: UserManagementView
-      },
-      {
-        path: 'register',
-        component: RegisterFrom
-      }
-    ]
+    component: DailyMetricView
+  },
+  {
+    path: '/dailymetric/history',
+    name: 'DailyMetricHistory',
+    component: DailyMetricHistory
   },
   {
     path: '/profileHealth/medical_record/',
@@ -142,6 +137,7 @@ import { useUserStore } from '@/stores/user'
 import UserManagementView from '@/views/admin/UserManagementView.vue'
 import AdminView from '@/views/AdminView.vue'
 import DailyMetricView from '@/views/DailyMetricView.vue'
+import DailyMetricHistory from '@/components/dailyMetric/DailyMetricHistory.vue'
 
 router.beforeEach(async (to) => {
   // gọi store

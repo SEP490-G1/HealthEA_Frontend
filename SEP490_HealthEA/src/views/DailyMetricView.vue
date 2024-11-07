@@ -8,9 +8,9 @@ import { message } from 'ant-design-vue'
     <a-typography-title style="display: flex; justify-content: center">
       Chỉ số sức khỏe của bạn
     </a-typography-title>
-    <a-button style="display: flex; justify-content: center; width: 100%" type="link"
-      >Xem lịch sử của bạn</a-button
-    >
+    <div style="display: flex; justify-content: center; width: 100%">
+      <a-button type="link" @click="toHistory">Xem lịch sử của bạn</a-button>
+    </div>
     <div v-if="listItem == []" style=""></div>
     <a-row v-if="listItem != []" :gutter="40" class="main-container">
       <a-col v-for="(item, key) in listItem" :key="key" class="gutter-row" :span="5">
@@ -47,7 +47,7 @@ import { message } from 'ant-design-vue'
           :label="form.titleModal"
           :rules="[{ required: true, message: 'Hãy nhập chỉ số này!' }]"
         >
-          <a-input v-model:value="dailyMetric.bodyTemperature" suffix="&deg;C" />
+          <a-input-number v-model:value="dailyMetric.bodyTemperature" suffix="&deg;C" />
         </a-form-item>
       </div>
       <div v-if="form.titleModal == 'Nhịp tim'">
@@ -55,7 +55,7 @@ import { message } from 'ant-design-vue'
           :label="form.titleModal"
           :rules="[{ required: true, message: 'Hãy nhập chỉ số này!' }]"
         >
-          <a-input v-model:value="dailyMetric.heartRate" suffix="bpm" />
+          <a-input-number v-model:value="dailyMetric.heartRate" suffix="bpm" />
         </a-form-item>
       </div>
       <div v-if="form.titleModal == 'Đường huyết'">
@@ -63,7 +63,7 @@ import { message } from 'ant-design-vue'
           :label="form.titleModal"
           :rules="[{ required: true, message: 'Hãy nhập chỉ số này!' }]"
         >
-          <a-input v-model:value="dailyMetric.bloodSugar" suffix="mg/dl" />
+          <a-input-number v-model:value="dailyMetric.bloodSugar" suffix="mg/dl" />
         </a-form-item>
       </div>
       <div v-if="form.titleModal == 'BMI'">
@@ -71,27 +71,27 @@ import { message } from 'ant-design-vue'
           label="Cân nặng"
           :rules="[{ required: true, message: 'Hãy nhập chỉ số này!' }]"
         >
-          <a-input v-model:value="dailyMetric.weight" suffix="Kg" />
+          <a-input-number v-model:value="dailyMetric.weight" suffix="Kg" />
         </a-form-item>
         <a-form-item
           label="Chiều cao"
           :rules="[{ required: true, message: 'Hãy nhập chỉ số này!' }]"
         >
-          <a-input v-model:value="dailyMetric.height" suffix="Cm" />
+          <a-input-number v-model:value="dailyMetric.height" suffix="Cm" />
         </a-form-item>
       </div>
       <div v-if="form.titleModal == 'Huyết áp'">
         <a-form-item label="Tâm thu" :rules="[{ required: true, message: 'Hãy nhập chỉ số này!' }]">
-          <a-input v-model:value="dailyMetric.systolicBloodPressure" suffix="mmHg" />
+          <a-input-number v-model:value="dailyMetric.systolicBloodPressure" /> mmHg
         </a-form-item>
         <a-form-item
           label="Tâm trương"
           :rules="[{ required: true, message: 'Hãy nhập chỉ số này!' }]"
         >
-          <a-input-number v-model:value="dailyMetric.diastolicBloodPressure" suffix="mmHg" />
+          <a-input-number v-model:value="dailyMetric.diastolicBloodPressure" /> mmHg
         </a-form-item>
       </div>
-      <div v-if="form.titleModal == 'Độ bão hòa Oxy'">
+      <div v-if="form.titleModal == 'Độ bão hòa Oxy' || form.titleModal == 'Oxygen Saturation'">
         <a-form-item
           label="Chỉ số O2 trong máu"
           :rules="[{ required: true, message: 'Hãy nhập chỉ số này!' }]"
@@ -167,7 +167,7 @@ export default {
           classFill: 'gray-card'
         },
         {
-          Title: 'Oxygen Saturation',
+          Title: 'Độ bão hòa Oxy',
           StokeColor: '#fcb800',
           Percent: 0,
           Value: `- -`,
@@ -183,6 +183,9 @@ export default {
     }
   },
   methods: {
+    toHistory() {
+      this.$router.push('/dailymetric/history')
+    },
     updateTitle(str) {
       return `Cập nhật chỉ số ${str}`
     },
@@ -207,7 +210,6 @@ export default {
           return
         }
         this.listItem = []
-        console.log(data.dailyMetric)
         ;(this.dailyMetric = {
           weight: data.dailyMetric.weight,
           height: data.dailyMetric.height,
@@ -237,7 +239,7 @@ export default {
               fill = 'warning-card'
             }
             var value = ''
-            if (element.status == 0) {
+            if (element.status == -1) {
               color = '#747474'
               percent = 0
               fill = 'gray-card'
@@ -248,7 +250,8 @@ export default {
               Percent: percent,
               StokeColor: color,
               Value: value ? value : element.value,
-              Status: element.description,
+              Status:
+                element.description == null ? 'Trường này chưa có dữ liệu' : element.description,
               classFill: fill
             })
           })
@@ -260,9 +263,8 @@ export default {
     async handleOk() {
       const store = useDailyMetricStore()
       const respon = await store.saveToday(this.dailyMetric)
-
+      console.log(this.dailyMetric)
       if (respon.status == 204) {
-        console.log('ress', respon)
         this.form.open = false
         this.loadData()
       }
