@@ -28,6 +28,18 @@ const routes = [
     ]
   },
   {
+    path: '/remind',
+    name: 'Remind',
+    component: RemindView,
+    children: [
+      {
+        path: 'calendar',
+        component: CalendarRemind
+      }
+      
+    ]
+  },
+  {
     path: '/client',
     name: 'client',
     component: ClientView,
@@ -132,39 +144,41 @@ const router = createRouter({
   routes
 })
 
-import { message } from 'ant-design-vue'
+import { Calendar, message } from 'ant-design-vue'
 import { useUserStore } from '@/stores/user'
 import UserManagementView from '@/views/admin/UserManagementView.vue'
 import AdminView from '@/views/AdminView.vue'
 import DailyMetricView from '@/views/DailyMetricView.vue'
 import DailyMetricHistory from '@/components/dailyMetric/DailyMetricHistory.vue'
+import RemindView from '@/views/RemindView.vue'
+import CalendarRemind from '@/components/remind/CalendarRemind.vue'
 
-router.beforeEach(async (to) => {
-  // gọi store
-  const userStore = useUserStore()
-  //nếu đã đăng nhập và truy cập vào trang login register sẽ bị đuổi sang home
-  if (userStore.user.auth == true) {
-    if (to.path.includes('/client')) {
-      message.info('Bạn đã đăng nhập!')
-      return '/'
-    }
-    if (userStore.user.role != 'ADMIN') {
-      if (to.path.includes('/admin')) {
-        message.info('Bạn phải có quyền admin!')
-        return '/'
-      }
-    }
-  }
-  // Nếu là role là admin thì sẽ truy cập
-  // nếu không đăng nhập thì chỉ vào được home và client
-  else if (userStore.user.auth == false) {
-    if (to.path == '/') {
-      // continue
-    } else if (!to.path.includes('/client')) {
-      message.info('Bạn phải đăng nhập!')
-      return '/client/login'
-    }
-  }
-})
+// router.beforeEach(async (to) => {
+//   // gọi store
+//   const userStore = useUserStore()
+//   //nếu đã đăng nhập và truy cập vào trang login register sẽ bị đuổi sang home
+//   if (userStore.user.auth == true) {
+//     if (to.path.includes('/client')) {
+//       message.info('Bạn đã đăng nhập!')
+//       return '/'
+//     }
+//     if (userStore.user.role != 'ADMIN') {
+//       if (to.path.includes('/admin')) {
+//         message.info('Bạn phải có quyền admin!')
+//         return '/'
+//       }
+//     }
+//   }
+//   // Nếu là role là admin thì sẽ truy cập
+//   // nếu không đăng nhập thì chỉ vào được home và client
+//   else if (userStore.user.auth == false) {
+//     if (to.path == '/') {
+//       // continue
+//     } else if (!to.path.includes('/client')) {
+//       message.info('Bạn phải đăng nhập!')
+//       return '/client/login'
+//     }
+//   }
+// })
 
 export default router
