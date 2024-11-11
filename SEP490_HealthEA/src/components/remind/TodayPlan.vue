@@ -17,12 +17,26 @@
         <template #renderItem="{ item }">
           <a-list-item>
             <template #actions>
-              <a key="list-loadmore-more">more</a>
+              <a-dropdown :trigger="['click']">
+                <a class="ant-dropdown-link" key="list-loadmore-more" @click.prevent
+                  >Option <DownOutlined
+                /></a>
+                <template #overlay>
+                  <a-menu>
+                    <a-menu-item key="0">
+                      <a href="http://www.alipay.com/">Xóa</a>
+                    </a-menu-item>
+                    <a-menu-item key="1">
+                      <a href="http://www.taobao.com/">Chỉnh sửa</a>
+                    </a-menu-item>                        
+                  </a-menu>
+                </template>
+              </a-dropdown>
             </template>
-            <a-skeleton avatar :title="false" :loading="!!item.loading" active>
+            <a-skeleton :title="false" :loading="!!item.loading">
               <a-list-item-meta :description="item.description">
                 <template #title>
-                  <a href="https://www.antdv.com/">{{ item.title }}</a>
+                  <a>{{ item.title }}</a>
                 </template>
               </a-list-item-meta>
             </a-skeleton>

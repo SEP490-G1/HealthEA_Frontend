@@ -26,25 +26,36 @@
     :footer-style="{ textAlign: 'right' }"
     @close="onClose"
   >
-    <a-form :model="form" :rules="rules" layout="vertical">
+    <a-form
+      :model="formState"
+      autocomplete="off"
+      :rules="rules"
+      layout="vertical"
+      @finish="onFinish"
+      @finishFailed="onFinishFailed"
+    >
       <a-row :gutter="16">
         <a-col :span="24">
           <a-form-item label="Tiêu đề" name="Title">
-            <a-input v-model:value="form.Title" placeholder="Trường tiêu đề không được để trống" />
+            <a-input v-model:value="formState.Title" placeholder="Nhập tiêu đề của bạn tại đây" />
           </a-form-item>
         </a-col>
         <a-col :span="10">
           <a-form-item label="Sự kiện diễn ra ngày" name="EventDateTime">
             <a-date-picker
-              v-model:value="form.EventDateTime"
+              v-model:value="formState.EventDateTime"
+              placeholder="Chọn ngày bắt đầu"
+              format="YYYY-MM-DD"
+              value-format="YYYY-MM-DD"
               style="width: 100%"
               :get-popup-container="(trigger) => trigger.parentElement"
             /> </a-form-item
         ></a-col>
         <a-col :span="6">
-          <a-form-item name="time-start" label="Thời gian bắt đầu">
+          <a-form-item name="StartTime" label="Thời gian bắt đầu">
             <a-time-picker
-              v-model:value="form.StartTime"
+              v-model:value="formState.StartTime"
+              placeholder="Giờ bắt đầu"
               format="HH:mm:ss"
               value-format="HH:mm:ss"
               :get-popup-container="(trigger) => trigger.parentElement"
@@ -52,58 +63,96 @@
           </a-form-item>
         </a-col>
         <a-col :span="10">
-          <a-form-item label="Sự kiện kết thúc ngày" name="EventDateTime">
+          <a-form-item label="Sự kiện kết thúc ngày" name="RepeatEndDate">
             <a-date-picker
-              v-model:value="form.EventDateTime"
+              v-model:value="formState.RepeatEndDate"
+              placeholder="Chọn ngày kết thúc"
+              format="YYYY-MM-DD"
+              value-format="YYYY-MM-DD"
               style="width: 100%"
               :get-popup-container="(trigger) => trigger.parentElement"
             /> </a-form-item
         ></a-col>
         <a-col :span="6">
-          <a-form-item name="time-end" label="Thời gian kết thúc">
+          <a-form-item name="EndTime" label="Thời gian kết thúc">
             <a-time-picker
-              v-model:value="form.EndTime"
+              v-model:value="formState.EndTime"
+              placeholder="Giờ kết thúc"
               format="HH:mm:ss"
               value-format="HH:mm:ss"
               :get-popup-container="(trigger) => trigger.parentElement"
             />
           </a-form-item>
         </a-col>
-        <a-col :span="20">
-          <a-form-item label="Location" name="Title">
-            <a-input v-model:value="form.Title" placeholder="Trường tiêu đề không được để trống" />
+        <a-col :span="18">
+          <a-form-item label="Vị trí" name="Location">
+            <a-input v-model:value="formState.Location" placeholder="Vị trí" />
           </a-form-item>
         </a-col>
-        <a-col :span="4">
+        <a-col :span="6">
           <a-form-item label="Kiểu lặp" name="RepeatFrequency">
-            <a-select v-model:value="form.RepeatFrequency">
-              <a-select-option value="1">No repeat</a-select-option>
-              <a-select-option value="2">Daily</a-select-option>
-              <a-select-option value="3">Weekly</a-select-option>
-              <a-select-option value="4">Monthly</a-select-option>
-              <a-select-option value="5">Yearly</a-select-option>
+            <a-select v-model:value="formState.RepeatFrequency">
+              <a-select-option :value="1">No repeat</a-select-option>
+              <a-select-option :value="2">Daily</a-select-option>
+              <a-select-option :value="3">Weekly</a-select-option>
+              <a-select-option :value="4">Monthly</a-select-option>
+              <a-select-option :value="5">Yearly</a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
       </a-row>
 
+      <a-form-item label="Tạo thông báo">
+        <a-row :gutter="16">
+          <a-col v-for="(item, index) in formState.ReminderOffsets" :key="index" :span="24">
+            <a-form-item style="width: 100%" :name="['ReminderOffsets']">
+              <a-row>
+                <a-col :span="4">
+                  <a-form-item :name="offsetUnit">
+                    <a-input-number v-model:value="item.offsetUnit" />
+                  </a-form-item>
+                </a-col>
+                <a-col :span="12">
+                  <a-form-item :name="offsetValue">
+                    <a-select v-model:value="item.offsetValue">
+                      <a-select-option :value="1">phút</a-select-option>
+                      <a-select-option :value="2">giờ</a-select-option>
+                      <a-select-option :value="3">ngày</a-select-option>
+                      <a-select-option :value="4">tuần</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+
+                <a-button style="margin-left: 3px" type="link" @click="remove(item)">
+                  Remove
+                </a-button>
+              </a-row>
+            </a-form-item>
+          </a-col>
+          <a-col :span="24">
+            <a-form-item>
+              <a-button type="dashed" block @click="addItem">
+                <PlusOutlined />
+                Thêm kiểu thông báo
+              </a-button>
+            </a-form-item>
+          </a-col>
+        </a-row>
+      </a-form-item>
+
       <a-row :gutter="16">
         <a-col :span="24">
-          <a-form-item label="Description" name="description">
+          <a-form-item label="Mô tả" name="Description">
             <a-textarea
-              v-model:value="form.description"
+              v-model:value="formState.Description"
               :rows="4"
-              placeholder="please enter url description"
+              placeholder="Hãy nhập mô tả của bạn"
             />
           </a-form-item>
         </a-col>
       </a-row>
+      <a-button type="primary" html-type="submit">Lưu</a-button>
     </a-form>
-    <template #extra>
-      <a-space>
-        <a-button type="primary" @click="onClose">Lưu</a-button>
-      </a-space>
-    </template>
   </a-drawer>
 </template>
 <script>
@@ -111,7 +160,7 @@ import { PlusOutlined } from '@ant-design/icons-vue'
 import { useRemindStore } from '@/stores/Remind'
 import dayjs from 'dayjs'
 import CalendarComponent from './CalendarComponent.vue'
-import TodayPlan from './TodayPlan'
+import TodayPlan from './TodayPlan.vue'
 import { ref, reactive } from 'vue'
 import { message } from 'ant-design-vue'
 export default {
@@ -133,58 +182,58 @@ export default {
   data() {
     return {
       rules: {
-        name: [
+        Title: [
           {
             required: true,
-            message: 'Please enter user name'
+            message: 'Hãy nhập tiêu đề sự kiện'
           }
         ],
-        url: [
+        EventDateTime: [
           {
             required: true,
-            message: 'please enter url'
+            message: 'Bắt buộc phải nhập thời gian '
           }
         ],
-        owner: [
+        StartTime: [
           {
             required: true,
-            message: 'Please select an owner'
+            message: 'Trường này bắt buộc'
           }
         ],
-        type: [
+        RepeatEndDate: [
           {
             required: true,
-            message: 'Please choose the type'
+            message: 'Trường này bắt buộc nhập'
           }
         ],
-        approver: [
+        EndTime: [
           {
             required: true,
-            message: 'Please choose the approver'
+            message: 'Trường này bắt buộc nhập'
           }
         ],
-        dateTime: [
+        offsetUnit: [
           {
             required: true,
-            message: 'Please choose the dateTime',
-            type: 'object'
-          }
-        ],
-        description: [
-          {
-            required: true,
-            message: 'Please enter url description'
+            message: 'Trường này bắt buộc nhập'
           }
         ]
       },
-      form: reactive({
-        title: '',
-        url: '',
-        owner: '',
-        type: '',
-        approver: '',
-        dateTime: null,
-        description: ''
+      formState: reactive({
+        Title: 'Thụy',
+        EventDateTime: '2024-11-06',
+        StartTime: '04:04:26',
+        EndTime: '04:04:26',
+        Location: '',
+        RepeatFrequency: 1,
+        RepeatEndDate: '2024-11-08',
+        Description: '',
+        ReminderOffsets: [
+          {
+            offsetUnit: 1,
+            offsetValue: 1
+          }
+        ]
       }),
       titleEvent: ref('Tạo một sự kiện mới'),
       open: ref(true),
@@ -199,9 +248,50 @@ export default {
     this.getListEvent()
   },
   methods: {
+    remove(item) {
+      const index = this.formState.ReminderOffsets.indexOf(item)
+      if (index !== -1) {
+        this.formState.ReminderOffsets.splice(index, 1)
+      }
+    },
+    addItem() {
+      this.formState.ReminderOffsets.push({
+        offsetUnit: 1,
+        offsetValue: 1
+      })
+    },
+    onFinish() {
+      this.submitz()
+    },
+    onFinishFailed(errorInfo) {
+      console.log('Failed:', errorInfo)
+    },
+    async submitz() {
+      var obj = this.formState
+      console.log(obj)
+
+      try {
+        obj.EventDateTime = dayjs(obj.EventDateTime).format('YYYY-MM-DD')
+        obj.RepeatEndDate = dayjs(obj.RepeatEndDate).format('YYYY-MM-DDTHH:mm:ssZ')
+        console.log(obj.RepeatEndDate)
+      } catch (error) {
+        message.error('Các trường dữ liệu thời gian trống')
+        return
+      }
+      const store = await useRemindStore()
+      const result = await store.AddNewRemind(obj)
+      console.log(result.status)
+      let chuSoA = Math.floor(result.status / 100)
+      if (chuSoA != 2) {
+        message.error('Hãy kiểm tra lại input của bạn!')
+        return
+      }
+
+      this.onClose()
+    },
     showDrawer() {
       this.titleEvent = 'Tạo một sự kiện mới'
-      this.open = true
+      this.open = !this.open
     },
     isDifferentMonth(date1, date2) {
       //dayjs
