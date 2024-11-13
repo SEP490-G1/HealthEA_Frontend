@@ -20,7 +20,10 @@
               <a-typography-paragraph class="mb-2">
                 {{ doctor?.description || 'Mô tả không có sẵn' }}
               </a-typography-paragraph>
-              <router-link class="btn btn-danger" :to="`/report?type=doctor&id=${$route.params.id}`">
+              <router-link
+                class="btn btn-danger"
+                :to="`/report?type=doctor&id=${$route.params.id}`"
+              >
                 Báo cáo bác sĩ
               </router-link>
             </div>
@@ -41,7 +44,8 @@
             <h3>Địa chỉ phòng khám</h3>
             <p v-if="doctor?.clinicAddress && doctor?.clinicCity">
               <a :href="googleMapsLink(doctor.clinicAddress, doctor.clinicCity)" target="_blank">
-                <strong>{{ doctor.clinicAddress }}</strong>, {{ doctor.clinicCity }}
+                <strong>{{ doctor.clinicAddress }}</strong
+                >, {{ doctor.clinicCity }}
               </a>
             </p>
             <p v-else-if="doctor?.clinicCity">
@@ -75,35 +79,59 @@
         </a-card>
       </div>
 
-      <!-- Appointment Scheduling Section -->
       <div class="col-md-6">
         <a-card title="Đặt lịch hẹn">
           <a-date-picker
-            v-model="selectedDate"
+            v-model:value="selectedDate"
             @change="fetchAvailableHours"
             placeholder="Chọn ngày"
             class="w-100 mb-3"
           />
-          <a-list
-            v-if="availableHours && availableHours.length > 0"
-            bordered
-            :data-source="availableHours"
-            item-layout="horizontal"
-            v-slot="{ item }"
-          >
-            <a-list-item>{{ item || 'Không có sẵn' }}</a-list-item>
-          </a-list>
+          <div v-if="availableHours.length > 0" class="d-flex flex-wrap gap-2">
+            <a-button
+              v-for="(hour, index) in availableHours"
+              :key="index"
+              type="primary"
+              class="mb-2"
+              @click="openAppointmentModal(hour)"
+            >
+              {{ hour }}
+            </a-button>
+          </div>
           <p v-else>Không có giờ trống cho ngày này</p>
         </a-card>
       </div>
+
+      <!-- Appointment Confirmation Modal -->
+      <a-modal
+        v-model:visible="isModalVisible"
+        title="Xác nhận cuộc hẹn"
+        @ok="createAppointment"
+        @cancel="isModalVisible = false"
+      >
+        <a-form layout="vertical">
+          <a-form-item label="Tiêu đề">
+            <a-input v-model:value="appointmentData.title" placeholder="Nhập tiêu đề" />
+          </a-form-item>
+          <a-form-item label="Mô tả">
+            <a-input v-model:value="appointmentData.description" placeholder="Nhập mô tả" />
+          </a-form-item>
+          <a-form-item label="Loại">
+            <a-select v-model:value="appointmentData.type" placeholder="Chọn loại cuộc hẹn">
+              <a-select-option value="Online">Online</a-select-option>
+              <a-select-option value="Offline">Offline</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-form>
+      </a-modal>
     </div>
   </div>
 </template>
 
 <script>
-import { Avatar, Typography, Card, DatePicker, List, Button } from 'ant-design-vue'
-import axios from 'axios'
-import { useRouter } from 'vue-router'
+import { Avatar, Typography, Card, DatePicker, List, Button, Modal, Form, Input, Select } from 'ant-design-vue';
+import axios from 'axios';
+import { useUserStore } from '@/stores/user';
 
 export default {
   components: {
@@ -116,47 +144,106 @@ export default {
     'a-list': List,
     'a-list-item': List.Item,
     'a-list-item-meta': List.Item.Meta,
-    'a-button': Button
+    'a-button': Button,
+    'a-modal': Modal,
+    'a-form': Form,
+    'a-form-item': Form.Item,
+    'a-input': Input,
+    'a-select': Select,
+    'a-select-option': Select.Option,
   },
   data() {
     return {
       doctor: null,
       workHistory: [],
       selectedDate: null,
-      availableHours: []
-    }
+      availableHours: [],
+      isModalVisible: false,
+      appointmentData: {
+        title: '',
+        description: '',
+        type: '',
+        startTime: '',
+      },
+    };
   },
   methods: {
     async fetchDoctorDetails() {
-      const doctorId = this.$route.params.id
+      const doctorId = this.$route.params.id;
+      const userStore = useUserStore();
       try {
-        const response = await axios.get(`http://localhost:5217/api/Doctor/${doctorId}`)
-        this.doctor = response.data || {}
-        this.workHistory = this.doctor.historyOfWork ? JSON.parse(this.doctor.historyOfWork) : []
+        const response = await axios.get(`http://localhost:5217/api/Doctor/${doctorId}`, {
+          headers: { Authorization: `Bearer ${userStore.token}` },
+        });
+        this.doctor = response.data || {};
+        this.workHistory = this.doctor.historyOfWork ? JSON.parse(this.doctor.historyOfWork) : [];
       } catch (error) {
-        console.error('Lỗi khi lấy thông tin bác sĩ:', error)
-        this.$router.push("/error/404")
+        console.error('Lỗi khi lấy thông tin bác sĩ:', error);
+        this.$router.push('/error/404');
       }
     },
     googleMapsLink(address, city) {
-      const fullAddress = address ? `${address}, ${city}` : city
-      return `https://www.google.com/maps/search/?q=${encodeURIComponent(fullAddress)}`
+      const fullAddress = address ? `${address}, ${city}` : city;
+      return `https://www.google.com/maps/search/?q=${encodeURIComponent(fullAddress)}`;
     },
-    fetchAvailableHours() {
-      if (this.selectedDate) {
-        this.availableHours = [
-          '09:00 AM - 10:00 AM',
-          '11:00 AM - 12:00 PM',
-          '02:00 PM - 03:00 PM',
-          '04:00 PM - 05:00 PM'
-        ]
-      } else {
-        this.availableHours = []
+    async fetchAvailableHours() {
+      if (!this.selectedDate) return;
+
+      const formattedDate = this.selectedDate.format('YYYY-MM-DD');
+      const doctorId = this.$route.params.id;
+      const userStore = useUserStore();
+
+      try {
+        const response = await axios.get(`http://localhost:5217/api/Schedules/by-day`, {
+          params: { date: formattedDate, doctorId },
+          headers: { Authorization: `Bearer ${userStore.token}` },
+        });
+        
+        this.availableHours = response.data.map((schedule) => schedule.startTime);
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          this.availableHours = [];
+        } else {
+          console.error('Lỗi khi lấy lịch trống:', error);
+        }
       }
-    }
+    },
+    openAppointmentModal(hour) {
+      this.appointmentData.startTime = hour;
+      this.isModalVisible = true;
+    },
+    async createAppointment() {
+      const doctorId = this.$route.params.id;
+      const userStore = useUserStore();
+      const appointment = {
+        doctorId,
+        title: this.appointmentData.title,
+        description: this.appointmentData.description,
+        type: this.appointmentData.type,
+        date: this.selectedDate.format('YYYY-MM-DD'),
+        startTime: this.appointmentData.startTime,
+      };
+
+      try {
+        await axios.post('http://localhost:5217/api/Appointments', appointment, {
+          headers: { Authorization: `Bearer ${userStore.token}` },
+        });
+        this.isModalVisible = false;
+        this.$message.success('Cuộc hẹn đã được đặt thành công!');
+      } catch (error) {
+        console.error('Lỗi khi tạo cuộc hẹn:', error);
+        this.$message.error('Không thể tạo cuộc hẹn. Vui lòng thử lại sau.');
+      }
+    },
   },
   created() {
-    this.fetchDoctorDetails()
-  }
-}
+    this.fetchDoctorDetails();
+  },
+};
 </script>
+
+<style scoped>
+.container-fluid {
+  padding: 1rem;
+}
+</style>
