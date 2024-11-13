@@ -116,14 +116,14 @@ export default {
         cancelText: 'Hủy'
       },
       dailyMetric: {
-        weight: 0,
-        height: 0,
-        systolicBloodPressure: 0,
-        diastolicBloodPressure: 0,
-        heartRate: 0,
-        bloodSugar: 0,
-        oxygenSaturation: 0,
-        bodyTemperature: 0
+        weight: null,
+        height: null,
+        systolicBloodPressure: null,
+        diastolicBloodPressure: null,
+        heartRate: null,
+        bloodSugar: null,
+        oxygenSaturation: null,
+        bodyTemperature: null
       },
       listItem: [
         {

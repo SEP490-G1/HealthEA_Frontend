@@ -15,7 +15,6 @@ import CommonLayout from '@/components/medical/CommonLayout'
       <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '10px' }"
       >
-        
         <common-layout :listBread="routes">
           <RouterView />
         </common-layout>

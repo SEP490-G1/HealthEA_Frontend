@@ -4,7 +4,7 @@ import { useDailyMetricStore } from '@/stores/DailyMetricView'
 import { ref } from 'vue'
 </script>
 <template lang="">
-  <ContentFooter>
+  <ContentFooter style="">
     <a-typography-title style="display: flex; justify-content: center">
       Lịch sử nhập chỉ số sức khỏe
     </a-typography-title>
@@ -172,14 +172,14 @@ export default {
       console.log(this.listValue.data)
       var n = this.chartOptions.xaxis.categories.length
       this.series = []
-      var heartRate = Array.from({ length: n }, () => 0)
-      var height = Array.from({ length: n }, () => 0)
-      var weight = Array.from({ length: n }, () => 0)
-      var bloodSugar = Array.from({ length: n }, () => 0)
-      var systolicBloodPressure = Array.from({ length: n }, () => 0)
-      var diastolicBloodPressure = Array.from({ length: n }, () => 0)
-      var bodyTemperature = Array.from({ length: n }, () => 0)
-      var oxygenSaturation = Array.from({ length: n }, () => 0)
+      var heartRate = Array.from({ length: n }, () => null)
+      var height = Array.from({ length: n }, () => null)
+      var weight = Array.from({ length: n }, () => null)
+      var bloodSugar = Array.from({ length: n }, () => null)
+      var systolicBloodPressure = Array.from({ length: n }, () => null)
+      var diastolicBloodPressure = Array.from({ length: n }, () => null)
+      var bodyTemperature = Array.from({ length: n }, () => null)
+      var oxygenSaturation = Array.from({ length: n }, () => null)
       this.listValue.data.forEach((element) => {
         var index = this.calculateDaysBetweenDates(element.date, startDate)
         heartRate[index] = element.heartRate

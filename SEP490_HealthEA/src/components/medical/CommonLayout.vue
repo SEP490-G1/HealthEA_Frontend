@@ -2,16 +2,22 @@
   <div>
     <a-page-header
       style="border: 1px solid rgb(235, 237, 240)"
-      title="Title"
+      :title="title"
       :breadcrumb="{ listBread }"
-      sub-title="This is a subtitle"
+      v-model:sub-title="subtitle"
     />
-    <slot></slot>
+    <slot :subtile="subtitle"></slot>
   </div>
 </template>
 <script>
+import { ref } from 'vue'
 export default {
-  props: { listBread: [] }
+  props: ['title'],
+  data() {
+    return {
+      subtitle: ref('Đây là tiêu đề của từng tag')
+    }
+  }
 }
 </script>
 <style lang=""></style>

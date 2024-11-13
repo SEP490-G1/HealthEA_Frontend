@@ -48,6 +48,10 @@ const routes = [
         component: LoginFrom
       },
       {
+        path: 'verify',
+        component: VerifyPage
+      },
+      {
         path: 'register',
         component: RegisterFrom
       }
@@ -79,7 +83,7 @@ const routes = [
     component: DailyMetricHistory
   },
   {
-    path: '/profileHealth/medical_record/',
+    path: '/profileHealth/medical_record',
     name: 'medicalrecord',
     component: ProfileHealth,
     children: [
@@ -94,7 +98,7 @@ const routes = [
         component: () => import('@/components/medical/HistoryExamination')
       },
       {
-        path: 'information',
+        path: 'information/:id',
         name: 'Information Page',
         component: () => import('@/components/medical/InformationPage')
       },
@@ -151,6 +155,7 @@ import DailyMetricView from '@/views/DailyMetricView.vue'
 import DailyMetricHistory from '@/components/dailyMetric/DailyMetricHistory.vue'
 import RemindView from '@/views/RemindView.vue'
 import CalendarRemind from '@/components/remind/CalendarRemind.vue'
+import VerifyPage from '@/components/login/VerifyPage.vue'
 
 router.beforeEach(async (to) => {
   // gọi store

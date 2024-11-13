@@ -269,7 +269,6 @@ export default {
     async submitz() {
       var obj = this.formState
       console.log(obj)
-
       try {
         obj.EventDateTime = dayjs(obj.EventDateTime).format('YYYY-MM-DD')
         obj.RepeatEndDate = dayjs(obj.RepeatEndDate).format('YYYY-MM-DDTHH:mm:ssZ')

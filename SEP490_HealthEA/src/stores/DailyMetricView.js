@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { message } from 'ant-design-vue'
-import { deleteData, getData, patchData } from '@/service/main'
+import { deleteData, getData, patchData, putData } from '@/service/main'
 import { useUserStore } from '@/stores/user'
 const API_URL = 'http://localhost:5217/api/DailyMetric'
 
@@ -61,6 +61,29 @@ export const useDailyMetricStore = defineStore('dailyMetric', {
           API_URL + `/me/range?startDate=${startDate}&endDate=${endDate}`,
           headers
         )
+        message.success('Lấy dữ liệu thành công')
+        return data
+      } catch (error) {
+        console.log(error)
+        message.error('Error fetching data:' + error, 3)
+      }
+    },
+
+    async update(object) {
+      try {
+        const newObject = {
+          weight: object.weight,
+          height: object.weight,
+          systolicBloodPressure: object.systolicBloodPressure,
+          diastolicBloodPressure: object.diastolicBloodPressure,
+          heartRate: object.heartRate,
+          bloodSugar: object.bloodSugar,
+          bodyTemperature: object.bodyTemperature,
+          oxygenSaturation: object.oxygenSaturation
+        }
+        const userStore = useUserStore()
+        headers.headers.Authorization = `Bearer ${userStore.token}`
+        const data = await putData(API_URL + `${object.id}`, newObject, headers)
         message.success('Lấy dữ liệu thành công')
         return data
       } catch (error) {

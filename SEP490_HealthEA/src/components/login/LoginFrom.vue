@@ -82,12 +82,12 @@ export default {
       var userStoreLogin = useUserStore()
       var obj = { username, password, remember }
       var response = await userStoreLogin.Login(obj)
-      if (!response) {
-        this.status.password = 'error'
-        this.status.username = 'error'
-        return
+      if (response == true) {
+        this.$router.push('/')
       }
-      this.$router.push('/')
+      if (response == 1020) {
+        this.$router.push('/client/verify')
+      }
       return
     }
   }

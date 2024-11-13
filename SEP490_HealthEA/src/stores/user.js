@@ -8,7 +8,7 @@ import {
   setSessionStogare,
   setLocalStoregare,
   getSessionStogare,
-  clearUser,
+  clearUser
 } from '@/service/main'
 
 const API_URL = 'http://localhost:9090/identity'
@@ -20,8 +20,10 @@ const headers = {
 const MEMORY_STOGARE = 'USERTOKEN'
 const MEMORY_STOGARE_USER = 'USEROBJECT'
 export const useUserStore = defineStore('user', {
-  state: () =>  ({
-    user: getLocalStogare(MEMORY_STOGARE_USER) ? JSON.parse(getLocalStogare(MEMORY_STOGARE_USER)) : {auth: false},
+  state: () => ({
+    user: getLocalStogare(MEMORY_STOGARE_USER)
+      ? JSON.parse(getLocalStogare(MEMORY_STOGARE_USER))
+      : { auth: false },
     token: getLocalStogare(MEMORY_STOGARE)
       ? getLocalStogare(MEMORY_STOGARE)
       : getSessionStogare(MEMORY_STOGARE)
@@ -43,12 +45,14 @@ export const useUserStore = defineStore('user', {
     },
     async Register(bodyParameters) {
       try {
-        const response = await postData(API_URL + '/users', bodyParameters, {})
-        console.log('rs' + response)
-        message.success('đăng ký thành công!')
+        const response = await postData(API_URL + '/users', bodyParameters, headers)
+        message.success('Đăng ký thành công!')
+        return response
       } catch (error) {
-        message.error('Error login: ' + error, 3)
-        return error
+        console.log(error)
+        message.error('Đăng ký thất bại', 3)
+        message.error(error, 3)
+        return false
       }
     },
     async getUser() {
@@ -70,12 +74,24 @@ export const useUserStore = defineStore('user', {
           auth: true
         }
         this.user = obj
+        console.log(obj);
+        
         var strings = JSON.stringify(obj)
         setLocalStoregare(MEMORY_STOGARE_USER, strings)
         return obj
       } catch (error) {
         // this.ClearUser()
         console.error(error)
+      }
+    },
+    async verify(email) {
+      try {
+        const response = await postData(API_URL + '/emails/sendVerifyEmail/?email=' + email)
+        console.log(response)
+        return true
+      } catch (error) {
+        console.log(error)
+        return false
       }
     },
     async Login(bodyParameters) {
@@ -86,13 +102,8 @@ export const useUserStore = defineStore('user', {
         }
 
         const response = await postData(API_URL + '/auth/token', body, headers)
-        if (response.status == 401) {
-          throw 'Kiểm tra lại tài khoản và mật khẩu'
-        }
-        if (response.status == 404) {
-          throw 'Not found! không tìm thấy server, liên hệ'
-        }
-
+        console.log(response);
+        
         //save token state
         this.token = response.data.result.token
 
@@ -109,7 +120,16 @@ export const useUserStore = defineStore('user', {
         message.success('Đăng nhập thành công ', 3)
         return true
       } catch (error) {
-        message.error('Lỗi đăng nhập: ' + error, 3)
+        if (error.response.data.code == 1020) {
+          console.log(error)
+          message.info('Hãy xác thực email tải khoàn của bạn', 10)
+          return 1020
+        }
+        if (error.response.data.code == 1005) {
+          message.error('Kiểm tra tài khoản và mật khẩu', 3)
+          return
+        }
+
         return false
       }
     }

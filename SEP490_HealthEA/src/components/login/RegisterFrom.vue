@@ -13,78 +13,99 @@
         :model="formState"
         name="basic"
         autocomplete="off"
+        @finish="onFinish"
+        @finishFailed="onFinishFailed"
       >
         <a-form-item
           label="Tên của bạn"
           name="lastname"
           :rules="[{ required: true, message: 'Tên không được để trống!' }]"
         >
-          <a-input v-model:value="this.formState.lastname" />
+          <a-input v-model:value="formState.lastname" />
         </a-form-item>
         <a-form-item
           label="Họ của bạn"
-          name="firstname"
+          name="firstName"
           :rules="[{ required: true, message: 'Họ không được để trống!' }]"
         >
-          <a-input v-model:value="this.formState.firstName" />
+          <a-input v-model:value="formState.firstName" />
         </a-form-item>
         <a-form-item
           label="Tên đăng nhập"
-          name="user_name"
+          name="username"
           :rules="[{ required: true, message: 'Tên đăng nhập không được để trống!' }]"
         >
-          <a-input v-model:value="this.formState.username" />
+          <a-input v-model:value="formState.username" />
         </a-form-item>
         <a-form-item
           label="Email"
           name="email"
           :rules="[{ required: true, message: 'Email không được để trống!' }]"
         >
-          <a-input v-model:value="this.formState.email" />
+          <a-input v-model:value="formState.email" />
         </a-form-item>
         <a-form-item
           label="Số điện thoại"
-          name="username"
-          @blur="validatePhoneNumber()"
-          :rules="[{ required: true, message: 'Số điện thoại không được để trống!' }]"
+          name="phone"
+          :rules="[
+            { required: true, message: 'Số điện thoại không được để trống!' },
+            { len: 10, message: 'Độ dài số điện thoại phải 10 chữ số' },
+            {
+              pattern: /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/,
+              message: 'Độ dài số điện thoại không hợp lệ'
+            }
+          ]"
         >
-          <a-input v-model:value="this.formState.phoneNumber" />
+          <a-input v-model:value="formState.phone" />
         </a-form-item>
 
         <a-form-item
           label="Mật khẩu"
-          name="pass_word"
-          :rules="[{ required: true, message: 'Mật khẩu không được để trống!' }]"
+          name="password"
+          :rules="[
+            { required: true, message: 'Mật khẩu không được để trống!' },
+            { min: 8, max: 25, message: 'Độ dài mật khẩu phải từ 8 - 25 chữ số' },
+            {
+              pattern: /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,25}/,
+              message: 'Mật khẩu phải có ít nhất một chữ hoa một chữ thường một số'
+            }
+          ]"
         >
-          <a-input-password v-model:value="this.formState.password" />
+          <a-input-password v-model:value="formState.password" />
         </a-form-item>
         <a-form-item
           label="Xác nhận mật khẩu"
-          name="password"
-          :rules="[{ required: true, message: 'Mật khẩu không được để trống!' }]"
+          name="re_password"
+          :rules="[
+            { required: true, message: 'Bạn phải nhập lại mật khẩu' },
+            {
+              validator: validatePass2
+            }
+          ]"
         >
-          <a-input-password v-model:value="this.formState.re_password" />
+          <a-input-password v-model:value="formState.re_password" />
+        </a-form-item>
+        <a-form-item align="center" name="acp">
+          <a-checkbox
+            style="width: 100%; display: flex; justify-content: center"
+            v-model:checked="this.formState.acp"
+            >Tôi chấp nhận điều khoản dịch vụ</a-checkbox
+          >
+        </a-form-item>
+        <a-form-item align="center" style="width: 100%; margin: 0; display: flex">
+          <a-button size="large" style="width: 100%" html-type="submit" type="primary"
+            >Đăng ký ngay</a-button
+          >
         </a-form-item>
       </a-form>
-      <a-form-item name="remember">
-        <a-checkbox
-          style="width: 100%; display: flex; justify-content: center"
-          v-model:checked="this.formState.acp"
-          >Tôi chấp nhận điều khoản dịch vụ</a-checkbox
-        >
-      </a-form-item>
-      <a-form-item style="width: 100%; background-color: aqua; margin: 0; display: flex">
-        <a-button size="large" style="width: 100%" type="primary" @click="register()"
-          >Đăng ký ngay</a-button
-        >
-      </a-form-item>
     </a-row>
   </div>
 </template>
 
 <script>
 import { useUserStore } from '@/stores/user'
-import { ref } from 'vue'
+import { reactive } from 'vue'
+import { message } from 'ant-design-vue'
 
 export default {
   data() {
@@ -97,12 +118,12 @@ export default {
       wrapperCol: {
         span: 15
       },
-      formState: ref({
+      formState: reactive({
         firstName: '',
         lastName: '',
         username: '',
         email: '',
-        phoneNumber: '',
+        phone: '',
         password: '',
         re_password: '',
         acp: false
@@ -110,40 +131,29 @@ export default {
     }
   },
   methods: {
-    validatePhoneNumber() {
-      const phoneRegex = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/
-      if (!phoneRegex.test(this.user.phone)) {
-        this.error.phoneNumber = 'Số điện thoại không hợp lệ. Vui lòng nhập lại!'
-        return false
+    async validatePass2(_rule, value) {
+      if (value !== this.formState.password) {
+        return Promise.reject('Hai mật khẩu không giống nhau')
+      } else {
+        return Promise.resolve()
       }
-      this.error.phoneNumber = ''
-      return true
     },
-    validatePassword() {
-      let isValid = true
-      if (this.user.password != this.password_confirm) {
-        this.error.confirm_pass = 'Password and Confirm password must be the same!'
-        isValid = false
-      }
-      return isValid
+    onFinish(value) {
+      console.log(value)
+      this.register(value)
     },
-    async register() {
-      const bodyRegister = {
-        username: this.user.username,
-        password: this.user.password,
-        email: this.user.email,
-        phone: this.user.phone,
-        firstName: this.user.first_name,
-        lastName: this.user.last_name
-      }
+    onFinishFailed() {
+      message.error('Kiểm tra lại form', 3)
+    },
+    async register(value) {
+      let newValue = value
       var userStoreLogin = useUserStore()
-      try {
-        const registerResponse = await userStoreLogin.Register(bodyRegister)
-        console.log(registerResponse)
-        alert('Đăng ký thành công')
-      } catch (error) {
-        console.log('Đăng ký thất bại:', error)
+      const registerResponse = await userStoreLogin.Register(newValue)
+      if (registerResponse == false) {
+        return
       }
+      console.log(registerResponse)
+      this.$router.push({ path: '/client/login' })
     }
   }
 }
@@ -156,5 +166,4 @@ export default {
   justify-content: center;
   flex-direction: column;
 }
-
 </style>

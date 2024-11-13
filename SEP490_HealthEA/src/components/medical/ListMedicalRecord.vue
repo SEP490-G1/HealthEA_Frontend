@@ -10,7 +10,7 @@ import CommonLayout from '@/components/common/TheModal'
     </div>
     <a-row :gutter="[16, 16]" justify="start">
       <a-col v-for="item in info" :key="item.id" class="gutter-row" :span="6">
-        <RouterLink to="/profileHealth/medical_record">
+        <RouterLink :to="`/profileHealth/medical_record/information/${item.id}`">
           <a-dropdown :trigger="['contextmenu']">
             <a-card :loading="loading" hoverable style="width: 100%; margin-bottom: 20px">
               <template #title>
@@ -159,7 +159,6 @@ export default {
       this.userData.dateOfBirth = st.dateOfBirth
       this.userData.note = st.note
       this.userData.sharedStatus = `${st.sharedStatus}`
-
     },
     handleCancel() {
       this.open = false
