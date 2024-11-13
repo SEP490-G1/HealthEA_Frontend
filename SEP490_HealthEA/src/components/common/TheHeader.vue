@@ -38,7 +38,8 @@ export default {
           { path: '/profileHealth', text: 'Hồ sơ sức khỏe' },
           { path: '/about', text: 'Về chúng tôi' },
           { path: '/admin/UserManagement', text: 'Quản lý người dùng' },
-          { path: '/dailymetric', text: 'Chỉ số sức khỏe định kỳ' }
+          { path: '/dailymetric', text: 'Chỉ số sức khỏe định kỳ' },
+          { path: '/doctors', text: 'Danh sách bác sĩ' }
         ])
     }
   },
