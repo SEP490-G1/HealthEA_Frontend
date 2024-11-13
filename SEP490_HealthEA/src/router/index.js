@@ -12,7 +12,6 @@ import AddDailyMetricView from '@/views/AddDailyMetricView.vue'
 
 import { useUserStore } from '@/stores/user'
 
-
 const routes = [
   {
     path: '/',
@@ -46,17 +45,18 @@ const routes = [
         component: RegisterFrom
       }
     ]
-  },{
-      path: '/dailymetric',
-      name: 'upload',
-      component: HomeView,
-      children: [
-        {
-          path: 'add',
-          component: AddDailyMetricView
-        },
-      ]
-    },
+  },
+  {
+    path: '/dailymetric',
+    name: 'upload',
+    component: HomeView,
+    children: [
+      {
+        path: 'add',
+        component: AddDailyMetricView
+      }
+    ]
+  },
   {
     path: '/admin',
     name: 'adminpage',
@@ -130,6 +130,11 @@ const routes = [
     component: () => import('@/components/medical/ListMedicalRecord')
   },
   {
+    path: '/appointment',
+    name: 'Appointment List',
+    component: () => import('@/components/appointment/AppointmentList')
+  },
+  {
     path: '/about',
     name: 'about',
     // route level code-splitting
@@ -169,7 +174,7 @@ const routes = [
   },
   {
     path: '/error/404',
-    name: "Not Found",
+    name: 'Not Found',
     component: PageNotFound
   },
   { path: '/:pathMatch(.*)*', redirect: '/error/404' }

@@ -122,3 +122,13 @@ export function clearUser() {
 ///////////////
 ///end token phase///////////////
 //////////////////////////
+
+export async function getAppointment(link) {
+  try {
+    var result
+    result = await axios.get(link)
+    return result
+  } catch (error) {
+    return error
+  }
+}
