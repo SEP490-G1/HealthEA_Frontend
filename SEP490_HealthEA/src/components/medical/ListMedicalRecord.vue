@@ -38,7 +38,7 @@ import CommonLayout from '@/components/common/TheModal'
                     <a-menu>
                       <a-menu-item @click="Delete(item.id)" key="1">Delete</a-menu-item>
                       <a-menu-item @click="Modified(item.id)" key="2">Modified</a-menu-item>
-                      <!-- <a-menu-item key="3">Share</a-menu-item> -->
+                      <a-menu-item @click="Share(item)" key="3">Share</a-menu-item>
                     </a-menu>
                   </template>
                 </a-dropdown>
@@ -57,13 +57,72 @@ import CommonLayout from '@/components/common/TheModal'
               <a-menu>
                 <a-menu-item @click="Delete(item.id)" key="1">Delete</a-menu-item>
                 <a-menu-item @click="Modified(item.id)" key="2">Modified</a-menu-item>
-                <!-- <a-menu-item key="3">Share</a-menu-item> -->
+                <a-menu-item @click="Share(item)" key="3">Share</a-menu-item>
               </a-menu>
             </template>
           </a-dropdown>
         </RouterLink>
       </a-col>
     </a-row>
+    <CommonLayout
+      :handleCancel="() => (this.openShare = !this.openShare)"
+      :handleOk="() => (this.openShare = !this.openShare)"
+      :open="openShare"
+      title="Quản lý chia sẻ hồ sơ"
+      okText="Đồng ý"
+      cancelText="Hủy"
+      :width="sizeForm"
+      height="500px"
+    >
+      <a-typography-title :level="3">{{ this.userData.fullName }}</a-typography-title>
+      <a-form-item
+        label="Chia sẻ hồ sơ với"
+        :rules="[{ required: true, message: 'Please chosse a value' }]"
+      >
+        <a-radio-group v-model:value="this.userData.sharedStatus">
+          <a-radio-button :value="3">Tất cả mọi người</a-radio-button>
+          <a-radio-button :value="2">Tất cả người dùng khác</a-radio-button>
+          <a-radio-button :value="1">Chỉ bác sĩ</a-radio-button>
+          <a-radio-button :value="0">Chỉ mình tôi</a-radio-button>
+        </a-radio-group>
+      </a-form-item>
+      <a-row>
+        <a-col :span="12">
+          <a-form-item
+            label="Chia sẻ bằng"
+            :rules="[{ required: true, message: 'Please chosse a value' }]"
+          >
+            <a-button
+              style="{margin: 10px}"
+              type="primary"
+              @click="
+                () => {
+                  this.qr.Status = !this.qr.Status
+                  this.qr.Name = this.qr.Status == true ? 'Ẩn' : 'Lấy'
+                }
+              "
+              >{{ this.qr.Name }} QRCode</a-button
+            >
+            <TheQRCode
+              v-if="this.qr.Status"
+              :LINK="`http://localhost:5173/profileHealth/medical_record/information/${this.userData.id}`"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-input-group compact style="display: flex">
+            <a-input
+              :value="`http://localhost:5173/profileHealth/medical_record/information/${this.userData.id}`"
+            />
+            <a-tooltip title="copy url">
+              <a-button>
+                <template #icon><CopyOutlined /></template>
+              </a-button>
+            </a-tooltip>
+          </a-input-group>
+        </a-col>
+      </a-row>
+    </CommonLayout>
     <CommonLayout
       :handleCancel="handleCancel"
       :handleOk="handleOk"
@@ -122,6 +181,7 @@ import CommonLayout from '@/components/common/TheModal'
   </ContentFooter>
 </template>
 <script>
+import TheQRCode from '../common/TheQRCode.vue'
 import { FolderFilled, FolderOpenFilled, PlusOutlined } from '@ant-design/icons-vue'
 import { useMedicalRecordStore } from '@/stores/medicalRecord'
 import { ref } from 'vue'
@@ -138,19 +198,38 @@ export default {
         note: '',
         sharedStatus: '0'
       },
+      qr: ref({ Status: false, Name: 'Lấy' }),
       msgName: '',
       msgdt: '',
       info: ref[({}, {}, {}, {}, {}, {}, {}, {})],
       loading: true,
       errored: false,
       open: false,
+      openShare: false,
       sizeForm: '1000px'
     }
   },
+  watch: {
+    'userData.sharedStatus'(newValue) {
+      // console.log(this.userData.id)
+      // console.log(newValue)
+      this.changeShare(this.userData.id, newValue)
+    }
+  },
   methods: {
+    async Share(item) {
+      this.openShare = !this.openShare
+      console.log(item)
+      this.userData = item
+    },
+    async changeShare(id, number) {
+      const store = useMedicalRecordStore()
+      var st = await store.changeShare(id, number)
+      console.log(st)
+    },
     async Modified(id) {
+      const store = useMedicalRecordStore()
       var st = await store.getHealthProfileByID(id)
-
       console.log(st.gender)
       this.open = true
       this.userData.fullName = st.fullName
@@ -229,4 +308,30 @@ export default {
   }
 }
 </script>
-<style lang=""></style>
+
+<style scoped>
+.site-input-group-wrapper .site-input-split {
+  background-color: #fff;
+}
+
+.site-input-group-wrapper .site-input-right {
+  border-left-width: 0;
+}
+
+.site-input-group-wrapper .site-input-right:hover,
+.site-input-group-wrapper .site-input-right:focus {
+  border-left-width: 1px;
+}
+
+.site-input-group-wrapper .ant-input-rtl.site-input-right {
+  border-right-width: 0;
+}
+
+.site-input-group-wrapper .ant-input-rtl.site-input-right:hover,
+.site-input-group-wrapper .ant-input-rtl.site-input-right:focus {
+  border-right-width: 1px;
+}
+[data-theme='dark'] .site-input-group-wrapper .site-input-split {
+  background-color: transparent;
+}
+</style>

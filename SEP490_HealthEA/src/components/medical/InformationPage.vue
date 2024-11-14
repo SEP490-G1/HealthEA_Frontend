@@ -1,20 +1,27 @@
 <template lang="">
   <div>
-    Thông tin dịch tễ
-    <a-button type="primary" @click="buttonAS"> Thông </a-button>
+    <a-typography-title style="margin: 10px">Thông tin dịch tễ</a-typography-title>
   </div>
 </template>
 <script>
+import { useMedicalRecordStore } from '@/stores/medicalRecord'
+import { ref } from 'vue'
+
 export default {
   data() {
     return {
-      idNew: null
+      healthProfie: ref({}),
+      idNew: this.$route.params.id
     }
+  },
+  async mounted() {
+    const store = await useMedicalRecordStore()
+    this.healthProfie = await store.getHealthProfileByID(this.idNew)
+    console.log(this.healthProfie)
   },
   methods: {
     buttonAS() {
-      const id = this.$route.params.id
-      console.log(id)
+      console.log(this.healthProfie)
     }
   }
 }

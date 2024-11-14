@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getData, postData, deleteData } from '@/service/main'
+import { getData, postData, deleteData, patchData } from '@/service/main'
 import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue'
 const API_URL = 'http://localhost:5217/api/customer'
@@ -21,6 +21,19 @@ export const useMedicalRecordStore = defineStore('medicalRecord', {
     }
   },
   actions: {
+    async changeShare(id, body) {
+      try {
+        const userStore = useUserStore()
+        headers.headers.Authorization = `Bearer ${userStore.token}`
+        const data = await patchData(API_URL + '/HealthProfile/share/' + id, body, headers)
+        this.storeHealthProfile = data.data.data
+        message.success(data.data.userMsg)
+      } catch (error) {
+        console.log(error)
+        message.error('Error fetching data:' + error, 3)
+      }
+    },
+
     async getHealthProfileByID(id) {
       try {
         const userStore = useUserStore()
