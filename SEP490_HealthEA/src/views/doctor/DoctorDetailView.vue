@@ -20,12 +20,14 @@
               <a-typography-paragraph class="mb-2">
                 {{ doctor?.description || 'Mô tả không có sẵn' }}
               </a-typography-paragraph>
-              <router-link
-                class="btn btn-danger"
-                :to="`/report?type=doctor&id=${$route.params.id}`"
-              >
-                Báo cáo bác sĩ
-              </router-link>
+              <div v-if="!isDoctor">
+                <router-link
+                  class="btn btn-danger"
+                  :to="`/report?type=doctor&id=${$route.params.id}`"
+                >
+                  Báo cáo bác sĩ
+                </router-link>
+              </div>
             </div>
           </div>
 
@@ -93,14 +95,35 @@
               :key="index"
               type="primary"
               class="mb-2"
-              @click="openAppointmentModal(hour)"
+              @click="handleScheduleClick(hour.id, hour.startTime)"
             >
-              {{ hour }}
+              {{ hour.startTime }}
             </a-button>
           </div>
           <p v-else>Không có giờ trống cho ngày này</p>
+          <!-- Add Schedule Button -->
+          <div v-if="isDoctor" class="mt-3">
+            <a-button type="dashed" block @click="$router.push('/doctors/schedules/add')">
+              Thêm lịch làm việc
+            </a-button>
+          </div>
+          <div v-if="isDoctor" class="mt-3">
+            <a-button type="dashed" block @click="$router.push('/doctors/update')">
+              Chỉnh sửa thông tin
+            </a-button>
+          </div>
         </a-card>
       </div>
+
+      <!-- Confirmation Modal for Deleting Schedule -->
+      <a-modal
+        v-model:visible="isDeleteModalVisible"
+        title="Xác nhận xoá lịch"
+        @ok="deleteSchedule"
+        @cancel="isDeleteModalVisible = false"
+      >
+        <p>Bạn có chắc chắn muốn xoá lịch hẹn này?</p>
+      </a-modal>
 
       <!-- Appointment Confirmation Modal -->
       <a-modal
@@ -129,9 +152,20 @@
 </template>
 
 <script>
-import { Avatar, Typography, Card, DatePicker, List, Button, Modal, Form, Input, Select } from 'ant-design-vue';
-import axios from 'axios';
-import { useUserStore } from '@/stores/user';
+import {
+  Avatar,
+  Typography,
+  Card,
+  DatePicker,
+  List,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Select
+} from 'ant-design-vue'
+import axios from 'axios'
+import { useUserStore } from '@/stores/user'
 
 export default {
   components: {
@@ -150,7 +184,7 @@ export default {
     'a-form-item': Form.Item,
     'a-input': Input,
     'a-select': Select,
-    'a-select-option': Select.Option,
+    'a-select-option': Select.Option
   },
   data() {
     return {
@@ -159,87 +193,138 @@ export default {
       selectedDate: null,
       availableHours: [],
       isModalVisible: false,
+      isDeleteModalVisible: false,
       appointmentData: {
         title: '',
         description: '',
         type: '',
-        startTime: '',
+        startTime: ''
       },
-    };
+      deleteScheduleId: null,
+      isDoctor: false
+    }
   },
   methods: {
     async fetchDoctorDetails() {
-      const doctorId = this.$route.params.id;
-      const userStore = useUserStore();
+      const doctorId = this.$route.params.id
+      const userStore = useUserStore()
       try {
         const response = await axios.get(`http://localhost:5217/api/Doctor/${doctorId}`, {
-          headers: { Authorization: `Bearer ${userStore.token}` },
-        });
-        this.doctor = response.data || {};
-        this.workHistory = this.doctor.historyOfWork ? JSON.parse(this.doctor.historyOfWork) : [];
+          headers: { Authorization: `Bearer ${userStore.token}` }
+        })
+        this.doctor = response.data || {}
+        this.workHistory = this.doctor.historyOfWork ? JSON.parse(this.doctor.historyOfWork) : []
+        this.checkIfUserIsDoctor()
       } catch (error) {
-        console.error('Lỗi khi lấy thông tin bác sĩ:', error);
-        this.$router.push('/error/404');
+        console.error('Lỗi khi lấy thông tin bác sĩ:', error)
+        this.$router.push('/error/404')
+      }
+    },
+    async checkIfUserIsDoctor() {
+      const doctorId = this.$route.params.id
+      const userStore = useUserStore()
+      try {
+        const response = await axios.get(
+          `http://localhost:5217/api/Schedules/is-user/${doctorId}`,
+          {
+            headers: { Authorization: `Bearer ${userStore.token}` }
+          }
+        )
+        if (response.status === 200) {
+          this.isDoctor = true // User is the doctor
+        }
+      } catch (error) {
+        console.error('Lỗi khi kiểm tra người dùng:', error)
+        this.isDoctor = false
       }
     },
     googleMapsLink(address, city) {
-      const fullAddress = address ? `${address}, ${city}` : city;
-      return `https://www.google.com/maps/search/?q=${encodeURIComponent(fullAddress)}`;
+      const fullAddress = address ? `${address}, ${city}` : city
+      return `https://www.google.com/maps/search/?q=${encodeURIComponent(fullAddress)}`
     },
     async fetchAvailableHours() {
-      if (!this.selectedDate) return;
+      if (!this.selectedDate) return
 
-      const formattedDate = this.selectedDate.format('YYYY-MM-DD');
-      const doctorId = this.$route.params.id;
-      const userStore = useUserStore();
+      const formattedDate = this.selectedDate.format('YYYY-MM-DD')
+      const doctorId = this.$route.params.id
+      const userStore = useUserStore()
 
       try {
         const response = await axios.get(`http://localhost:5217/api/Schedules/by-day`, {
           params: { date: formattedDate, doctorId },
-          headers: { Authorization: `Bearer ${userStore.token}` },
-        });
-        
-        this.availableHours = response.data.map((schedule) => schedule.startTime);
+          headers: { Authorization: `Bearer ${userStore.token}` }
+        })
+
+        this.availableHours = response.data.map((schedule) => ({
+          id: schedule.scheduleId,
+          startTime: schedule.startTime,
+        }));
       } catch (error) {
         if (error.response && error.response.status === 404) {
-          this.availableHours = [];
+          this.availableHours = []
         } else {
-          console.error('Lỗi khi lấy lịch trống:', error);
+          console.error('Lỗi khi lấy lịch trống:', error)
         }
       }
     },
+    handleScheduleClick(scheduleId, startTime) {
+      console.log(scheduleId)
+      if (this.isDoctor) {
+        this.deleteScheduleId = scheduleId;
+        this.isDeleteModalVisible = true;
+      } else {
+        this.openAppointmentModal(startTime);
+      }
+    },
     openAppointmentModal(hour) {
-      this.appointmentData.startTime = hour;
-      this.isModalVisible = true;
+      this.appointmentData.startTime = hour
+      this.isModalVisible = true
+    },
+    async deleteSchedule() {
+      if (!this.deleteScheduleId) return;
+
+      const userStore = useUserStore();
+
+      try {
+        await axios.delete(`http://localhost:5217/api/Schedules/${this.deleteScheduleId}`, {
+          headers: { Authorization: `Bearer ${userStore.token}` },
+        });
+        this.$message.success("Xoá lịch thành công!");
+        this.isDeleteModalVisible = false;
+        this.fetchAvailableHours(); // Refresh the schedule list
+      } catch (error) {
+        console.error("Lỗi khi xoá lịch:", error);
+        this.$message.error("Không thể xoá lịch. Vui lòng thử lại sau.");
+      }
     },
     async createAppointment() {
-      const doctorId = this.$route.params.id;
-      const userStore = useUserStore();
+      const doctorId = this.$route.params.id
+      const userStore = useUserStore()
       const appointment = {
         doctorId,
         title: this.appointmentData.title,
         description: this.appointmentData.description,
         type: this.appointmentData.type,
         date: this.selectedDate.format('YYYY-MM-DD'),
-        startTime: this.appointmentData.startTime,
-      };
+        startTime: this.appointmentData.startTime
+      }
 
       try {
         await axios.post('http://localhost:5217/api/Appointments', appointment, {
-          headers: { Authorization: `Bearer ${userStore.token}` },
-        });
-        this.isModalVisible = false;
-        this.$message.success('Cuộc hẹn đã được đặt thành công!');
+          headers: { Authorization: `Bearer ${userStore.token}` }
+        })
+        this.isModalVisible = false
+        this.$message.success('Cuộc hẹn đã được đặt thành công!')
       } catch (error) {
-        console.error('Lỗi khi tạo cuộc hẹn:', error);
-        this.$message.error('Không thể tạo cuộc hẹn. Vui lòng thử lại sau.');
+        console.error('Lỗi khi tạo cuộc hẹn:', error)
+        this.$message.error('Không thể tạo cuộc hẹn. Vui lòng thử lại sau.')
       }
-    },
+    }
   },
   created() {
-    this.fetchDoctorDetails();
-  },
-};
+    this.fetchDoctorDetails()
+  }
+}
 </script>
 
 <style scoped>

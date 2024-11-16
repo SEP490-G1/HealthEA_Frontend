@@ -26,12 +26,16 @@
           <td>{{ appointment.date }}</td>
           <td>{{ appointment.startTime }} - {{ appointment.endTime }}</td>
           <td>{{ appointment.location }}</td>
-          <td>{{ user.status }}</td>
+          <td>{{ appointment.status }}</td>
           <td>
-            <router-link :to="{ name: 'updateUser', params: { id: appointment.appointmentId } }">
-              <button class="btn btn-primary">Đồng ý</button>
-              <button class="btn btn-primary">Từ chối</button>
-            </router-link>
+            <!-- <router-link :to="{ name: 'updateUser', params: { id: appointment.appointmentId } }"> -->
+            <button class="btn btn-primary" @click="approveAppointment(appointment.appointmentId)">
+              Đồng ý
+            </button>
+            <button class="btn btn-primary" @click="rejectAppointment(appointment.appointmentId)">
+              Từ chối
+            </button>
+            <!-- </router-link> -->
           </td>
         </tr>
       </tbody>
@@ -64,29 +68,25 @@
 </template>
 
 <script>
-import { useAppointment } from '@/stores/appointment'
-import { ref } from 'vue'
+import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue'
+import axios from 'axios'
 
 export default {
   data() {
     return {
       appointments: [],
-      //   filters: {
-      //     username: '',
-      //     email: '',
-      //     status: '',
-      //     role: ''
-      //   },
       pageSizes: [5, 10, 15, 20],
       currentPage: 1,
       pageSize: 10,
-      totalPages: 20,
-      totalElements: 0
+      totalPages: 0,
+      totalElements: 10,
+      userId: 0
     }
   },
   async mounted() {
     try {
+      await this.getUserId()
       await this.getAppointment(1, 10)
       console.log(this.info)
       this.loading = false
@@ -96,17 +96,17 @@ export default {
     }
   },
   methods: {
-    // async getTotalUser() {
-    //   try {
-    //     const response = await getTotalUsers('http://localhost:9090/identity/users/total')
-    //     this.totalElements = response.data.result
-    //     this.totalPages = Math.ceil(this.totalElements / this.pageSize)
-    //     console.log(this.totalElements)
-    //   } catch (error) {
-    //     console.log(error)
-    //   }
-    // },
-
+    async getUserId() {
+      const userStore = useUserStore()
+      const headers = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userStore.token}`
+        }
+      }
+      const user = await axios.get('http://localhost:9090/identity/users/myinfo', headers)
+      this.userId = user.data.result.id
+    },
     async getAppointment(page = this.currentPage, size = this.pageSize) {
       this.totalPages = Math.ceil(this.totalElements / this.pageSize)
       try {
@@ -114,18 +114,44 @@ export default {
           page: page,
           size: size
         }
-        const response = await useAppointment(
-          'http://localhost:5217/api/Appointments/47863E73-E00C-4EBF-8F2A-1E8753359C4D?pageNumber=1&pageSize=10'
+        const response = await axios.get(
+          'http://localhost:5217/api/Appointments/' + this.userId + '?pageNumber=1&pageSize=10'
         )
         this.appointments = response.data.items
-        console.log(this.appointments)
+        console.log(response)
       } catch (error) {
         console.log(error)
       }
     },
     changePage(page) {
       this.currentPage = page
-      this.getAllUser(page, this.pageSize)
+      this.getAppointment(page, this.pageSize)
+    },
+    async approveAppointment(id) {
+      console.log(id)
+      const bodyParameter = {
+        appointmentId: id
+      }
+      const response = await axios.post(
+        'http://localhost:5217/api/Appointments/approve/' + id,
+        bodyParameter
+      )
+      console.log(response.data.message)
+      alert(response.data.message)
+      this.getAppointment(this.page, this.pageSize)
+    },
+    async rejectAppointment(id) {
+      console.log(id)
+      const bodyParameter = {
+        appointmentId: id
+      }
+      const response = await axios.post(
+        'http://localhost:5217/api/Appointments/reject/' + id,
+        bodyParameter
+      )
+      console.log(response.data.message)
+      alert(response.data.message)
+      this.getAppointment(this.page, this.pageSize)
     }
   }
 }

@@ -158,6 +158,11 @@ const routes = [
     component: () => DoctorUpdateView
   },
   {
+    path: '/doctors/schedules/add',
+    name: 'Add Schedules',
+    component: () => DoctorCreateScheduleView
+  },
+  {
     path: '/report',
     name: 'Report',
     component: () => ReportView
@@ -198,6 +203,7 @@ import ReportView from '@/views/report/ReportView.vue'
 import DoctorUpdateView from '@/views/doctor/DoctorUpdateView.vue'
 import ReportListView from '@/views/report/ReportListView.vue'
 import ReportDetailsView from '@/views/report/ReportDetailsView.vue'
+import DoctorCreateScheduleView from '@/views/doctor/DoctorCreateScheduleView.vue'
 
 router.beforeEach(async (to) => {
   // gọi store
