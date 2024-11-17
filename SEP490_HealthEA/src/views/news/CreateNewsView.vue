@@ -1,0 +1,177 @@
+<template>
+  <div class="news-management">
+    <!-- Markdown Editor -->
+    <div class="editor-section">
+      <h2>Create or Edit News</h2>
+      <a-input v-model:value="newsTitle" placeholder="Enter the news title" class="mb-3" />
+      <a-input v-model:value="newsAuthor" placeholder="Enter the author's name" class="mb-3" />
+      <a-input v-model:value="newsCategory" placeholder="Enter the news category" class="mb-3" />
+      <MdEditor
+        v-model:model-value="newsContent"
+        height="300px"
+        language="en-US"
+        code-theme="github"
+        noUploadImg
+      />
+
+      <div class="actions mt-3">
+        <a-button type="primary" @click="saveNews" :loading="isSaving"> Save </a-button>
+        <a-button type="default" @click="resetForm" class="ml-2"> Reset </a-button>
+      </div>
+    </div>
+
+    <!-- Existing News List -->
+    <div class="news-list mt-5">
+      <h2>News List</h2>
+      <a-list bordered :data-source="newsList" :loading="isLoading" item-layout="horizontal">
+        <template v-for="item in newsList" :key="item.id">
+          <a-list-item>
+            <a-list-item-meta
+              :title="item.title"
+              :description="`Author: ${item.author} | Category: ${item.category}`"
+            />
+            <template #actions>
+              <a-button type="link" @click="editNews(item)"> Edit </a-button>
+              <a-button type="link" @click="deleteNews(item.id)"> Delete </a-button>
+            </template>
+          </a-list-item>
+        </template>
+      </a-list>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from 'axios'
+import { MdEditor } from 'md-editor-v3'
+import { Input, Button, List, message } from 'ant-design-vue'
+import 'md-editor-v3/lib/style.css'
+
+export default {
+  components: {
+    MdEditor,
+    AInput: Input,
+    AButton: Button,
+    AList: List
+  },
+  data() {
+    return {
+      // Form fields
+      newsTitle: '',
+      newsAuthor: '',
+      newsContent: '',
+      newsCategory: '',
+      newsList: [],
+
+      // States
+      isLoading: false,
+      isSaving: false,
+      newsToEditId: null
+    }
+  },
+  methods: {
+    // Fetch news list
+    async fetchNews() {
+      this.isLoading = true
+      try {
+        const response = await axios.get('http://localhost:5217/api/News')
+        this.newsList = response.data
+        console.log(this.newsList)
+      } catch (error) {
+        message.error('Error fetching news!')
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    // Save or update news
+    async saveNews() {
+      if (!this.newsTitle || !this.newsAuthor || !this.newsContent || !this.newsCategory) {
+        message.error('Please fill in all fields!')
+        return
+      }
+
+      this.isSaving = true
+      try {
+        const newsData = {
+          title: this.newsTitle,
+          author: this.newsAuthor,
+          content: this.newsContent,
+          category: this.newsCategory
+        }
+
+        if (this.newsToEditId) {
+          // Update existing news
+          await axios.put(`http://localhost:5217/api/News/${this.newsToEditId}`, newsData)
+          message.success('News updated successfully!')
+        } else {
+          // Create new news
+          await axios.post('http://localhost:5217/api/News', newsData)
+          message.success('News saved successfully!')
+        }
+
+        this.fetchNews()
+        this.resetForm()
+      } catch (error) {
+        message.error('Error saving news!')
+      } finally {
+        this.isSaving = false
+      }
+    },
+
+    // Delete news
+    async deleteNews(id) {
+      try {
+        await axios.delete(`http://localhost:5217/api/News/${id}`)
+        message.success('News deleted successfully!')
+        this.fetchNews()
+      } catch (error) {
+        message.error('Error deleting news!')
+      }
+    },
+
+    // Edit news
+    editNews(item) {
+      this.newsToEditId = item.id
+      this.newsTitle = item.title
+      this.newsAuthor = item.author
+      this.newsContent = item.content
+      this.newsCategory = item.category
+    },
+
+    // Reset form
+    resetForm() {
+      this.newsToEditId = null
+      this.newsTitle = ''
+      this.newsAuthor = ''
+      this.newsContent = ''
+      this.newsCategory = ''
+    }
+  },
+  mounted() {
+    this.fetchNews()
+  }
+}
+</script>
+
+<style scoped>
+.news-management {
+  padding: 20px;
+}
+.editor-section {
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #fff;
+}
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.news-list {
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #fff;
+}
+</style>

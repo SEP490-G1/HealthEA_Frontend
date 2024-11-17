@@ -178,6 +178,16 @@ const routes = [
     component: () => ReportDetailsView
   },
   {
+    path: '/admin/news/create',
+    name: 'Create News',
+    component: () => CreateNewsView
+  },
+  {
+    path: '/news/:id',
+    name: 'News',
+    component: () => NewsView
+  },
+  {
     path: '/error/404',
     name: 'Not Found',
     component: PageNotFound
@@ -204,6 +214,8 @@ import DoctorUpdateView from '@/views/doctor/DoctorUpdateView.vue'
 import ReportListView from '@/views/report/ReportListView.vue'
 import ReportDetailsView from '@/views/report/ReportDetailsView.vue'
 import DoctorCreateScheduleView from '@/views/doctor/DoctorCreateScheduleView.vue'
+import CreateNewsView from '@/views/news/CreateNewsView.vue'
+import NewsView from '@/views/news/NewsView.vue'
 
 router.beforeEach(async (to) => {
   // gọi store
