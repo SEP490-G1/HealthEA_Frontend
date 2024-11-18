@@ -61,21 +61,18 @@
           <!-- Work History Section -->
           <div>
             <h2>Lịch sử làm việc</h2>
-            <a-list
-              v-if="workHistory && workHistory.length > 0"
-              :data-source="workHistory"
-              bordered
-              item-layout="vertical"
-            >
-              <template v-slot:item="{ item }">
-                <a-list-item>
-                  <a-list-item-meta
-                    :title="`${item.yearStart || 'N/A'} - ${item.yearEnd || 'N/A'}`"
-                    :description="item.job || 'Chức danh không có sẵn'"
-                  />
-                </a-list-item>
-              </template>
-            </a-list>
+            <ul v-if="workHistory && workHistory.length > 0" class="list-group">
+              <li
+                v-for="item in workHistory"
+                :key="item.id || `${item.yearStart}-${item.yearEnd}`"
+                class="list-group-item"
+              >
+                <div>
+                  <h5>{{ item.yearStart || 'N/A' }} - {{ item.yearEnd || 'N/A' }}</h5>
+                  <p class="mb-0 text-muted">{{ item.job || 'Chức danh không có sẵn' }}</p>
+                </div>
+              </li>
+            </ul>
             <p v-else>Không có lịch sử làm việc</p>
           </div>
         </a-card>
@@ -213,7 +210,11 @@ export default {
           headers: { Authorization: `Bearer ${userStore.token}` }
         })
         this.doctor = response.data || {}
-        this.workHistory = this.doctor.historyOfWork ? JSON.parse(this.doctor.historyOfWork) : []
+        try {
+          this.workHistory = this.doctor.historyOfWork ? JSON.parse(this.doctor.historyOfWork) : []
+        } catch (error){
+          this.workHistory = []
+        }
         this.checkIfUserIsDoctor()
       } catch (error) {
         console.error('Lỗi khi lấy thông tin bác sĩ:', error)
@@ -257,8 +258,8 @@ export default {
 
         this.availableHours = response.data.map((schedule) => ({
           id: schedule.scheduleId,
-          startTime: schedule.startTime,
-        }));
+          startTime: schedule.startTime
+        }))
       } catch (error) {
         if (error.response && error.response.status === 404) {
           this.availableHours = []
@@ -270,10 +271,10 @@ export default {
     handleScheduleClick(scheduleId, startTime) {
       console.log(scheduleId)
       if (this.isDoctor) {
-        this.deleteScheduleId = scheduleId;
-        this.isDeleteModalVisible = true;
+        this.deleteScheduleId = scheduleId
+        this.isDeleteModalVisible = true
       } else {
-        this.openAppointmentModal(startTime);
+        this.openAppointmentModal(startTime)
       }
     },
     openAppointmentModal(hour) {
@@ -281,20 +282,20 @@ export default {
       this.isModalVisible = true
     },
     async deleteSchedule() {
-      if (!this.deleteScheduleId) return;
+      if (!this.deleteScheduleId) return
 
-      const userStore = useUserStore();
+      const userStore = useUserStore()
 
       try {
         await axios.delete(`http://localhost:5217/api/Schedules/${this.deleteScheduleId}`, {
-          headers: { Authorization: `Bearer ${userStore.token}` },
-        });
-        this.$message.success("Xoá lịch thành công!");
-        this.isDeleteModalVisible = false;
-        this.fetchAvailableHours(); // Refresh the schedule list
+          headers: { Authorization: `Bearer ${userStore.token}` }
+        })
+        this.$message.success('Xoá lịch thành công!')
+        this.isDeleteModalVisible = false
+        this.fetchAvailableHours() // Refresh the schedule list
       } catch (error) {
-        console.error("Lỗi khi xoá lịch:", error);
-        this.$message.error("Không thể xoá lịch. Vui lòng thử lại sau.");
+        console.error('Lỗi khi xoá lịch:', error)
+        this.$message.error('Không thể xoá lịch. Vui lòng thử lại sau.')
       }
     },
     async createAppointment() {
