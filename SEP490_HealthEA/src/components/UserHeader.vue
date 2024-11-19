@@ -1,17 +1,15 @@
 <template lang="">
   <div>
-    <div v-if="userStore.user.auth">
+    <div v-if="userStorez">
       <a-dropdown :trigger="['click']">
         <a class="ant-dropdown-link" @click.prevent>
           <a-avatar
-            :src="userStore.user.imageSrc"
+            :src="userStorez.imageSrc"
             size="large"
             :style="{ backgroundColor: color, verticalAlign: 'middle' }"
           >
             {{
-              userStore.user.userLastName == ''
-                ? userStore.user.userName
-                : userStore.user.userLastName
+              userStorez.userLastName == null ? userStorez.userFirstName : userStorez.userLastName
             }}
           </a-avatar>
         </a>
@@ -27,7 +25,7 @@
         </template>
       </a-dropdown>
     </div>
-    <div v-if="!userStore.user.auth">
+    <div v-if:="!userStorez">
       <a-button type="primary" shape="round" style="margin-right: 10px" @click="gotoLogin">
         Login now
       </a-button>
@@ -40,7 +38,6 @@ import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { LoginOutlined } from '@ant-design/icons-vue'
 const colorList = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae']
-
 export default {
   setup() {
     const userStore = useUserStore()
@@ -48,10 +45,20 @@ export default {
   },
   data() {
     return {
+      userStorez: ref(this.userStore.user),
+      varCheck: ref(this.userStore.token != null),
       color: ref(colorList[0])
     }
   },
-
+  watch: {
+    async 'userStore.token'(value) {
+      if (value == null) {
+        console.log('Trông')
+      }
+      this.userStorez = await this.userStore.getUser()
+    }
+  },
+  mounted() {},
   components() {
     LoginOutlined
   },
@@ -64,6 +71,7 @@ export default {
     },
     logOut() {
       this.userStore.Logout()
+      this.varCheck = false
       this.$router.push('/client/login')
     }
   }

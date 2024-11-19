@@ -1,7 +1,7 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 </script>
-<template lang="">
+<template>
   <div>
     <a-layout-header class="header">
       <a-menu theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
@@ -33,36 +33,17 @@ export default {
     return {
       pathActive: '',
       role: ref(''),
-      listHeader: ref( [
-          { path: '/', text: 'Trang chủ' },
-          { path: '/profileHealth', text: 'Hồ sơ sức khỏe' },
-          { path: '/about', text: 'Về chúng tôi' },
-          { path: '/admin/UserManagement', text: 'Quản lý người dùng' },
-          { path: '/dailymetric', text: 'Chỉ số sức khỏe định kỳ' },
-          { path: '/remind/calendar', text: 'Lịch của bạn' }
-        ])
+      listHeader: ref([
+        { path: '/', text: 'Trang chủ' },
+        { path: '/profileHealth', text: 'Hồ sơ sức khỏe' },
+        { path: '/about', text: 'Về chúng tôi' },
+        { path: '/admin/UserManagement', text: 'Quản lý người dùng' },
+        { path: '/dailymetric', text: 'Chỉ số sức khỏe định kỳ' },
+        { path: '/remind/calendar', text: 'Lịch của bạn' }
+      ])
     }
   },
-  mounted() {
-    // switch (this.role) {
-    //   case 'CUSTOMER':
-    //     this.listHeader = [
-    //       { path: '/', text: 'Trang chủ' },
-    //       { path: '/profileHealth', text: 'Hồ sơ sức khỏe' },
-    //       { path: '/about', text: 'Về chúng tôi' },
-    //       { path: '/profile', text: 'Hồ sơ của bạn' }
-    //     ]
-    //     break
-    //   default:
-    //     this.listHeader = [
-    //       { path: '/', text: 'Trang chủ' },
-    //       { path: '/', text: 'Chức năng chính' },
-    //       { path: '/', text: 'Về chúng tôi' },
-    //       { path: '/', text: 'Liên hệ' }
-    //     ]
-    //     break
-    // }
-  },
+  mounted() {},
   watch: {
     $route(to) {
       this.pathActive = to.path

@@ -86,7 +86,7 @@ export default {
         this.$router.push('/')
       }
       if (response == 1020) {
-        this.$router.push('/client/verify')
+        this.$router.push('/client/verifyEmail')
       }
       return
     }

@@ -27,7 +27,11 @@ import { ref } from 'vue'
       </div>
     </div>
     <div class="container-list">
-      <listMetric @handleClickDelete="deleteClick" v-model:list="listValue.data" />
+      <listMetric
+        @handleClickAdd="loadData"
+        @handleClickDelete="deleteClick"
+        v-model:list="listValue.data"
+      />
     </div>
   </ContentFooter>
 </template>
@@ -47,15 +51,7 @@ export default {
   },
   data() {
     return {
-      rangeConfig: {
-        rules: [
-          {
-            type: 'array',
-            required: true,
-            message: 'Please select time!'
-          }
-        ]
-      },
+      rangeConfig: {},
       listValue: {},
       formState: {
         rangePicker: [this.subtractDay(this.getTodayInYYYYMMDD(), 7), this.getTodayInYYYYMMDD()]

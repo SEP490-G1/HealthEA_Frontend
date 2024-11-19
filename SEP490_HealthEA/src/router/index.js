@@ -39,6 +39,11 @@ const routes = [
     ]
   },
   {
+    path: '/client/verify',
+    component: AccpetVerify,
+    props: (route) => ({ token: route.query.token })
+  },
+  {
     path: '/client',
     name: 'client',
     component: ClientView,
@@ -48,7 +53,7 @@ const routes = [
         component: LoginFrom
       },
       {
-        path: 'verify',
+        path: 'verifyEmail',
         component: VerifyPage
       },
       {
@@ -156,31 +161,51 @@ import DailyMetricHistory from '@/components/dailyMetric/DailyMetricHistory.vue'
 import RemindView from '@/views/RemindView.vue'
 import CalendarRemind from '@/components/remind/CalendarRemind.vue'
 import VerifyPage from '@/components/login/VerifyPage.vue'
-
+import AccpetVerify from '@/components/login/AccpetVerify.vue'
+function exitUser() {
+  // gọi store
+  const userStore = useUserStore()
+  message.info('Bạn phải đăng nhập vào tài khoản tương ứng!')
+  console.log('Token', userStore.token)
+  return '/client/login'
+}
 router.beforeEach(async (to) => {
   // gọi store
   const userStore = useUserStore()
-  //nếu đã đăng nhập và truy cập vào trang login register sẽ bị đuổi sang home
-  if (userStore.user.auth == true) {
+
+  // nếu truy cập vào các page:
+  // - không có path /client
+  // - không có quyền truy cập
+  // Result: xóa cache người dùng và đưa về login page
+  // không có quyền đưa về login page
+  if (userStore.token == null && !to.path.includes('/client')) {
+    return exitUser()
+  }
+  // phần này của các người dùng
+  if (userStore.token != null) {
+    // USER :
+    // - nếu truy cập vào các page của client thì trả đưa về home
     if (to.path.includes('/client')) {
       message.info('Bạn đã đăng nhập!')
       return '/'
     }
-    if (userStore.user.role != 'ADMIN') {
-      if (to.path.includes('/admin')) {
+    //ADMIN:
+    // - nếu truy cập vào các page của admin bạn phải có quyền admin
+    if (to.path.includes('/admin')) {
+      if (userStore.user.role == 'ADMIN') {
+        return
+      } else {
+        return exitUser()
+      }
+    }
+    //Doctor:
+    // - nếu truy cập vào các page của /doctor bạn phải có quyền doctor
+    if (to.path.includes('/doctor')) {
+      if (userStore.user.role != 'DOCTOR') {
         message.info('Bạn phải có quyền admin!')
         return '/'
       }
-    }
-  }
-  // Nếu là role là admin thì sẽ truy cập
-  // nếu không đăng nhập thì chỉ vào được home và client
-  else if (userStore.user.auth == false) {
-    if (to.path == '/') {
-      // continue
-    } else if (!to.path.includes('/client')) {
-      message.info('Bạn phải đăng nhập!')
-      return '/client/login'
+      return exitUser()
     }
   }
 })

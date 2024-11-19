@@ -24,11 +24,14 @@
                 <template #overlay>
                   <a-menu>
                     <a-menu-item key="0">
-                      <a href="http://www.alipay.com/">Xóa</a>
+                      <a @click="handleDelete(item.eventId, 0)">Xóa hôm nay</a>
                     </a-menu-item>
                     <a-menu-item key="1">
-                      <a href="http://www.taobao.com/">Chỉnh sửa</a>
-                    </a-menu-item>                        
+                      <a @click="handleDelete(item.eventId, 1)">Xóa hoàn toàn</a>
+                    </a-menu-item>
+                    <a-menu-item key="2">
+                      <a @click="handleEdit(item)">Chỉnh sửa</a>
+                    </a-menu-item>
                   </a-menu>
                 </template>
               </a-dropdown>
@@ -72,6 +75,18 @@ export default {
     }
   },
   methods: {
+    handleDelete(id, i) {
+      console.log(id)
+      if (i == 0) {
+        this.$emit('handleDeleteBtn', id)
+      }
+      if (i == 1) {
+        this.$emit('handleDeleteAllBtn', id)
+      }
+    },
+    handleEdit(id) {
+      this.$emit('handleEditBtn', id)
+    },
     convertDateStart(date) {
       return dayjs(date).format('YYYY-MM-DDT00:00:00')
     },

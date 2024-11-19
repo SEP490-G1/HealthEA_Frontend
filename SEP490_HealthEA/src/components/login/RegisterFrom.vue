@@ -18,10 +18,10 @@
       >
         <a-form-item
           label="Tên của bạn"
-          name="lastname"
+          name="lastName"
           :rules="[{ required: true, message: 'Tên không được để trống!' }]"
         >
-          <a-input v-model:value="formState.lastname" />
+          <a-input v-model:value="formState.lastName" />
         </a-form-item>
         <a-form-item
           label="Họ của bạn"

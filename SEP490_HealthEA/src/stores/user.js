@@ -40,8 +40,8 @@ export const useUserStore = defineStore('user', {
       message.success('Đã đăng xuất!')
     },
     ClearUser() {
-      this.user = {}
-      this.token = ''
+      this.user = null
+      this.token = null
     },
     async Register(bodyParameters) {
       try {
@@ -73,9 +73,7 @@ export const useUserStore = defineStore('user', {
           status: data.status == 'ACTIVE' ? true : false,
           auth: true
         }
-        this.user = obj
-        console.log(obj);
-        
+
         var strings = JSON.stringify(obj)
         setLocalStoregare(MEMORY_STOGARE_USER, strings)
         return obj
@@ -84,48 +82,43 @@ export const useUserStore = defineStore('user', {
         console.error(error)
       }
     },
+    async verifyById(id) {
+      const response = await postData(API_URL + '/emails/verifyEmail/' + id)
+      console.log(response)
+
+      return response
+    },
     async verify(email) {
-      try {
-        const response = await postData(API_URL + '/emails/sendVerifyEmail/?email=' + email)
-        console.log(response)
-        return true
-      } catch (error) {
-        console.log(error)
-        return false
-      }
+      const response = await postData(API_URL + '/emails/sendVerifyEmail/' + email)
+      return response
     },
     async Login(bodyParameters) {
+      const body = {
+        username: bodyParameters.username,
+        password: bodyParameters.password
+      }
+      const response = await postData(API_URL + '/auth/token', body)
       try {
-        const body = {
-          username: bodyParameters.username,
-          password: bodyParameters.password
-        }
+        if (response.data.code == 0) {
+          this.getUser()
+          this.token = response.data.result.token
+          //save token session
+          if (bodyParameters.remember == false) {
+            await setSessionStogare(MEMORY_STOGARE, this.token)
+          }
+          if (bodyParameters.remember == true) {
+            await setLocalStoregare(MEMORY_STOGARE, this.token)
+          }
 
-        const response = await postData(API_URL + '/auth/token', body, headers)
-        console.log(response);
-        
-        //save token state
-        this.token = response.data.result.token
-
-        //save token session
-        if (bodyParameters.remember == false) {
-          await setSessionStogare(MEMORY_STOGARE, this.token)
+          message.success('Đăng nhập thành công', 3)
+          return true
         }
-        if (bodyParameters.remember == true) {
-          await setLocalStoregare(MEMORY_STOGARE, this.token)
-        }
-
-        //setup user
-        this.getUser()
-        message.success('Đăng nhập thành công ', 3)
-        return true
       } catch (error) {
-        if (error.response.data.code == 1020) {
-          console.log(error)
+        if (response.response.data.code == 1020) {
           message.info('Hãy xác thực email tải khoàn của bạn', 10)
           return 1020
         }
-        if (error.response.data.code == 1005) {
+        if (response.response.data.code == 1005) {
           message.error('Kiểm tra tài khoản và mật khẩu', 3)
           return
         }

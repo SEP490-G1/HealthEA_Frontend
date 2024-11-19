@@ -97,6 +97,7 @@ export function getLocalStogare(role) {
       token = localStorage.getItem(STORE_TOKEN_USER_OBJ)
       break
   }
+
   return token
 }
 

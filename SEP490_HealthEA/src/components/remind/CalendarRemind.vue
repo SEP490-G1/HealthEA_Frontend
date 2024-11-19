@@ -13,7 +13,12 @@
         <CalendarComponent :listEvent="listEvent" v-model:valueZ="valueDate" />
       </a-col>
       <a-col class="gutter-box" :span="6">
-        <TodayPlan v-model:dateSelect="valueDate" />
+        <TodayPlan
+          @handleDeleteBtn="deleteRemind"
+          @handleDeleteAllBtn="deleteAllRemind"
+          @handleEditBtn="editRemind"
+          v-model:dateSelect="valueDate"
+        />
       </a-col>
     </a-row>
   </div>
@@ -124,7 +129,7 @@
                 </a-col>
 
                 <a-button style="margin-left: 3px" type="link" @click="remove(item)">
-                  Remove
+                  Xóa
                 </a-button>
               </a-row>
             </a-form-item>
@@ -219,6 +224,7 @@ export default {
           }
         ]
       },
+      mayForm: ref(0),
       formState: reactive({
         Title: 'Thụy',
         EventDateTime: '2024-11-06',
@@ -236,11 +242,12 @@ export default {
         ]
       }),
       titleEvent: ref('Tạo một sự kiện mới'),
-      open: ref(true),
+      open: ref(false),
       valueDate: ref(dayjs()),
       listEvent: ref([]),
       rangeDate: ref([]),
-      listToday: ref([])
+      listToday: ref([]),
+      updateObj: ref()
     }
   },
   mounted() {
@@ -248,6 +255,26 @@ export default {
     this.getListEvent()
   },
   methods: {
+    async deleteAllRemind(id) {
+      const store = useRemindStore()
+      const response = await store.deleteRemind(id)
+      console.log(response.status)
+
+      if (response.status == 200) {
+        this.getListEvent()
+        message.success('Xóa dữ liệu thành công', 3)
+      }
+    },
+    async deleteRemind(id) {
+      const store = useRemindStore()
+      const response = await store.deleteRemind(id)
+      console.log(response.status)
+
+      if (response.status == 200) {
+        this.getListEvent()
+        message.success('Xóa dữ liệu thành công', 3)
+      }
+    },
     remove(item) {
       const index = this.formState.ReminderOffsets.indexOf(item)
       if (index !== -1) {
@@ -260,8 +287,9 @@ export default {
         offsetValue: 1
       })
     },
-    onFinish() {
-      this.submitz()
+    async onFinish() {
+      await this.submitz()
+      await this.getListEvent()
     },
     onFinishFailed(errorInfo) {
       console.log('Failed:', errorInfo)
@@ -277,19 +305,56 @@ export default {
         message.error('Các trường dữ liệu thời gian trống')
         return
       }
-      const store = await useRemindStore()
-      const result = await store.AddNewRemind(obj)
-      console.log(result.status)
-      let chuSoA = Math.floor(result.status / 100)
-      if (chuSoA != 2) {
-        message.error('Hãy kiểm tra lại input của bạn!')
-        return
+      if (this.mayForm == 0) {
+        const store = await useRemindStore()
+        const result = await store.AddNewRemind(obj)
+        console.log(result.status)
+        let chuSoA = Math.floor(result.status / 100)
+        if (chuSoA != 2) {
+          message.error('Hãy kiểm tra lại input của bạn!')
+          return
+        }
+        this.onClose()
+      } else {
+        console.log('loghere', obj)
+        const store = await useRemindStore()
+        const result = await store.updateRemind(obj)
+        console.log('sssss', result)
+      }
+    },
+    editRemind(obj) {
+      this.mayForm = 1
+      this.titleEvent = 'Chỉnh sửa sự kiện'
+      this.formState = {
+        eventId: obj.eventId,
+        Title: obj.title,
+        EventDateTime: obj.eventDateTime,
+        StartTime: obj.startTime,
+        EndTime: obj.startTime,
+        Location: obj.location,
+        RepeatFrequency: obj.repeatFrequency,
+        RepeatEndDate: obj.repeatEndDate,
+        Description: obj.description,
+        ReminderOffsets: obj.reminderOffsets,
       }
 
-      this.onClose()
+      console.log(obj)
+      this.open = !this.open
     },
     showDrawer() {
+      this.mayForm = 0
       this.titleEvent = 'Tạo một sự kiện mới'
+      this.formState = {
+        Title: '',
+        EventDateTime: '',
+        StartTime: '',
+        EndTime: '',
+        Location: '',
+        RepeatFrequency: 0,
+        RepeatEndDate: '',
+        Description: '',
+        ReminderOffsets: []
+      }
       this.open = !this.open
     },
     isDifferentMonth(date1, date2) {

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { message } from 'ant-design-vue'
-import { deleteData, getData, patchData, putData } from '@/service/main'
+import { deleteData, getData, patchData, postData, putData } from '@/service/main'
 import { useUserStore } from '@/stores/user'
 const API_URL = 'http://localhost:5217/api/DailyMetric'
 
@@ -68,7 +68,12 @@ export const useDailyMetricStore = defineStore('dailyMetric', {
         message.error('Error fetching data:' + error, 3)
       }
     },
-
+    async AddNew(object) {
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      const data = await postData(API_URL, object, headers)
+      return data.status
+    },
     async update(object) {
       try {
         const newObject = {

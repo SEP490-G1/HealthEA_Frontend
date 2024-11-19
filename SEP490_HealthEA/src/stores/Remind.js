@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getData, postData } from '@/service/main'
+import { deleteData, getData, postData, putData } from '@/service/main'
 import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue'
 const API_URL = 'http://localhost:5217/api/Events'
@@ -16,6 +16,28 @@ export const useRemindStore = defineStore('remindStore', {
     listEvent: null
   }),
   actions: {
+    async updateRemind(item) {
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      
+      const data = await putData(API_URL + `/${item.eventId}`, item, headers)
+      
+      console.log(data);
+      
+      return data
+    },
+    async deleteRemind(id) {
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      const data = await deleteData(API_URL + `/${id}`, headers)
+      return data
+    },
+    async deleteAllRemind(id) {
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      const data = await deleteData(API_URL + `/all/${id}`, headers)
+      return data
+    },
     async AddNewRemind(body) {
       try {
         const userStore = useUserStore()

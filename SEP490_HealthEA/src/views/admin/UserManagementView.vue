@@ -1,4 +1,5 @@
 <script setup>
+import { userManagementStore } from '@/stores/userManagement'
 import { ref } from 'vue'
 </script>
 <template lang="">
@@ -6,35 +7,24 @@ import { ref } from 'vue'
     <a-page-header
       style="border: 1px solid rgb(235, 237, 240)"
       title="Quản lý người dùng"
-      :breadcrumb="{ routes }"
       @back="() => null"
     />
-    <a-table :columns="columns" :data-source="dataSource" bordered>
-      <template #bodyCell="{ text, record }">
-        <template v-if="['name', 'age', 'address'].includes(colum.dataIndex)">
-          <div>
-            <a-input
-              v-if="editabeData[record.key]"
-              v-model:value="editabeData[record.key][colum.dataIndex]"
-              style="margin: -5px 0"
-            />
-            <template v-else>
-              {{ text }}
-            </template>
-          </div>
-        </template>
-        <template v-else-if="colum.dataIndex === 'operation'">
-          <div class="editable-row-operations">
-            <span v-if="editabeData[record.key]">
-              <a-typography-link @click="save(record.key)">Save</a-typography-link>
-              <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.key)">
-                <a>Cancel</a>
-              </a-popconfirm>
-            </span>
-            <span v-else>
-              <a @click="edit(record.key)">Edit</a>
-            </span>
-          </div>
+    <a-table
+      :columns="columns"
+      :data-source="listUser"
+      :pagination="{ pageSize: 10 }"
+      :scroll="{ y: 1500 }"
+      bordered
+    >
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <span>
+            <a>Deactive</a>
+            <a-divider type="vertical" />
+            <a>Edit - {{ record.id }}</a>
+            <a-divider type="vertical" />
+            <a> Report </a>
+          </span>
         </template>
       </template>
     </a-table>
@@ -42,68 +32,77 @@ import { ref } from 'vue'
 </template>
 <script>
 export default {
-  beforeMount() {
-    for (let i = 0; i < 100; i++) {
-      this.dataUser.push({
-        key: i.toString(),
-        name: `Edrward ${i}`,
-        age: 32,
-        address: `London Park no. ${i}`
-      })
-    }
-  },
   data() {
     return {
-      dataSource: ref(this.dataUser),
       columns: [
         {
-          title: 'name',
-          dataIndex: 'name',
-          width: '10%'
+          title: '#',
+          dataIndex: '',
+          key: 'id',
+          width: 80
         },
         {
-          title: 'name',
-          dataIndex: 'name',
-          width: '10%'
+          title: 'username',
+          dataIndex: 'username',
+          key: 'username',
+          width: 150
         },
         {
-          title: 'age',
-          dataIndex: 'age',
-          width: '15%'
+          title: 'Họ',
+          dataIndex: 'firstName',
+          key: 'firstName',
+          width: 150
         },
         {
-          title: 'address',
-          dataIndex: 'address',
-          width: '40%'
+          title: 'Tên',
+          dataIndex: 'lastName',
+          key: 'lastName',
+          width: 150
         },
         {
-          title: 'operation',
-          dataIndex: 'operation'
+          title: 'Ngày sinh',
+          dataIndex: 'dob',
+          key: 'dob',
+          width: 150
+        },
+        {
+          title: 'Số điện thoại',
+          dataIndex: 'phone',
+          key: 'phone',
+          width: 150
+        },
+        {
+          title: 'Quyền hạn',
+          dataIndex: 'role',
+          key: 'role',
+          width: 150
+        },
+        {
+          title: 'Email',
+          dataIndex: 'email',
+          key: 'email',
+          width: 250
+        },
+        {
+          title: 'Email',
+          dataIndex: 'email',
+          key: 'email',
+          width: 250
+        },
+        {
+          title: 'Action',
+          key: 'action'
         }
       ],
-      dataUser: [
-        {
-          key: 1,
-          name: `Edrward 1`,
-          age: 32,
-          address: `London Park no. 1`
-        }
-      ],
-      routes: [
-        {
-          path: 'index',
-          breadcrumbName: 'First-level Menu'
-        },
-        {
-          path: 'first',
-          breadcrumbName: 'Second-level Menu'
-        },
-        {
-          path: 'second',
-          breadcrumbName: 'Third-level Menu'
-        }
-      ]
+      listUser: ref([])
     }
+  },
+  async mounted() {
+    const userManageStore = userManagementStore()
+    var listUser = await userManageStore.getAllUser()
+    console.log(listUser)
+    this.listUser = listUser
+    console.log(this.listUser)
   }
 }
 </script>

@@ -1,14 +1,14 @@
 <script setup>
-import TheMenu from '@/components/common/TheMenu.vue'
+// import TheMenu from '@/components/common/TheMenu.vue'
 import { ref, h, reactive } from 'vue'
 import { RouterLink } from 'vue-router'
 </script>
 
 <template>
   <a-layout>
-    <a-layout-sider width="200" style="background: #fff">
+    <!-- <a-layout-sider width="200" style="background: #fff">
       <TheMenu :itemList="items" :openKeys="keyOpen" :selectedKeys="selectedKeys" />
-    </a-layout-sider>
+    </a-layout-sider> -->
     <a-layout style="padding: 0 24px 24px">
       <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
