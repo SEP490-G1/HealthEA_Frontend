@@ -3,9 +3,9 @@
     <!-- Markdown Editor -->
     <div class="editor-section">
       <h2>Create or Edit News</h2>
-      <a-input v-model:value="newsTitle" placeholder="Enter the news title" class="mb-3" />
-      <a-input v-model:value="newsAuthor" placeholder="Enter the author's name" class="mb-3" />
-      <a-input v-model:value="newsCategory" placeholder="Enter the news category" class="mb-3" />
+      <a-input v-model:value="newsTitle" placeholder="Tiêu đề bài viết" class="mb-3" />
+      <a-input v-model:value="newsAuthor" placeholder="Tác giả" class="mb-3" />
+      <a-input v-model:value="newsCategory" placeholder="Loại" class="mb-3" />
       <MdEditor
         v-model:model-value="newsContent"
         height="300px"
@@ -15,7 +15,7 @@
       />
 
       <div class="actions mt-3">
-        <a-button type="primary" @click="saveNews" :loading="isSaving"> Save </a-button>
+        <a-button type="primary" @click="saveNews" :loading="isSaving"> Lưu </a-button>
         <a-button type="default" @click="resetForm" class="ml-2"> Reset </a-button>
       </div>
     </div>
@@ -31,8 +31,8 @@
               :description="`Author: ${item.author} | Category: ${item.category}`"
             />
             <template #actions>
-              <a-button type="link" @click="editNews(item)"> Edit </a-button>
-              <a-button type="link" @click="deleteNews(item.id)"> Delete </a-button>
+              <a-button type="link" @click="editNews(item)"> Chỉnh sửa </a-button>
+              <a-button type="link" @click="deleteNews(item.id)"> Xóa </a-button>
             </template>
           </a-list-item>
         </template>
@@ -87,7 +87,7 @@ export default {
     // Save or update news
     async saveNews() {
       if (!this.newsTitle || !this.newsAuthor || !this.newsContent || !this.newsCategory) {
-        message.error('Please fill in all fields!')
+        message.error('Vui lòng điền toàn bộ các thông tin!')
         return
       }
 
