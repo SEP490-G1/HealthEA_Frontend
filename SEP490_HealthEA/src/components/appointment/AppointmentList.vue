@@ -58,7 +58,7 @@
         @click="changePage(page - 1)"
         :class="{ active: currentPage === page - 1 }"
       >
-        {{ page }}
+        {{ currentPage }}
       </button>
       <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages - 1">
         Sau
@@ -114,8 +114,14 @@ export default {
           page: page,
           size: size
         }
+        const userStore = useUserStore()
         const response = await axios.get(
-          'http://localhost:5217/api/Appointments/' + this.userId + '?pageNumber=1&pageSize=10'
+          'http://localhost:5217/api/Appointments' + '?pageNumber=' + this.currentPage + '&pageSize=' + this.pageSize,
+          {
+            headers: {
+              Authorization: `Bearer ${userStore.token}`
+            }
+          }
         )
         this.appointments = response.data.items
         console.log(response)
@@ -129,12 +135,18 @@ export default {
     },
     async approveAppointment(id) {
       console.log(id)
+      const userStore = useUserStore()
       const bodyParameter = {
         appointmentId: id
       }
       const response = await axios.post(
         'http://localhost:5217/api/Appointments/approve/' + id,
-        bodyParameter
+        bodyParameter,
+        {
+          headers: {
+            Authorization: `Bearer ${userStore.token}`
+          }
+        }
       )
       console.log(response.data.message)
       alert(response.data.message)
@@ -145,6 +157,7 @@ export default {
       const bodyParameter = {
         appointmentId: id
       }
+      const userStore = useUserStore()
       const response = await axios.post(
         'http://localhost:5217/api/Appointments/reject/' + id,
         bodyParameter
