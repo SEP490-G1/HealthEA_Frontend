@@ -4,11 +4,7 @@ import { ref } from 'vue'
 </script>
 <template lang="">
   <div>
-    <a-page-header
-      style="border: 1px solid rgb(235, 237, 240)"
-      title="Quản lý người dùng"
-      @back="() => null"
-    />
+    <a-page-header style="border: 1px solid rgb(235, 237, 240)" title="Quản lý người dùng" />
     <a-table
       :columns="columns"
       :data-source="listUser"
@@ -16,12 +12,13 @@ import { ref } from 'vue'
       :scroll="{ y: 1500 }"
       bordered
     >
-      <template #bodyCell="{ column, record }">
+    
+      <template #bodyCell="{ column }">
         <template v-if="column.key === 'action'">
           <span>
             <a>Deactive</a>
             <a-divider type="vertical" />
-            <a>Edit - {{ record.id }}</a>
+            <a>Edit</a>
             <a-divider type="vertical" />
             <a> Report </a>
           </span>

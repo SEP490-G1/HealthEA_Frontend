@@ -26,6 +26,7 @@ import CommonLayout from '@/components/medical/CommonLayout'
 export default {
   data() {
     return {
+      idNew: this.$route.params.id,
       routes: [
         {
           path: 'index',
@@ -48,7 +49,7 @@ export default {
           icon: () => h(PieChartOutlined),
           label: h(
             RouterLink,
-            { to: '/profileHealth/medical_record/information' },
+            { to: `/profileHealth/medical_record/information/` + this.$route.params.id },
             'Thông tin chung'
           ),
           title: 'Thông tin chung'
@@ -63,7 +64,7 @@ export default {
               key: '2',
               label: h(
                 RouterLink,
-                { to: '/profileHealth/medical_record/prehistoric' },
+                { to: '/profileHealth/medical_record/prehistoric/' + this.$route.params.id },
                 'Tiền Sử Bệnh'
               ),
               title: 'Tiền sử bệnh'
@@ -72,7 +73,7 @@ export default {
               key: '3',
               label: h(
                 RouterLink,
-                { to: '/profileHealth/medical_record/vaccination' },
+                { to: '/profileHealth/medical_record/vaccination/' + this.$route.params.id },
                 'Tiêm Chủng'
               ),
               title: 'Lịch sử tiêm chủng'
@@ -90,15 +91,6 @@ export default {
               key: '5',
               label: h(RouterLink, { to: '/profileHealth/medical_record/testing' }, 'Xét Nghiệm'),
               title: 'Xét nghiệm'
-            },
-            {
-              key: '6',
-              label: h(
-                RouterLink,
-                { to: '/profileHealth/medical_record/diagnostic_image' },
-                'Chẩn đoán hình ảnh'
-              ),
-              title: 'Hình ảnh chẩn đoán'
             },
             {
               key: '7',

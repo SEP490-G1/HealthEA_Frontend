@@ -63,6 +63,17 @@ const routes = [
     ]
   },
   {
+    path: '/myprofile',
+    name: 'MyProfile',
+    component: Profile,
+    children: [
+      {
+        path: 'myInfo',
+        component: () => import('@/components/personal/MyInformation.vue')
+      }
+    ]
+  },
+  {
     path: '/admin',
     name: 'adminpage',
     component: AdminView,
@@ -162,6 +173,7 @@ import RemindView from '@/views/RemindView.vue'
 import CalendarRemind from '@/components/remind/CalendarRemind.vue'
 import VerifyPage from '@/components/login/VerifyPage.vue'
 import AccpetVerify from '@/components/login/AccpetVerify.vue'
+import Profile from '@/views/common/MyProfile.vue'
 function exitUser() {
   // gọi store
   const userStore = useUserStore()
@@ -172,7 +184,9 @@ function exitUser() {
 router.beforeEach(async (to) => {
   // gọi store
   const userStore = useUserStore()
-
+  if (to.path.includes('/profileHealth')) {
+    return
+  }
   // nếu truy cập vào các page:
   // - không có path /client
   // - không có quyền truy cập
@@ -202,7 +216,7 @@ router.beforeEach(async (to) => {
     // - nếu truy cập vào các page của /doctor bạn phải có quyền doctor
     if (to.path.includes('/doctor')) {
       if (userStore.user.role != 'DOCTOR') {
-        message.info('Bạn phải có quyền admin!')
+        message.info('Bạn phải có quyền doctor!')
         return '/'
       }
       return exitUser()

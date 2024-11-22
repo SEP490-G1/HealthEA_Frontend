@@ -35,16 +35,10 @@ export const useMedicalRecordStore = defineStore('medicalRecord', {
     },
 
     async getHealthProfileByID(id) {
-      try {
-        const userStore = useUserStore()
-        headers.headers.Authorization = `Bearer ${userStore.token}`
-        const data = await getData(API_URL + '/HealthProfile/infomation/' + id, headers)
-        message.success(data.data.userMsg)
-        return data.data.data
-      } catch (error) {
-        console.log(error)
-        message.error('Error fetching data:' + error, 3)
-      }
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      const data = await getData(API_URL + '/HealthProfile/infomation/' + id, headers)
+      return data.data.data
     },
     async deleteHealthProfile(id) {
       try {

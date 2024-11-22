@@ -1,7 +1,6 @@
 <script setup>
 const value = defineModel('valueZ')
 const listEventz = defineModel('listEvent')
-
 </script>
 <template>
   <div>
@@ -9,7 +8,12 @@ const listEventz = defineModel('listEvent')
       <template #dateCellRender="{ current }">
         <ul class="events">
           <li v-for="item in getListData(current)" :key="item.content">
-            <a-badge class="item_event" :status="item.type" :text="item.content" />
+            <a-badge
+              :type="item.type"
+              class="item_event"
+              :status="item.type"
+              :text="item.content"
+            />
           </li>
         </ul>
       </template>
@@ -20,11 +24,15 @@ const listEventz = defineModel('listEvent')
 import dayjs from 'dayjs'
 export default {
   methods: {
-    onPanelChange(value, source) {
-      if (source === 'date') {
-        console.log('Panel Select:', source)
+    changeType(type) {
+      switch (type) {
+        case 1:
+          return 'success'
+        case 2:
+          return 'warning'
       }
     },
+
     getListData(value) {
       try {
         var list = []
@@ -33,7 +41,7 @@ export default {
           var s = element.eventDateTime
           if (dayjs(s).format('YYYY-MM-DD') == datetime) {
             list.push({
-              type: 'warning',
+              type: element.type == 1 ? 'success' : 'warning',
               content: element.title
             })
           }

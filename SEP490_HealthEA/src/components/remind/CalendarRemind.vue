@@ -298,6 +298,8 @@ export default {
       var obj = this.formState
       console.log(obj)
       try {
+        console.log(obj);
+        
         obj.EventDateTime = dayjs(obj.EventDateTime).format('YYYY-MM-DD')
         obj.RepeatEndDate = dayjs(obj.RepeatEndDate).format('YYYY-MM-DDTHH:mm:ssZ')
         console.log(obj.RepeatEndDate)
@@ -335,7 +337,7 @@ export default {
         RepeatFrequency: obj.repeatFrequency,
         RepeatEndDate: obj.repeatEndDate,
         Description: obj.description,
-        ReminderOffsets: obj.reminderOffsets,
+        ReminderOffsets: obj.reminderOffsets ? obj.reminderOffsets : []
       }
 
       console.log(obj)

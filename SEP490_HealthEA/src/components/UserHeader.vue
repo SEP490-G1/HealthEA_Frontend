@@ -1,7 +1,25 @@
-<template lang="">
+<template>
   <div>
-    <div v-if="userStorez">
-      <a-dropdown :trigger="['click']">
+    <div v-if="userStorez.auth">
+      <!-- <a-dropdown :trigger="['click']" style="margin-left: 10px" placement="bottomRight">
+        <a class="ant-dropdown-link" @click.prevent>
+          <a-avatar
+            :src="userStorez.imageSrc"
+            size="large"
+            :style="{ backgroundColor: color, verticalAlign: 'middle' }"
+          >
+            <AlertOutlined />
+          </a-avatar>
+        </a>
+        <template #overlay>
+          <a-menu style="margin-top: 10px; width: 300px">
+            <a-menu-item key="0">
+              <a>Thông báo 1</a>
+            </a-menu-item>
+          </a-menu>
+        </template>
+      </a-dropdown> -->
+      <a-dropdown :trigger="['click']" style="margin-left: 10px">
         <a class="ant-dropdown-link" @click.prevent>
           <a-avatar
             :src="userStorez.imageSrc"
@@ -16,7 +34,7 @@
         <template #overlay>
           <a-menu>
             <a-menu-item key="0">
-              <a href="http://www.taobao.com/">Xem hồ sơ</a>
+              <a @click="moveMyProfile">Xem hồ sơ</a>
             </a-menu-item>
             <a-menu-item key="1">
               <a @click="logOut">Đăng Xuất</a>
@@ -25,7 +43,7 @@
         </template>
       </a-dropdown>
     </div>
-    <div v-if:="!userStorez">
+    <div v-if:="!userStorez.auth">
       <a-button type="primary" shape="round" style="margin-right: 10px" @click="gotoLogin">
         Login now
       </a-button>
@@ -36,7 +54,7 @@
 <script>
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { LoginOutlined } from '@ant-design/icons-vue'
+import AlertOutlined from '@ant-design/icons-vue'
 const colorList = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae']
 export default {
   setup() {
@@ -60,7 +78,7 @@ export default {
   },
   mounted() {},
   components() {
-    LoginOutlined
+    AlertOutlined
   },
   methods: {
     gotoLogin() {
@@ -73,6 +91,9 @@ export default {
       this.userStore.Logout()
       this.varCheck = false
       this.$router.push('/client/login')
+    },
+    moveMyProfile(){
+      this.$router.push('/myprofile')
     }
   }
 }
