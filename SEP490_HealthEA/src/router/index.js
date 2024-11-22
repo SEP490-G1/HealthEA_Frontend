@@ -72,8 +72,8 @@ const routes = [
         component: UserManagementView
       },
       {
-        path: 'register',
-        component: RegisterFrom
+        path: 'DoctorManagement',
+        component: DoctorManagementView
       }
     ]
   },
@@ -162,6 +162,7 @@ import RemindView from '@/views/RemindView.vue'
 import CalendarRemind from '@/components/remind/CalendarRemind.vue'
 import VerifyPage from '@/components/login/VerifyPage.vue'
 import AccpetVerify from '@/components/login/AccpetVerify.vue'
+import DoctorManagementView from '@/views/admin/DoctorManagementView.vue'
 function exitUser() {
   // gọi store
   const userStore = useUserStore()

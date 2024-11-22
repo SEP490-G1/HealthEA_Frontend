@@ -1,6 +1,6 @@
 <template lang="">
   <div>
-    <div v-if="userStorez">
+    <div v-if="userStorez.auth">
       <a-dropdown :trigger="['click']">
         <a class="ant-dropdown-link" @click.prevent>
           <a-avatar
@@ -17,15 +17,18 @@
           <a-menu>
             <a-menu-item key="0">
               <a href="http://www.taobao.com/">Xem hồ sơ</a>
-            </a-menu-item>
+            </a-menu-item>    
             <a-menu-item key="1">
+              <a href="http://www.taobao.com/">Đổi mật khẩu</a>
+            </a-menu-item>
+            <a-menu-item key="2">
               <a @click="logOut">Đăng Xuất</a>
             </a-menu-item>
           </a-menu>
         </template>
       </a-dropdown>
     </div>
-    <div v-if:="!userStorez">
+    <div v-if:="!userStorez.auth">
       <a-button type="primary" shape="round" style="margin-right: 10px" @click="gotoLogin">
         Login now
       </a-button>
@@ -51,11 +54,15 @@ export default {
     }
   },
   watch: {
-    async 'userStore.token'(value) {
-      if (value == null) {
-        console.log('Trông')
+    async 'userStore.token'() {
+      console.log("Change");
+      
+      const response = await this.userStore.getUser()
+      if (response == undefined) {
+        this.userStorez = { auth: false }
+        return
       }
-      this.userStorez = await this.userStore.getUser()
+      this.userStorez = response
     }
   },
   mounted() {},
