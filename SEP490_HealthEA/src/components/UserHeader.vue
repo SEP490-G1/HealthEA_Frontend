@@ -1,25 +1,7 @@
 <template>
   <div>
     <div v-if="userStorez.auth">
-      <!-- <a-dropdown :trigger="['click']" style="margin-left: 10px" placement="bottomRight">
-        <a class="ant-dropdown-link" @click.prevent>
-          <a-avatar
-            :src="userStorez.imageSrc"
-            size="large"
-            :style="{ backgroundColor: color, verticalAlign: 'middle' }"
-          >
-            <AlertOutlined />
-          </a-avatar>
-        </a>
-        <template #overlay>
-          <a-menu style="margin-top: 10px; width: 300px">
-            <a-menu-item key="0">
-              <a>Thông báo 1</a>
-            </a-menu-item>
-          </a-menu>
-        </template>
-      </a-dropdown> -->
-      <a-dropdown :trigger="['click']" style="margin-left: 10px">
+      <a-dropdown :trigger="['click']">
         <a class="ant-dropdown-link" @click.prevent>
           <a-avatar
             :src="userStorez.imageSrc"
@@ -37,6 +19,9 @@
               <a @click="moveMyProfile">Xem hồ sơ</a>
             </a-menu-item>
             <a-menu-item key="1">
+              <a href="http://www.taobao.com/">Đổi mật khẩu</a>
+            </a-menu-item>
+            <a-menu-item key="2">
               <a @click="logOut">Đăng Xuất</a>
             </a-menu-item>
           </a-menu>
@@ -69,11 +54,15 @@ export default {
     }
   },
   watch: {
-    async 'userStore.token'(value) {
-      if (value == null) {
-        console.log('Trông')
+    async 'userStore.token'() {
+      console.log("Change");
+      
+      const response = await this.userStore.getUser()
+      if (response == undefined) {
+        this.userStorez = { auth: false }
+        return
       }
-      this.userStorez = await this.userStore.getUser()
+      this.userStorez = response
     }
   },
   mounted() {},
