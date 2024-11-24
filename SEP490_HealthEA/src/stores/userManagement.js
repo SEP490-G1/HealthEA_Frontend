@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { getData } from '@/service/main'
 import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue'
-const API_URL = 'http://localhost:9090/identity/users'
+const API_URL = 'http://160.25.233.36:9090/identity/users'
 
 const headers = {
   // Các tùy chọn cấu hình khác

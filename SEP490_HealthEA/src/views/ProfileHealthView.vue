@@ -1,6 +1,6 @@
 <script setup>
 import { PieChartOutlined } from '@ant-design/icons-vue'
-import { reactive, h, ref } from 'vue'
+import {  h, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import TheMenu from '@/components/common/TheMenu.vue'
 import CommonLayout from '@/components/medical/CommonLayout'
@@ -15,7 +15,7 @@ import CommonLayout from '@/components/medical/CommonLayout'
       <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '10px' }"
       >
-        <common-layout :listBread="routes">
+        <common-layout>
           <RouterView />
         </common-layout>
       </a-layout-content>
@@ -27,23 +27,9 @@ export default {
   data() {
     return {
       idNew: this.$route.params.id,
-      routes: [
-        {
-          path: 'index',
-          breadcrumbName: 'First-level Menu'
-        },
-        {
-          path: 'first',
-          breadcrumbName: 'Second-level Menu'
-        },
-        {
-          path: 'second',
-          breadcrumbName: 'Third-level Menu'
-        }
-      ],
-      key: ref(['sub1']),
+      key: ref(['1']),
       selectedKeys: ref(['0']),
-      items: reactive([
+      items: [
         {
           key: '0',
           icon: () => h(PieChartOutlined),
@@ -55,7 +41,7 @@ export default {
           title: 'Thông tin chung'
         },
         {
-          key: 'sub1',
+          key: '1',
           icon: () => h(PieChartOutlined),
           label: 'Loại hồ sơ',
           title: 'Các loại hồ sơ',
@@ -82,7 +68,7 @@ export default {
               key: '4',
               label: h(
                 RouterLink,
-                { to: '/profileHealth/medical_record/prescription' },
+                { to: `/profileHealth/medical_record/prescription/${this.$route.params.id}` },
                 'Đơn Thuốc'
               ),
               title: 'Đơn thuốc'
@@ -100,10 +86,19 @@ export default {
                 'Lịch Sử Khám'
               ),
               title: 'Lịch sử khám bệnh'
+            },
+            {
+              key: '8',
+              label: h(
+                RouterLink,
+                { to: `/profileHealth/medical_record/diagnostic_image/${this.$route.params.id}` },
+                'Ảnh của hồ sơ'
+              ),
+              title: 'Danh sách ảnh hồ sơ'
             }
           ]
         }
-      ])
+      ]
     }
   }
 }

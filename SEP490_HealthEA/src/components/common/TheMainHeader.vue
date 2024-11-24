@@ -3,7 +3,6 @@ import { RouterLink } from 'vue-router'
 </script>
 <template>
   <div>
-    <!-- Test -->
     <a-menu theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
       <a-flex style="padding: 0 10px; width: 100%" justify="space-between">
         <div>

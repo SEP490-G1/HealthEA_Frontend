@@ -11,7 +11,7 @@ import {
   clearUser
 } from '@/service/main'
 
-const API_URL = 'http://localhost:9090/identity'
+const API_URL = 'http://160.25.233.36:9090/identity'
 const headers = {
   headers: {
     'Content-Type': 'application/json'

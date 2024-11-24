@@ -55,8 +55,8 @@ export default {
   },
   watch: {
     async 'userStore.token'() {
-      console.log("Change");
-      
+      console.log('Change')
+
       const response = await this.userStore.getUser()
       if (response == undefined) {
         this.userStorez = { auth: false }
@@ -81,7 +81,7 @@ export default {
       this.varCheck = false
       this.$router.push('/client/login')
     },
-    moveMyProfile(){
+    moveMyProfile() {
       this.$router.push('/myprofile')
     }
   }

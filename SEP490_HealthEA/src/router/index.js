@@ -104,7 +104,7 @@ const routes = [
     component: ProfileHealth,
     children: [
       {
-        path: 'diagnostic_image',
+        path: 'diagnostic_image/:id',
         name: 'Diagnostic Imageing',
         component: () => import('@/components/medical/DiagnosticImaging')
       },
@@ -119,14 +119,19 @@ const routes = [
         component: () => import('@/components/medical/InformationPage')
       },
       {
-        path: 'prehistoric',
+        path: 'Prehistoric/:id',
         name: 'Prehistoric',
         component: () => import('@/components/medical/PrehistoricPage')
       },
       {
-        path: 'prescription',
+        path: 'prescription/:id',
         name: 'prescription',
         component: () => import('@/components/medical/PrescriptionPage')
+      },
+      {
+        path: 'prescription/:id/detail/:idD',
+        name: 'prescriptionDetail',
+        component: () => import('@/components/medical/PrescriptionDetail')
       },
       {
         path: 'testing',

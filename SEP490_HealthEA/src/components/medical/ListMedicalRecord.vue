@@ -32,7 +32,6 @@ import CommonLayout from '@/components/common/TheModal'
                 <a-dropdown :trigger="['click']">
                   <a class="ant-dropdown-link" @click.prevent>
                     More
-                    <DownOutlined />
                   </a>
                   <template #overlay v-if="!loading">
                     <a-menu>
@@ -116,7 +115,6 @@ import CommonLayout from '@/components/common/TheModal'
             />
             <a-tooltip title="copy url">
               <a-button>
-                <template #icon><CopyOutlined /></template>
               </a-button>
             </a-tooltip>
           </a-input-group>

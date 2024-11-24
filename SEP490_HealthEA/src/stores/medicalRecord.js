@@ -21,6 +21,13 @@ export const useMedicalRecordStore = defineStore('medicalRecord', {
     }
   },
   actions: {
+    // http://localhost:5217/api/customer/DocumentProfile/3fa85f64-5717-4562-b3fc-2c963f66afa6/1
+    async getListAType(id, type) {
+      const userStore = useUserStore()
+        headers.headers.Authorization = `Bearer ${userStore.token}`
+        const data = await getData(API_URL + `/DocumentProfile/${id}/${type}`, headers)
+        return data;
+    },
     async changeShare(id, body) {
       try {
         const userStore = useUserStore()
