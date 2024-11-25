@@ -33,29 +33,40 @@ export default {
         image: [],
         type: 1,
         healthProfileId: this.idHP,
-        contentMedical: "{}"
+        contentMedical: '{}'
       }
       const res = useMedicalRecordStore()
       var response = await res.addNewDP(obj)
-      console.log(response);
-      
+      this.jump(response.data.data.id)
+      this.loadData()
     },
 
     jump(id) {
       this.$router.push(`/profileHealth/medical_record/prescription/${this.idHP}/detail/${id}`)
     },
-
-
+    getTitle(value){     
+      var obj = JSON.parse(value.contentMedical)
+      if(undefined == obj.title){
+        return `Đơn thuốc ngày ${dayjs(obj.date).format('DD-MM-YYYY')}`
+      }
+      return obj.title
+    },
     async loadData() {
       const res = useMedicalRecordStore()
+      var listnew = []
       var list = await res.getListAType(this.idHP, 1)
+      console.log(list.data.data[0].contentMedical);
+      
       list.data.data.forEach((element) => {
-        this.listPre.push({
+        listnew.push({
           id: element.id,
-          title: `Đơn thuốc tạo ngày ${dayjs(element.createDate).format('YYYY-MM-DD')}`,
+          date: dayjs(element.createDate).format('YYYY-MM-DD'),
+          title: this.getTitle(element),
           lastModified: `Lần thay đổi cuối  ${dayjs(element.lastModifyDate).format('YYYY-MM-DD, HH:mm:ss')}`
         })
       })
+      listnew.sort((a, b) => -(new Date(a.date) - new Date(b.date)))
+      this.listPre = listnew
     }
   },
   data() {

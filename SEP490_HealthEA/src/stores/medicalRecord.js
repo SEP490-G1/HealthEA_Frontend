@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getData, postData, deleteData, patchData } from '@/service/main'
+import { getData, postData, deleteData, patchData, putData } from '@/service/main'
 import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue'
 const API_URL = 'http://localhost:5217/api/customer'
@@ -21,11 +21,23 @@ export const useMedicalRecordStore = defineStore('medicalRecord', {
     }
   },
   actions: {
+    async updateDP(id, body) {
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      console.log(id);
+      const data = await putData(API_URL + `/DocumentProfile?id=${id}`, body, headers)
+      return data
+    },
+    async getOneDP(id) {
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      const data = await getData(API_URL + `/DocumentProfile/${id}`, headers)
+      return data
+    },
     // http://localhost:5217/api/customer/DocumentProfile
     async addNewDP(body) {
       const userStore = useUserStore()
       headers.headers.Authorization = `Bearer ${userStore.token}`
-      console.log(body);
       const data = await postData(API_URL + `/DocumentProfile`, body, headers)
       return data
     },

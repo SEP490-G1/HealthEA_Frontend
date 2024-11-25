@@ -139,7 +139,7 @@ const routes = [
         component: () => import('@/components/medical/TestingPage')
       },
       {
-        path: 'vaccination',
+        path: 'vaccination/:id',
         name: 'Vaccination',
         component: () => import('@/components/medical/VaccinationPage')
       }
