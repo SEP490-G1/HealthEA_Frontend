@@ -4,7 +4,7 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
 <template>
   <div>
     <a-typography-title :level="2" style="margin-top: 30px">Danh sách đơn thuốc</a-typography-title>
-   
+    <a-button type="primary" @click="addNew">Thêm mới</a-button>
     <div>
       <a-list item-layout="horizontal" :data-source="listPre">
         <template #renderItem="{ item }">
@@ -28,9 +28,24 @@ export default {
     this.loadData()
   },
   methods: {
-    jump(id){
+    async addNew() {
+      var obj = {
+        image: [],
+        type: 1,
+        healthProfileId: this.idHP,
+        contentMedical: "{}"
+      }
+      const res = useMedicalRecordStore()
+      var response = await res.addNewDP(obj)
+      console.log(response);
+      
+    },
+
+    jump(id) {
       this.$router.push(`/profileHealth/medical_record/prescription/${this.idHP}/detail/${id}`)
     },
+
+
     async loadData() {
       const res = useMedicalRecordStore()
       var list = await res.getListAType(this.idHP, 1)
@@ -41,8 +56,7 @@ export default {
           lastModified: `Lần thay đổi cuối  ${dayjs(element.lastModifyDate).format('YYYY-MM-DD, HH:mm:ss')}`
         })
       })
-    },
-
+    }
   },
   data() {
     return {
