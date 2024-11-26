@@ -142,7 +142,7 @@
                 style="width: 100%"
                 v-model:value="formStage.weight"
                 addon-after="Kg"
-                :min="0"
+                :min="1"
               />
             </a-form-item>
           </a-col>
@@ -152,7 +152,7 @@
                 style="width: 100%"
                 v-model:value="formStage.height"
                 addon-after="Cm"
-                :min="0"
+                :min="1"
               />
             </a-form-item>
           </a-col>
@@ -161,12 +161,12 @@
               label="Tâm thu"
               name="systolicBloodPressure"
               style="width: 90%; margin: 0 10px"
-              :rules="[{ min: 0, message: 'Phải là số lớn hơn 0' }]"
+
             >
               <a-input-number
                 style="width: 100%"
                 v-model:value="formStage.systolicBloodPressure"
-                addon-after="mmHg"
+                addon-after="mmHg" :min="1"
               />
             </a-form-item>
           </a-col>
@@ -174,13 +174,13 @@
             <a-form-item
               label="Tâm trương"
               name="diastolicBloodPressure"
+       
               style="width: 90%; margin: 0 10px"
-              :rules="[{ min: 0, message: 'Phải là số lớn hơn 0' }]"
             >
               <a-input-number
                 style="width: 100%"
                 v-model:value="formStage.diastolicBloodPressure"
-                addon-after="mmHg"
+                addon-after="mmHg" :min="1"
               />
             </a-form-item>
           </a-col>
@@ -189,12 +189,11 @@
               label="Đường huyết"
               name="bloodSugar"
               style="width: 90%; margin: 0 10px"
-              :rules="[{ min: 0, message: 'Phải là số lớn hơn 0' }]"
             >
               <a-input-number
                 style="width: 100%"
                 v-model:value="formStage.bloodSugar"
-                addon-after="mg/dl"
+                addon-after="mg/dl" :min="1"
               />
             </a-form-item>
           </a-col>
@@ -203,12 +202,12 @@
               label="Nhịp tim"
               name="heartRate"
               style="width: 90%; margin: 0 10px"
-              :rules="[{ min: 0, message: 'Phải là số lớn hơn 0' }]"
+              
             >
               <a-input-number
                 style="width: 100%"
                 v-model:value="formStage.heartRate"
-                addon-after="bpm"
+                addon-after="bpm" :min="1"
               />
             </a-form-item>
           </a-col>
@@ -222,7 +221,7 @@
               <a-input-number
                 style="width: 100%"
                 v-model:value="formStage.bodyTemperature"
-                addon-after="&deg;C"
+                addon-after="&deg;C" :min="1"
               />
             </a-form-item>
           </a-col>
