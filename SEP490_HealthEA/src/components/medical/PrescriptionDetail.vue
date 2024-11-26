@@ -9,11 +9,22 @@
       justify-content: center;
     "
   >
-    <div>
-      <a-button style="width: 100%" type="dashed" @click="exportSave">Save</a-button>
-      <a-popconfirm title="Sure to cancel?" @confirm="confirm" @cancel="cancel">
-        <a-button style="width: 100%" type="dashed">Delete</a-button>
-      </a-popconfirm>
+    <div style="width: 100%; display: flex; margin: 10px; justify-content: space-between">
+      <div>
+        <a-button style="margin: 10px" type="primary" @click="viewImage">Xem ảnh thực tế </a-button>
+      </div>
+      <div>
+        <a-button style="margin: 10px" type="primary" @click="exportSave" :disabled="stageEditor"
+          >Lưu thay đổi</a-button
+        >
+        <a-popconfirm
+          title="Bạn có chắc muốn xóa tài liệu này?"
+          @confirm="confirm"
+          @cancel="cancelLolipop"
+        >
+          <a-button style="margin: 10px" type="primary" danger>Xóa</a-button>
+        </a-popconfirm>
+      </div>
     </div>
     <div class="ThePage">
       <div class="Content_ThePage">
@@ -76,6 +87,28 @@
         <a-button style="width: 100%" type="dashed" @click="add">Add new</a-button>
       </div>
     </div>
+    <a-drawer
+      v-model:open="open"
+      class="custom-class"
+      root-class-name="root-class-name"
+      :root-style="{ color: 'blue' }"
+      :width="1000"
+      title="Ảnh của tài liệu này"
+    >
+      <a-drawer
+        v-model:open="childrenDrawer"
+        title="Two-level Drawer"
+        width="320"
+        :closable="false"
+      >
+        <a-button type="primary" @click="showChildrenDrawer">This is two-level drawer</a-button>
+      </a-drawer>
+      <template #extra>
+        <a-button type="primary" @click="onCloseChild">Thêm ảnh</a-button>
+      </template>
+
+      
+    </a-drawer>
   </div>
 </template>
 <script>
@@ -86,9 +119,30 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
 export default {
   mounted() {
     this.loadDate()
+    this.stageEditor = true
   },
 
   methods: {
+    onCloseChild() {
+      this.childrenDrawer = !this.childrenDrawer
+    },
+    viewImage() {
+      this.onClose()
+    },
+    onClose() {
+      this.open = !this.open
+    },
+    confirm() {
+      this.removeThis()
+      this.$router.back()
+    },
+    async removeThis() {
+      var id = this.$route.params.idD
+      const mdStore = useMedicalRecordStore()
+      var response = await mdStore.removeDP(id)
+      console.log(response)
+    },
+    cancelLolipop() {},
     changeEditorTitle() {
       this.stageEditor = !this.stageEditor
     },
@@ -98,7 +152,6 @@ export default {
       var response = await mdStore.getOneDP(id)
       var obj = JSON.parse(response.data.data.contentMedical)
       this.dataSource = obj.drug == null ? [] : obj.drug
-
       this.formState = {
         title:
           obj.title != null
@@ -109,6 +162,8 @@ export default {
         doctorRecomend: obj.doctorRecomend,
         doctor: obj.doctor
       }
+
+      this.stageEditor = await true
     },
     async exportSave() {
       var content = {
@@ -133,6 +188,7 @@ export default {
 
       var response = await mdStore.updateDP(id, obj)
       console.log(response)
+      this.stageEditor = true
     },
     edit(key) {
       this.editableData[key] = cloneDeep(this.dataSource.filter((item) => key === item.key)[0])
@@ -162,9 +218,27 @@ export default {
       delete this.editableData[key]
     }
   },
+  watch: {
+    formState: {
+      handler(newValue) {
+        this.stageEditor = false
+        console.log('ssss', newValue)
+      },
+      deep: true // This is crucial for watching nested changes
+    },
+    dataSource: {
+      handler(newValue) {
+        this.stageEditor = false
+        console.log('ssss', newValue)
+      },
+      deep: true // This is crucial for watching nested changes
+    }
+  },
   data() {
     return {
-      stageEditor: ref(false),
+      childrenDrawer: ref(false),
+      open: ref(false),
+      stageEditor: ref(true),
       formState: {
         title: 'Đơn thuốc',
         date: dayjs('2002-04-14'),

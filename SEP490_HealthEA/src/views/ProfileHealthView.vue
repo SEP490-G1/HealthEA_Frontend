@@ -79,22 +79,13 @@ export default {
               title: 'Xét nghiệm'
             },
             {
-              key: '7',
-              label: h(
-                RouterLink,
-                { to: '/profileHealth/medical_record/history_examination' },
-                'Lịch Sử Khám'
-              ),
-              title: 'Lịch sử khám bệnh'
-            },
-            {
-              key: '8',
+              key: '6',
               label: h(
                 RouterLink,
                 { to: `/profileHealth/medical_record/diagnostic_image/${this.$route.params.id}` },
-                'Ảnh của hồ sơ'
+                'Hình ảnh khác'
               ),
-              title: 'Danh sách ảnh hồ sơ'
+              title: 'Danh sách ảnh của hồ sơ'
             }
           ]
         }

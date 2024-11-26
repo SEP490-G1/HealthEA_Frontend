@@ -4,6 +4,7 @@
       style="border: 1px solid rgb(235, 237, 240)"
       :title="this.healthProfie.fullName"
       v-model:sub-title="subtitle"
+      @back="back"
     />
     <slot ></slot>
   </div>
@@ -22,6 +23,11 @@ export default {
       healthProfie: ref({}),
       subtitle: ref('Đây là tiêu đề của từng tag'),
       title: ref('Tiêu đề')
+    }
+  },
+  methods: {
+    back(){
+      this.$router.back()
     }
   }
 }

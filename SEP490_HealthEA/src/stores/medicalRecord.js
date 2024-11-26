@@ -21,10 +21,15 @@ export const useMedicalRecordStore = defineStore('medicalRecord', {
     }
   },
   actions: {
+    async removeDP(id){
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      const data = await deleteData(API_URL + `/DocumentProfile/${id}`, headers)
+      return data
+    },
     async updateDP(id, body) {
       const userStore = useUserStore()
       headers.headers.Authorization = `Bearer ${userStore.token}`
-      console.log(id);
       const data = await putData(API_URL + `/DocumentProfile?id=${id}`, body, headers)
       return data
     },

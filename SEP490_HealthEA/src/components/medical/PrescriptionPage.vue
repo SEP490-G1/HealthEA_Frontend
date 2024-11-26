@@ -55,8 +55,6 @@ export default {
       const res = useMedicalRecordStore()
       var listnew = []
       var list = await res.getListAType(this.idHP, 1)
-      console.log(list.data.data[0].contentMedical);
-      
       list.data.data.forEach((element) => {
         listnew.push({
           id: element.id,
