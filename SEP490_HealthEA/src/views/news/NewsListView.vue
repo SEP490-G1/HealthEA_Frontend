@@ -7,6 +7,12 @@
         <div class="card-body">
           <h2>Tin Mới Nhất</h2>
           <div v-if="latestNews">
+            <img
+              v-if="latestNews.imageUrl"
+              :src="latestNews.imageUrl"
+              alt="Latest News Image"
+              class="latest-news-image mb-3"
+            />
             <h4>{{ latestNews.title }}</h4>
             <p class="text-muted">Tác giả: {{ latestNews.author }}</p>
             <p>{{ formatDate(latestNews.createdAt) }}</p>
@@ -73,6 +79,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import axios from "axios";
@@ -154,8 +161,16 @@ export default {
   border-radius: 8px;
 }
 
+.latest-news-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
 .pagination .page-item .page-link.active {
   background-color: #007bff;
   color: white;
 }
 </style>
+

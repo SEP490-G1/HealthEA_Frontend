@@ -6,12 +6,23 @@
       <a-input v-model:value="newsTitle" placeholder="Tiêu đề bài viết" class="mb-3" />
       <a-input v-model:value="newsAuthor" placeholder="Tác giả" class="mb-3" />
       <a-input v-model:value="newsCategory" placeholder="Loại" class="mb-3" />
+
+      <div class="image-upload-section mb-3">
+        <h3>Image</h3>
+        <a-input v-model:value="newsImageUrl" placeholder="Image URL" class="mb-2" />
+        <div>
+          <input type="file" @change="handleFileSelect" />
+          <a-button type="primary" @click="uploadImage" :loading="isUploading" class="ml-2">
+            Confirm Upload
+          </a-button>
+        </div>
+      </div>
+
       <MdEditor
         v-model:model-value="newsContent"
         height="300px"
         language="en-US"
         code-theme="github"
-        noUploadImg
       />
 
       <div class="actions mt-3">
@@ -61,11 +72,14 @@ export default {
       newsAuthor: '',
       newsContent: '',
       newsCategory: '',
+      newsImageUrl: '',
+      selectedFile: null,
       newsList: [],
 
       // States
       isLoading: false,
       isSaving: false,
+      isUploading: false,
       newsToEditId: null
     }
   },
@@ -76,7 +90,6 @@ export default {
       try {
         const response = await axios.get('http://localhost:5217/api/News')
         this.newsList = response.data
-        console.log(this.newsList)
       } catch (error) {
         message.error('Error fetching news!')
       } finally {
@@ -86,7 +99,7 @@ export default {
 
     // Save or update news
     async saveNews() {
-      if (!this.newsTitle || !this.newsAuthor || !this.newsContent || !this.newsCategory) {
+      if (!this.newsTitle || !this.newsAuthor || !this.newsContent || !this.newsCategory || !this.newsImageUrl) {
         message.error('Vui lòng điền toàn bộ các thông tin!')
         return
       }
@@ -97,7 +110,8 @@ export default {
           title: this.newsTitle,
           author: this.newsAuthor,
           content: this.newsContent,
-          category: this.newsCategory
+          category: this.newsCategory,
+          imageUrl: this.newsImageUrl
         }
 
         if (this.newsToEditId) {
@@ -119,6 +133,40 @@ export default {
       }
     },
 
+    // Upload image
+    async uploadImage() {
+      if (!this.selectedFile) {
+        message.error('Please select a file to upload!')
+        return
+      }
+
+      this.isUploading = true
+      const formData = new FormData()
+      formData.append('Files', this.selectedFile)
+
+      try {
+        const response = await axios.post('http://localhost:5217/api/Images', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        })
+        const imageId = response.data[0]?.id
+        if (imageId) {
+          this.newsImageUrl = `http://localhost:5217/api/Images/img/${imageId}`
+          message.success('Image uploaded successfully!')
+        } else {
+          message.error('Error retrieving image ID!')
+        }
+      } catch (error) {
+        message.error('Error uploading image!')
+      } finally {
+        this.isUploading = false
+      }
+    },
+
+    // Handle file selection
+    handleFileSelect(event) {
+      this.selectedFile = event.target.files[0]
+    },
+
     // Delete news
     async deleteNews(id) {
       try {
@@ -137,6 +185,7 @@ export default {
       this.newsAuthor = item.author
       this.newsContent = item.content
       this.newsCategory = item.category
+      this.newsImageUrl = item.imageUrl
     },
 
     // Reset form
@@ -146,6 +195,8 @@ export default {
       this.newsAuthor = ''
       this.newsContent = ''
       this.newsCategory = ''
+      this.newsImageUrl = ''
+      this.selectedFile = null
     }
   },
   mounted() {
@@ -173,5 +224,8 @@ export default {
   border-radius: 8px;
   padding: 20px;
   background-color: #fff;
+}
+.image-upload-section input {
+  margin-bottom: 8px;
 }
 </style>

@@ -39,6 +39,14 @@ export async function patchData(link, bodyParameters, config) {
     return err
   }
 }
+export async function putData(link, bodyParameters, config) {
+  try {
+    var response = await axios.put(link, bodyParameters, config)
+    return response
+  } catch (err) {
+    return err
+  }
+}
 ///////////////////////////
 ///Session stogare
 ////////////////
@@ -89,6 +97,7 @@ export function getLocalStogare(role) {
       token = localStorage.getItem(STORE_TOKEN_USER_OBJ)
       break
   }
+
   return token
 }
 
@@ -122,13 +131,3 @@ export function clearUser() {
 ///////////////
 ///end token phase///////////////
 //////////////////////////
-
-export async function getAppointment(link) {
-  try {
-    var result
-    result = await axios.get(link)
-    return result
-  } catch (error) {
-    return error
-  }
-}

@@ -6,18 +6,28 @@
 
     <div v-else>
       <h1 class="text-center font-bold">{{ news.title }}</h1>
+      
+      <!-- Banner Image -->
+      <img 
+        v-if="news.imageUrl" 
+        :src="news.imageUrl" 
+        alt="News Banner" 
+        class="news-banner my-4" 
+      />
+      
       <div class="d-flex justify-content-end mb-4">
-
         <div>
           <span class="fw-bold">{{ news.author }}</span>
           <div>Created: {{ formattedCreatedAt }}</div>
           <div>Updated: {{ formattedUpdatedAt }}</div>
         </div>
       </div>
+      
       <div v-html="convertedContent" class="news-content"></div>
     </div>
   </div>
 </template>
+
 
 <script>
 import axios from 'axios'
@@ -75,6 +85,15 @@ export default {
 .news-page {
   padding: 20px;
 }
+
+.news-banner {
+  width: 100%; /* Full width */
+  height: 300px; /* Restrict height */
+  object-fit: cover; /* Maintain aspect ratio and crop */
+  border-radius: 8px; /* Optional: Rounded corners */
+  border: 1px solid #ddd; /* Optional: Border styling */
+}
+
 .news-content {
   padding: 20px;
   background-color: #f7f7f7;

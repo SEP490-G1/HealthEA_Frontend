@@ -193,6 +193,22 @@ const routes = [
     component: () => NewsListView
   },
   {
+    path: '/doctors/me',
+    name: 'Doctor Info',
+    component: () => DoctorRedirectView
+  },
+  {
+    path: '/remind',
+    name: 'Remind',
+    component: RemindView,
+    children: [
+      {
+        path: 'calendar',
+        component: CalendarRemind
+      }
+    ]
+  },
+  {
     path: '/error/404',
     name: 'Not Found',
     component: PageNotFound
@@ -222,6 +238,9 @@ import DoctorCreateScheduleView from '@/views/doctor/DoctorCreateScheduleView.vu
 import CreateNewsView from '@/views/news/CreateNewsView.vue'
 import NewsView from '@/views/news/NewsView.vue'
 import NewsListView from '@/views/news/NewsListView.vue'
+import RemindView from '@/views/RemindView.vue'
+import CalendarRemind from '@/components/remind/CalendarRemind.vue'
+import DoctorRedirectView from '@/views/DoctorRedirectView.vue'
 
 router.beforeEach(async (to) => {
   // gọi store
