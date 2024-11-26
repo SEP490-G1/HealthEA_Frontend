@@ -39,6 +39,20 @@ const routes = [
     ]
   },
   {
+    path: '/alldoctor',
+    component: () => import('@/views/DoctorView.vue'),
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/components/doctor/doctorList')
+      },
+      {
+        path: 'detail/:id',
+        component: () => import('@/components/doctor/doctorDetail')
+      },
+    ]
+  },
+  {
     path: '/client/verify',
     component: AccpetVerify,
     props: (route) => ({ token: route.query.token })
