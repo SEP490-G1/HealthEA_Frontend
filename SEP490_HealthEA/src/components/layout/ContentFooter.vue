@@ -1,7 +1,7 @@
 <script setup></script>
 <template lang="">
   <div style="box-sizing: border-box; margin: 20px 70px">
-    <a-layout-content>
+    <a-layout-content >
       <div class="layout">
         <slot></slot>
       </div>
@@ -15,6 +15,7 @@ export default {}
 .layout {
   background-color: #fff;
   padding: 24px;
-  min-height: 60vh;
+  min-height: 90vh;
+  height: auto;
 }
 </style>

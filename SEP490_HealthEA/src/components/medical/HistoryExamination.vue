@@ -1,7 +1,12 @@
 <template lang="">
-  <div>page này để xem các lịch sử khám</div>
+  <div>
+    <TheRichEditor />
+  </div>
 </template>
 <script>
-export default {}
+import TheRichEditor from '../common/TheRichEditor.vue'
+export default {
+  components: ['TheRichEditor']
+}
 </script>
 <style lang=""></style>

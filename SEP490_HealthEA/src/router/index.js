@@ -32,6 +32,36 @@ const routes = [
     ]
   },
   {
+    path: '/remind',
+    name: 'Remind',
+    component: RemindView,
+    children: [
+      {
+        path: 'calendar',
+        component: CalendarRemind
+      }
+    ]
+  },
+  {
+    path: '/alldoctor',
+    component: () => import('@/views/DoctorView.vue'),
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/components/doctor/doctorList')
+      },
+      {
+        path: 'detail/:id',
+        component: () => import('@/components/doctor/doctorDetail')
+      }
+    ]
+  },
+  {
+    path: '/client/verify',
+    component: AccpetVerify,
+    props: (route) => ({ token: route.query.token })
+  },
+  {
     path: '/client',
     name: 'client',
     component: ClientView,
@@ -41,10 +71,26 @@ const routes = [
         component: LoginFrom
       },
       {
+        path: 'verifyEmail',
+        component: VerifyPage
+      },
+      {
         path: 'register',
         component: RegisterFrom
       }
     ]
+  },
+  {
+    path: '/myprofile',
+    name: 'MyProfile',
+    component: Profile,
+    children: [
+      {
+        path: 'myInfo',
+        component: () => import('@/components/personal/MyInformation.vue')
+      }
+    ]
+  },
   },
   {
     path: '/dailymetric',
@@ -67,8 +113,23 @@ const routes = [
         component: UserManagementView
       },
       {
-        path: 'register',
-        component: RegisterFrom
+        path: 'DoctorManagement',
+        component: DoctorManagementView
+      }
+    ]
+  },
+  {
+    path: '/doctor',
+    name: 'doctorPage',
+    component: () => import('@/views/doctor/DoctorMain.vue'),
+    children: [
+      {
+        path: 'apoinemnt',
+        component: () => import('@/components/doctor/doctorApoinment.vue')
+      },
+      {
+        path: 'profile',
+        component: () => import('@/components/doctor/doctorList')
       }
     ]
   },
@@ -83,12 +144,12 @@ const routes = [
     component: DailyMetricHistory
   },
   {
-    path: '/profileHealth/medical_record/',
+    path: '/profileHealth/medical_record',
     name: 'medicalrecord',
     component: ProfileHealth,
     children: [
       {
-        path: 'diagnostic_image',
+        path: 'diagnostic_image/:id',
         name: 'Diagnostic Imageing',
         component: () => import('@/components/medical/DiagnosticImaging')
       },
@@ -98,19 +159,24 @@ const routes = [
         component: () => import('@/components/medical/HistoryExamination')
       },
       {
-        path: 'information',
+        path: 'information/:id',
         name: 'Information Page',
         component: () => import('@/components/medical/InformationPage')
       },
       {
-        path: 'prehistoric',
+        path: 'Prehistoric/:id',
         name: 'Prehistoric',
         component: () => import('@/components/medical/PrehistoricPage')
       },
       {
-        path: 'prescription',
+        path: 'prescription/:id',
         name: 'prescription',
         component: () => import('@/components/medical/PrescriptionPage')
+      },
+      {
+        path: 'prescription/:id/detail/:idD',
+        name: 'prescriptionDetail',
+        component: () => import('@/components/medical/PrescriptionDetail')
       },
       {
         path: 'testing',
@@ -118,7 +184,7 @@ const routes = [
         component: () => import('@/components/medical/TestingPage')
       },
       {
-        path: 'vaccination',
+        path: 'vaccination/:id',
         name: 'Vaccination',
         component: () => import('@/components/medical/VaccinationPage')
       }
@@ -241,31 +307,58 @@ import NewsListView from '@/views/news/NewsListView.vue'
 import RemindView from '@/views/RemindView.vue'
 import CalendarRemind from '@/components/remind/CalendarRemind.vue'
 import DoctorRedirectView from '@/views/DoctorRedirectView.vue'
-
+import RemindView from '@/views/RemindView.vue'
+import CalendarRemind from '@/components/remind/CalendarRemind.vue'
+import VerifyPage from '@/components/login/VerifyPage.vue'
+import AccpetVerify from '@/components/login/AccpetVerify.vue'
+import Profile from '@/views/common/MyProfile.vue'
+import DoctorManagementView from '@/views/admin/DoctorManagementView.vue'
+function exitUser() {
+  // gọi store
+  const userStore = useUserStore()
+  message.info('Bạn phải đăng nhập vào tài khoản tương ứng!')
+  console.log('Token', userStore.token)
+  return '/client/login'
+}
 router.beforeEach(async (to) => {
   // gọi store
   const userStore = useUserStore()
-  //nếu đã đăng nhập và truy cập vào trang login register sẽ bị đuổi sang home
-  if (userStore.user.auth == true) {
+  if (to.path.includes('/profileHealth')) {
+    return
+  }
+  // nếu truy cập vào các page:
+  // - không có path /client
+  // - không có quyền truy cập
+  // Result: xóa cache người dùng và đưa về login page
+  // không có quyền đưa về login page
+  if (userStore.token == null && !to.path.includes('/client')) {
+    return exitUser()
+  }
+  // phần này của các người dùng
+  if (userStore.token != null) {
+    // USER :
+    // - nếu truy cập vào các page của client thì trả đưa về home
     if (to.path.includes('/client')) {
       message.info('Bạn đã đăng nhập!')
       return '/'
     }
-    if (userStore.user.role != 'ADMIN') {
-      if (to.path.includes('/admin')) {
-        message.info('Bạn phải có quyền admin!')
-        return '/'
+    //ADMIN:
+    // - nếu truy cập vào các page của admin bạn phải có quyền admin
+    if (to.path.includes('/admin')) {
+      if (userStore.user.role == 'ADMIN') {
+        return
+      } else {
+        return exitUser()
       }
     }
-  }
-  // Nếu là role là admin thì sẽ truy cập
-  // nếu không đăng nhập thì chỉ vào được home và client
-  else if (userStore.user.auth == false) {
-    if (to.path == '/') {
-      // continue
-    } else if (!to.path.includes('/client')) {
-      message.info('Bạn phải đăng nhập!')
-      return '/client/login'
+    //Doctor:
+    // - nếu truy cập vào các page của /doctor bạn phải có quyền doctor
+    if (to.path.includes('/doctor')) {
+      if (userStore.user.role != 'DOCTOR') {
+        message.info('Bạn phải có quyền doctor!')
+        return exitUser()
+      }
+      return
     }
   }
 })

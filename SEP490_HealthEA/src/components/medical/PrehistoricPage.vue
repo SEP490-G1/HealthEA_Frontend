@@ -1,7 +1,18 @@
+<script setup>
+</script>
 <template lang="">
-  <div>Tiền Sử bệnh Prehistoric Page</div>
+  <div>
+    <div class="output-group">
+      <label> Chức năng này đang trong quá trình phát triển</label>
+    </div>
+  </div>
 </template>
 <script>
-export default {}
+export default {
+  data() {
+    return {
+    }
+  }
+}
 </script>
 <style lang=""></style>

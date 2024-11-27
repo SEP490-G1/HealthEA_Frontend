@@ -47,7 +47,7 @@ import { message } from 'ant-design-vue'
           :label="form.titleModal"
           :rules="[{ required: true, message: 'Hãy nhập chỉ số này!' }]"
         >
-          <a-input-number v-model:value="dailyMetric.bodyTemperature" suffix="&deg;C" />
+          <a-input-number v-model:value="dailyMetric.bodyTemperature" suffix="&deg;C" /> &deg;C
         </a-form-item>
       </div>
       <div v-if="form.titleModal == 'Nhịp tim'">
@@ -55,7 +55,7 @@ import { message } from 'ant-design-vue'
           :label="form.titleModal"
           :rules="[{ required: true, message: 'Hãy nhập chỉ số này!' }]"
         >
-          <a-input-number v-model:value="dailyMetric.heartRate" suffix="bpm" />
+          <a-input-number v-model:value="dailyMetric.heartRate" suffix="bpm" /> bpm
         </a-form-item>
       </div>
       <div v-if="form.titleModal == 'Đường huyết'">
@@ -63,7 +63,7 @@ import { message } from 'ant-design-vue'
           :label="form.titleModal"
           :rules="[{ required: true, message: 'Hãy nhập chỉ số này!' }]"
         >
-          <a-input-number v-model:value="dailyMetric.bloodSugar" suffix="mg/dl" />
+          <a-input-number v-model:value="dailyMetric.bloodSugar" suffix="mg/dl" /> mg/dl
         </a-form-item>
       </div>
       <div v-if="form.titleModal == 'BMI'">
@@ -71,13 +71,13 @@ import { message } from 'ant-design-vue'
           label="Cân nặng"
           :rules="[{ required: true, message: 'Hãy nhập chỉ số này!' }]"
         >
-          <a-input-number v-model:value="dailyMetric.weight" suffix="Kg" />
+          <a-input-number v-model:value="dailyMetric.weight" suffix="Kg" /> Kg
         </a-form-item>
         <a-form-item
           label="Chiều cao"
           :rules="[{ required: true, message: 'Hãy nhập chỉ số này!' }]"
         >
-          <a-input-number v-model:value="dailyMetric.height" suffix="Cm" />
+          <a-input-number v-model:value="dailyMetric.height" suffix="Cm" /> Cm
         </a-form-item>
       </div>
       <div v-if="form.titleModal == 'Huyết áp'">
@@ -96,7 +96,12 @@ import { message } from 'ant-design-vue'
           label="Chỉ số O2 trong máu"
           :rules="[{ required: true, message: 'Hãy nhập chỉ số này!' }]"
         >
-          <a-input-number v-model:value="dailyMetric.oxygenSaturation" suffix="SPO2" />
+          <a-input-number
+            placeholder="100"
+            v-model:value="dailyMetric.oxygenSaturation"
+            suffix="SPO2"
+          />
+          %
         </a-form-item>
       </div>
     </CommonLayout>
@@ -116,14 +121,14 @@ export default {
         cancelText: 'Hủy'
       },
       dailyMetric: {
-        weight: 0,
-        height: 0,
-        systolicBloodPressure: 0,
-        diastolicBloodPressure: 0,
-        heartRate: 0,
-        bloodSugar: 0,
-        oxygenSaturation: 0,
-        bodyTemperature: 0
+        weight: null,
+        height: null,
+        systolicBloodPressure: null,
+        diastolicBloodPressure: null,
+        heartRate: null,
+        bloodSugar: null,
+        oxygenSaturation: null,
+        bodyTemperature: null
       },
       listItem: [
         {

@@ -2,16 +2,34 @@
   <div>
     <a-page-header
       style="border: 1px solid rgb(235, 237, 240)"
-      title="Title"
-      :breadcrumb="{ listBread }"
-      sub-title="This is a subtitle"
+      :title="this.healthProfie.fullName"
+      v-model:sub-title="subtitle"
+      @back="back"
     />
-    <slot></slot>
+    <slot ></slot>
   </div>
 </template>
 <script>
+import { useMedicalRecordStore } from '@/stores/medicalRecord'
+import { ref } from 'vue'
 export default {
-  props: { listBread: [] }
+  async mounted() {
+    const store = await useMedicalRecordStore()
+    this.healthProfie = await store.getHealthProfileByID(this.newId)
+  },
+  data() {
+    return {
+      newId: this.$route.params.id,
+      healthProfie: ref({}),
+      subtitle: ref('Đây là tiêu đề của từng tag'),
+      title: ref('Tiêu đề')
+    }
+  },
+  methods: {
+    back(){
+      this.$router.back()
+    }
+  }
 }
 </script>
 <style lang=""></style>

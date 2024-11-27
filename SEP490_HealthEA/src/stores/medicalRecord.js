@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getData, postData, deleteData } from '@/service/main'
+import { getData, postData, deleteData, patchData, putData } from '@/service/main'
 import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue'
 const API_URL = 'http://localhost:5217/api/customer'
@@ -21,17 +21,56 @@ export const useMedicalRecordStore = defineStore('medicalRecord', {
     }
   },
   actions: {
-    async getHealthProfileByID(id) {
+    async removeDP(id){
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      const data = await deleteData(API_URL + `/DocumentProfile/${id}`, headers)
+      return data
+    },
+    async updateDP(id, body) {
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      const data = await putData(API_URL + `/DocumentProfile?id=${id}`, body, headers)
+      return data
+    },
+    async getOneDP(id) {
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      const data = await getData(API_URL + `/DocumentProfile/${id}`, headers)
+      return data
+    },
+    // http://localhost:5217/api/customer/DocumentProfile
+    async addNewDP(body) {
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      const data = await postData(API_URL + `/DocumentProfile`, body, headers)
+      return data
+    },
+    // http://localhost:5217/api/customer/DocumentProfile/3fa85f64-5717-4562-b3fc-2c963f66afa6/1
+    async getListAType(id, type) {
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      const data = await getData(API_URL + `/DocumentProfile/${id}/${type}`, headers)
+      return data
+    },
+    async changeShare(id, body) {
       try {
         const userStore = useUserStore()
         headers.headers.Authorization = `Bearer ${userStore.token}`
-        const data = await getData(API_URL + '/HealthProfile/infomation/' + id, headers)
+        const data = await patchData(API_URL + '/HealthProfile/share/' + id, body, headers)
+        this.storeHealthProfile = data.data.data
         message.success(data.data.userMsg)
-        return data.data.data
       } catch (error) {
         console.log(error)
         message.error('Error fetching data:' + error, 3)
       }
+    },
+
+    async getHealthProfileByID(id) {
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      const data = await getData(API_URL + '/HealthProfile/infomation/' + id, headers)
+      return data.data.data
     },
     async deleteHealthProfile(id) {
       try {
