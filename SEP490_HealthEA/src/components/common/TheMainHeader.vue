@@ -53,6 +53,7 @@ export default {
           this.listHeader.push({ path: '/profileHealth', text: 'Hồ sơ sức khỏe' })
           this.listHeader.push({ path: '/dailymetric', text: 'Chỉ số sức khỏe định kỳ' })
           this.listHeader.push({ path: '/remind/calendar', text: 'Lịch của bạn' })
+          this.listHeader.push({ path: '/alldoctor/list', text: 'Danh sách bác sĩ' })
         }
         if (role == 'ADMIN') {
           this.listHeader.push({ path: '/admin/UserManagement', text: 'Quản lý tài khoản' })

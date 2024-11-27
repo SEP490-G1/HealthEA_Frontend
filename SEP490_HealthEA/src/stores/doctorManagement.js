@@ -17,9 +17,11 @@ export const doctorManagementStore = defineStore('doctorManagement', {
   }),
   actions: {
     async getAllDoctor() {
-      const userStore = useUserStore()
-      headers.headers.Authorization = `Bearer ${userStore.token}`
       const data = await getData(API_URL, headers)
+      return data
+    },
+    async getId(id) {
+      const data = await getData(API_URL + `/${id}`, headers)
       return data
     },
     async updateDoctorById(id, obj) {
