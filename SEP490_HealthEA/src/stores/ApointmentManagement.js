@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { deleteData, getData, patchData, postData, putData } from '@/service/main'
+import { getData, postData } from '@/service/main'
 import { useUserStore } from '@/stores/user'
 const API_URL = 'http://localhost:5217/api/Appointments'
 
@@ -21,7 +21,7 @@ export const useApointment = defineStore('apointment', {
       const userStore = useUserStore()
       headers.headers.Authorization = `Bearer ${userStore.token}`
       var statusString = status == true ? 'approve' : 'reject'
-      const data = await getData(API_URL `/${statusString}/${id}`, headers)
+      const data = await postData(API_URL`/${statusString}/${id}`, headers)
       return data
     }
   }
