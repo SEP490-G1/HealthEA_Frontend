@@ -49,7 +49,7 @@ const routes = [
       {
         path: 'detail/:id',
         component: () => import('@/components/doctor/doctorDetail')
-      },
+      }
     ]
   },
   {
@@ -99,6 +99,21 @@ const routes = [
       {
         path: 'DoctorManagement',
         component: DoctorManagementView
+      }
+    ]
+  },
+  {
+    path: '/doctor',
+    name: 'doctorPage',
+    component: () => import('@/views/doctor/DoctorMain.vue'),
+    children: [
+      {
+        path: 'apoinemnt',
+        component: () => import('@/components/doctor/doctorApoinment.vue')
+      },
+      {
+        path: 'profile',
+        component: () => import('@/components/doctor/doctorList')
       }
     ]
   },
@@ -237,9 +252,9 @@ router.beforeEach(async (to) => {
     if (to.path.includes('/doctor')) {
       if (userStore.user.role != 'DOCTOR') {
         message.info('Bạn phải có quyền doctor!')
-        return '/'
+        return exitUser()
       }
-      return exitUser()
+      return
     }
   }
 })

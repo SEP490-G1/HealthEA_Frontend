@@ -27,10 +27,13 @@ export const doctorManagementStore = defineStore('doctorManagement', {
     async updateDoctorById(id, obj) {
       const userStore = useUserStore()
       headers.headers.Authorization = `Bearer ${userStore.token}`
-      console.log('tss', id)
-
       const data = await putData(API_URL + `/${id}`, obj, headers)
       return data
+    },
+
+    async addDoctor(obj){
+      console.log(obj);
+      
     },
     async removeDoctor(id) {
       const userStore = useUserStore()

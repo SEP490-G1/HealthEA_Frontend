@@ -64,6 +64,7 @@ export default {
   data() {
     return {
       drawerStage: ref({
+        stateEdit: 0,
         open: false,
         title: 'Tạo bác sĩ mới',
         change: false,
@@ -144,15 +145,28 @@ export default {
       this.drawerStage.state = true
     },
     async onFinish(doctor) {
-      var id = doctor.id
-      delete doctor.id
-      const doctorManageStore = doctorManagementStore()
-      var response = await doctorManageStore.updateDoctorById(id, doctor)
-      console.log(response)
-      if (response.status == 204) {
-        message.success('Thành công', 10)
-        this.onClose()
-        this.loadData()
+      if (this.drawerStage.state == false) {
+        var id = doctor.id
+        delete doctor.id
+        const doctorManageStore = doctorManagementStore()
+        var response = await doctorManageStore.updateDoctorById(id, doctor)
+        console.log(response)
+        if (response.status == 204) {
+          message.success('Thành công', 10)
+          this.onClose()
+          this.loadData()
+        }
+      }
+
+      if (this.drawerStage.state == true) {
+        // const doctorManageStore = doctorManagementStore()
+        // var response = await doctorManageStore.updateDoctorById(id, doctor)
+        // console.log(response)
+        // if (response.status == 204) {
+        //   message.success('Thành công', 10)
+        //   this.onClose()
+        //   this.loadData()
+        // }
       }
     },
     async editDoctor(doctor) {
