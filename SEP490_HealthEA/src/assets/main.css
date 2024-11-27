@@ -3,3 +3,7 @@
 #app {
   margin: 0 auto;
 }
+
+* {
+  text-decoration: none !important;
+}

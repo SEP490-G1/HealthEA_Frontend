@@ -91,7 +91,6 @@ const routes = [
       }
     ]
   },
-  },
   {
     path: '/dailymetric',
     name: 'upload',
@@ -125,7 +124,7 @@ const routes = [
     children: [
       {
         path: 'apoinemnt',
-        component: () => import('@/components/doctor/doctorApoinment.vue')
+        component: () => DoctorApoinment
       },
       {
         path: 'profile',
@@ -209,12 +208,12 @@ const routes = [
     component: () => import('../views/AboutView.vue')
   },
   {
-    path: '/doctors',
+    path: '/listDoctor',
     name: 'doctors',
     component: () => DoctorListView
   },
   {
-    path: '/doctors/:id',
+    path: '/listDoctor/:id',
     name: 'Doctor Detail',
     component: () => DoctorDetailView
   },
@@ -307,12 +306,11 @@ import NewsListView from '@/views/news/NewsListView.vue'
 import RemindView from '@/views/RemindView.vue'
 import CalendarRemind from '@/components/remind/CalendarRemind.vue'
 import DoctorRedirectView from '@/views/DoctorRedirectView.vue'
-import RemindView from '@/views/RemindView.vue'
-import CalendarRemind from '@/components/remind/CalendarRemind.vue'
 import VerifyPage from '@/components/login/VerifyPage.vue'
 import AccpetVerify from '@/components/login/AccpetVerify.vue'
 import Profile from '@/views/common/MyProfile.vue'
 import DoctorManagementView from '@/views/admin/DoctorManagementView.vue'
+import DoctorApoinment from '@/components/doctor/DoctorApoinment.vue'
 function exitUser() {
   // gọi store
   const userStore = useUserStore()

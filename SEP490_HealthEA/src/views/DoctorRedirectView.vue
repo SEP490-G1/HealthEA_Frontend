@@ -30,7 +30,7 @@ import axios from "axios";
             }
           });
           if (response.status === 200 && response.data.id) {
-            this.$router.push(`/doctors/${response.data.id}`);
+            this.$router.push(`/listDoctor/${response.data.id}`);
           } else {
             console.error("Unexpected response structure:", response);
             this.$router.push("/error/404");

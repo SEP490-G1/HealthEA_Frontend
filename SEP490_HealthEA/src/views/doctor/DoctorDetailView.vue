@@ -110,7 +110,7 @@
             </a-button>
           </div>
           <div v-if="isDoctor" class="mt-3">
-            <a-button type="dashed" block @click="$router.push('/appointment')">
+            <a-button type="dashed" block @click="$router.push('/doctor/apoinemnt')">
               Xem yêu cầu khám bệnh từ khách hàng
             </a-button>
           </div>

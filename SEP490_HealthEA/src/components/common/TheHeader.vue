@@ -1,5 +1,6 @@
 <script setup>
 import TheMainHeader from '@/components/common/TheMainHeader.vue'
+import { ref } from 'vue';
 </script>
 <template>
   <div>

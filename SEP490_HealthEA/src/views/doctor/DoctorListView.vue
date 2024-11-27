@@ -57,7 +57,7 @@
           :sm="12"
           :md="6"
         >
-          <router-link :to="`/doctors/${doctor.id}`">
+          <router-link :to="`/listDoctor/${doctor.id}`">
             <a-card class="doctor-card" hoverable>
               <div class="profile-image-container">
                 <img
