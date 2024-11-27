@@ -40,6 +40,7 @@
             Tìm kiếm
           </a-button>
         </a-form-item>
+        <router-link v-if="isDoctor" to="/doctors/me">Thông tin của bạn</router-link>
       </a-form>
     </div>
 
@@ -104,7 +105,8 @@ export default {
       displayedDoctors: [],
       loading: false,
       currentPage: 1,
-      pageSize: 8
+      pageSize: 8,
+      isDoctor: false,
     };
   },
   methods: {
@@ -134,6 +136,17 @@ export default {
     handlePageChange(page) {
       this.currentPage = page;
       this.updateDisplayedDoctors();
+    },
+    async checkUserIsDoctor(){
+      const userStore = useUserStore();
+      try {
+        const response = await axios.get('http://localhost:5217/api/Doctor/me', {
+          headers: { Authorization: `Bearer ${userStore.token}` }
+        });
+        this.isDoctor = true
+      } catch (error) {
+      } finally {
+      }
     }
   },
   watch: {
@@ -144,6 +157,7 @@ export default {
   },
   created() {
     this.fetchDoctors();
+    this.checkUserIsDoctor();
   }
 };
 </script>
