@@ -8,8 +8,8 @@
             <a-badge :status="record.status == 'Pending' ? 'processing' : 'success'" :text="record.status" />
         </template>
         <template v-if="column.dataIndex === 'action' && record.status == 'Pending'">
-            <div v-if="record.status == 'Pending'">Đã hoàn thành</div>
-            <div v-if="record.status == 'Pending'">Đã từ chối</div>
+            <div v-if="record.status != 'Pending'">Đã hoàn thành</div>
+            <div v-if="record.status != 'Pending'">Đã từ chối</div>
             <div class="editable-cell" v-if="record.status == 'Pending'">
             <a-popconfirm
               title="Bạn có xác nhận là chấp nhận lịch hẹn không?"
@@ -22,7 +22,7 @@
               title="Bạn có xác nhận là từ chối nhận lịch hẹn không?"
               @confirm="reject(record.appointmentId)"
             >
-              <a-typography-link @click="reject(record.appointmentId)">Từ chối</a-typography-link>
+              <a-typography-link>Từ chối</a-typography-link>
             </a-popconfirm>
           </div>
         </template>
@@ -32,6 +32,9 @@
 </template>
 <script>
 import { useApointment } from '@/stores/ApointmentManagement'
+import { useUserStore } from '@/stores/user';
+import { message } from 'ant-design-vue';
+import axios from 'axios';
 import { ref } from 'vue'
 
 export default {
@@ -39,11 +42,53 @@ export default {
     this.loadData()
   },
   methods: {
-    approve(item) {
-      console.log(item)
+    async approve(id) {
+      const userStore = useUserStore()
+      const bodyParameter = {
+        appointmentId: id
+      }
+      await axios.post(
+        'http://localhost:5217/api/Appointments/approve/' + id,
+        bodyParameter,
+        {
+          headers: {
+            Authorization: `Bearer ${userStore.token}`
+          }
+        }
+      ).then(
+        async () => {
+          message.success("Đã chấp nhận yêu cầu.")
+          await this.loadData()
+        }
+      ).catch(
+        () => {
+          message.error("Có lỗi xảy ra.")
+        }
+      )
     },
-    reject(item) {
-      console.log(item)
+    async reject(id) {
+      const userStore = useUserStore()
+      const bodyParameter = {
+        appointmentId: id
+      }
+      await axios.post(
+        'http://localhost:5217/api/Appointments/reject/' + id,
+        bodyParameter,
+        {
+          headers: {
+            Authorization: `Bearer ${userStore.token}`
+          }
+        }
+      ).then(
+        async () => {
+          message.success("Đã từ chối yêu cầu.")
+          await this.loadData()
+        }
+      ).catch(
+        () => {
+          message.error("Có lỗi xảy ra.")
+        }
+      )
     },
     async loadData() {
       const user = useApointment()

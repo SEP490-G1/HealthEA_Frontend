@@ -8,6 +8,10 @@ import LoginFrom from '@/components/login/LoginFrom'
 import RegisterFrom from '@/components/login/RegisterFrom'
 import ProfileHealth from '@/views/ProfileHealthView'
 
+import AddDailyMetricView from '@/views/AddDailyMetricView.vue'
+
+import { useUserStore } from '@/stores/user'
+
 const routes = [
   {
     path: '/',
@@ -88,6 +92,17 @@ const routes = [
     ]
   },
   {
+    path: '/dailymetric',
+    name: 'upload',
+    component: HomeView,
+    children: [
+      {
+        path: 'add',
+        component: AddDailyMetricView
+      }
+    ]
+  },
+  {
     path: '/admin',
     name: 'adminpage',
     component: AdminView,
@@ -109,7 +124,7 @@ const routes = [
     children: [
       {
         path: 'apoinemnt',
-        component: () => import('@/components/doctor/doctorApoinment.vue')
+        component: () => DoctorApoinment
       },
       {
         path: 'profile',
@@ -180,6 +195,11 @@ const routes = [
     component: () => import('@/components/medical/ListMedicalRecord')
   },
   {
+    path: '/appointment',
+    name: 'Appointment List',
+    component: () => import('@/components/appointment/AppointmentList')
+  },
+  {
     path: '/about',
     name: 'about',
     // route level code-splitting
@@ -187,7 +207,78 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import('../views/AboutView.vue')
   },
-  { path: '/:pathMatch(.*)*', component: PageNotFound }
+  {
+    path: '/listDoctor',
+    name: 'doctors',
+    component: () => DoctorListView
+  },
+  {
+    path: '/listDoctor/:id',
+    name: 'Doctor Detail',
+    component: () => DoctorDetailView
+  },
+  {
+    path: '/doctors/update',
+    name: 'Update doctor details',
+    component: () => DoctorUpdateView
+  },
+  {
+    path: '/doctors/schedules/add',
+    name: 'Add Schedules',
+    component: () => DoctorCreateScheduleView
+  },
+  {
+    path: '/report',
+    name: 'Report',
+    component: () => ReportView
+  },
+  {
+    path: '/admin/reports',
+    name: 'Report Lists',
+    component: () => ReportListView
+  },
+  {
+    path: '/admin/reports/:id',
+    name: 'Report Details',
+    component: () => ReportDetailsView
+  },
+  {
+    path: '/admin/news/create',
+    name: 'Create News',
+    component: () => CreateNewsView
+  },
+  {
+    path: '/news/:id',
+    name: 'News',
+    component: () => NewsView
+  },
+  {
+    path: '/news',
+    name: 'News List',
+    component: () => NewsListView
+  },
+  {
+    path: '/doctors/me',
+    name: 'Doctor Info',
+    component: () => DoctorRedirectView
+  },
+  {
+    path: '/remind',
+    name: 'Remind',
+    component: RemindView,
+    children: [
+      {
+        path: 'calendar',
+        component: CalendarRemind
+      }
+    ]
+  },
+  {
+    path: '/error/404',
+    name: 'Not Found',
+    component: PageNotFound
+  },
+  { path: '/:pathMatch(.*)*', redirect: '/error/404' }
 ]
 
 const history = createWebHistory(import.meta.env.BASE_URL)
@@ -198,17 +289,28 @@ const router = createRouter({
 })
 
 import { message } from 'ant-design-vue'
-import { useUserStore } from '@/stores/user'
 import UserManagementView from '@/views/admin/UserManagementView.vue'
 import AdminView from '@/views/AdminView.vue'
 import DailyMetricView from '@/views/DailyMetricView.vue'
 import DailyMetricHistory from '@/components/dailyMetric/DailyMetricHistory.vue'
+import DoctorListView from '@/views/doctor/DoctorListView.vue'
+import DoctorDetailView from '@/views/doctor/DoctorDetailView.vue'
+import ReportView from '@/views/report/ReportView.vue'
+import DoctorUpdateView from '@/views/doctor/DoctorUpdateView.vue'
+import ReportListView from '@/views/report/ReportListView.vue'
+import ReportDetailsView from '@/views/report/ReportDetailsView.vue'
+import DoctorCreateScheduleView from '@/views/doctor/DoctorCreateScheduleView.vue'
+import CreateNewsView from '@/views/news/CreateNewsView.vue'
+import NewsView from '@/views/news/NewsView.vue'
+import NewsListView from '@/views/news/NewsListView.vue'
 import RemindView from '@/views/RemindView.vue'
 import CalendarRemind from '@/components/remind/CalendarRemind.vue'
+import DoctorRedirectView from '@/views/DoctorRedirectView.vue'
 import VerifyPage from '@/components/login/VerifyPage.vue'
 import AccpetVerify from '@/components/login/AccpetVerify.vue'
 import Profile from '@/views/common/MyProfile.vue'
 import DoctorManagementView from '@/views/admin/DoctorManagementView.vue'
+import DoctorApoinment from '@/components/doctor/DoctorApoinment.vue'
 function exitUser() {
   // gọi store
   const userStore = useUserStore()
