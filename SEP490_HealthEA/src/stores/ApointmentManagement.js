@@ -9,6 +9,10 @@ const headers = {
     'Content-Type': 'application/json'
   }
 }
+
+// const storeApoint = useApointment()
+// storeApoint.updateStatus(idApoint, )
+
 export const useApointment = defineStore('apointment', {
   actions: {
     async getApoinmentDoctor() {

@@ -1,6 +1,7 @@
 <!-- @author: thuyht -->
 <script setup>
 import TheHeader from '@/components/common/TheHeader'
+// import { noticeStore } from './stores/Notice'
 </script>
 
 <template>
@@ -13,9 +14,12 @@ import TheHeader from '@/components/common/TheHeader'
 </template>
 <script>
 export default {
-  
   components: {
     TheHeader
+  },
+  mounted() {
+    // const noti = noticeStore()
+    // noti.registerDeviceToken()
   },
   data() {
     return {}
