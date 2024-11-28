@@ -143,6 +143,11 @@ const routes = [
     component: DailyMetricHistory
   },
   {
+    path: '/chat',
+    name: 'chat',
+    component: () => import('@/components/dailymetric/Chat')
+  },
+  {
     path: '/profileHealth/medical_record',
     name: 'medicalrecord',
     component: ProfileHealth,
