@@ -143,6 +143,11 @@ const routes = [
     component: DailyMetricHistory
   },
   {
+    path: '/chat',
+    name: 'chat',
+    component: () => import('@/components/dailymetric/Chat')
+  },
+  {
     path: '/callVideo',
     name: 'videoCall',
     component: () => import('@/views/VideoCallView.vue')
