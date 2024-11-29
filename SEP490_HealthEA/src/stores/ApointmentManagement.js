@@ -15,17 +15,17 @@ const headers = {
 
 export const useApointment = defineStore('apointment', {
   actions: {
-    async getApoinmentDoctor() {
+    async getApoinmentDoctor(pagenumber, pagesize) {
       const userStore = useUserStore()
       headers.headers.Authorization = `Bearer ${userStore.token}`
-      const data = await getData(API_URL, headers)
+      const data = await getData(API_URL + `?PageNumber=${pagenumber}&PageSize=${pagesize}`, headers)
       return data
     },
     async updateStatus(id, status) {
       const userStore = useUserStore()
       headers.headers.Authorization = `Bearer ${userStore.token}`
       var statusString = status == true ? 'approve' : 'reject'
-      const data = await postData(API_URL`/${statusString}/${id}`, headers)
+      const data = await postData(API_URL + `/${statusString}/${id}`, {} , headers)
       return data
     }
   }

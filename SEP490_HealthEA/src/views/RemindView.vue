@@ -1,15 +1,16 @@
 <template>
   <div>
-    <RemindView> 
+    <MainRemind> 
         <RouterView />
-    </RemindView>
+    </MainRemind>
   </div>
 </template>
 <script>
-import RemindView from '@/components/remind/MainRemind'
+import MainRemind from '@/components/remind/MainRemind.vue';
+
 export default {
   components: {
-    RemindView
+    MainRemind 
   }
 }
 </script>

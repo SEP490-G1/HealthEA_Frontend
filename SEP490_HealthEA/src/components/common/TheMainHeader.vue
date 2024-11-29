@@ -11,7 +11,7 @@ import { RouterLink } from 'vue-router'
             :class="item.path == pathActive ? 'ant-menu-item-selected' : ''"
             :key="index"
           >
-            <RouterLink :to="item.path">{{ item.text }}</RouterLink>
+            <RouterLink class="text-decoration-none" :to="item.path">{{ item.text }}</RouterLink>
           </a-menu-item>
         </div>
         <UserHeader v-model:role="role" />
@@ -53,22 +53,29 @@ export default {
           this.listHeader.push({ path: '/profileHealth', text: 'Hồ sơ sức khỏe' })
           this.listHeader.push({ path: '/dailymetric', text: 'Chỉ số sức khỏe định kỳ' })
           this.listHeader.push({ path: '/remind/calendar', text: 'Lịch của bạn' })
-          this.listHeader.push({ path: '/alldoctor/list', text: 'Danh sách bác sĩ' })
+          this.listHeader.push({ path: '/listDoctor', text: 'Danh sách bác sĩ' })
+          this.listHeader.push({ path: '/news', text: 'Tin tức' })
+          this.listHeader.push({ path: '/callVideo', text: 'Gọi trực tuyến' })
+          return
         }
         if (role == 'ADMIN') {
           this.listHeader.push({ path: '/admin/UserManagement', text: 'Quản lý tài khoản' })
           this.listHeader.push({ path: '/admin/DoctorManagement', text: 'Quản lý bác sĩ' })
+          return
         }
         if (role == 'DOCTOR') {
           this.listHeader.push({ path: '/doctor/apoinemnt', text: 'Xem lịch hẹn' })
-          this.listHeader.push({ path: '/doctor/profile', text: 'Xem thông tin' })
+          this.listHeader.push({ path: '/doctors/me', text: 'Xem thông tin' })
+          return
         }
+       
       } catch (error) {
-        this.listHeader = [
+        error
+      }
+      this.listHeader = [
           { path: '/', text: 'Trang chủ' },
           { path: '/about', text: 'Về chúng tôi' }
         ]
-      }
     }
   }
 }
