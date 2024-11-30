@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { deleteData, getData, postData, putData } from '@/service/main'
 import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue'
-const API_URL = 'http://localhost:5217/api/Events'
+const API_URL = `${import.meta.env.VITE}/api/Events`
 
 const headers = {
   // Các tùy chọn cấu hình khác
