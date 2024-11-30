@@ -69,6 +69,8 @@ export default {
         if (role == 'ADMIN') {
           this.listHeader.push({ path: '/admin/UserManagement', text: 'Quản lý tài khoản' })
           this.listHeader.push({ path: '/admin/DoctorManagement', text: 'Quản lý bác sĩ' })
+          this.listHeader.push({ path: '/admin/reports', text: 'Quản lý báo cáo' })
+          this.listHeader.push({ path: '/admin/news/create', text: 'Quản lý tin tức' })
         }
         if (role == 'DOCTOR') {
           this.listHeader.push({ path: '/doctor/apoinemnt', text: 'Xem lịch hẹn' })

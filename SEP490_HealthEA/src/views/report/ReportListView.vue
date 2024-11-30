@@ -1,6 +1,6 @@
 <template>
     <div class="container mt-4">
-      <h2>Báo cáo Người dùng</h2>
+      <h2>Quản lí báo cáo</h2>
   
       <!-- Filter by Status -->
       <a-select

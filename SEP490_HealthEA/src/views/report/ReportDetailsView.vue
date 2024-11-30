@@ -50,8 +50,8 @@ export default {
     return {
       report: null,
       linkMapping: {
-        doctor: "/doctors/",
-        patient: "/patients/",
+        doctor: "/listDoctor/",
+        news: "/news/",
         // Add more mappings as needed
       }
     };
