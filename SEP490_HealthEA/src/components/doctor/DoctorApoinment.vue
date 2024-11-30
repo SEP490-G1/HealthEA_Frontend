@@ -1,16 +1,19 @@
 <template>
   <div>
     <a-typography-title :level="3">Lịch hẹn của bạn</a-typography-title>
-    <a-table :dataSource="listApointment" :columns="columns">
+    <a-table :dataSource="listApointment" :columns="columns" :pagination="pagination">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'status'">
-            <!-- //status: success | processing | default | error | warning -->
-            <a-badge :status="record.status == 'Pending' ? 'processing' : 'success'" :text="record.status" />
+          <!-- //status: success | processing | default | error | warning -->
+          <a-badge
+            :status="record.status == 'Pending' ? 'processing' : 'success'"
+            :text="record.status"
+          />
         </template>
         <template v-if="column.dataIndex === 'action' && record.status == 'Pending'">
-            <div v-if="record.status != 'Pending'">Đã hoàn thành</div>
-            <div v-if="record.status != 'Pending'">Đã từ chối</div>
-            <div class="editable-cell" v-if="record.status == 'Pending'">
+          <div v-if="record.status != 'Pending'">Đã hoàn thành</div>
+          <div v-if="record.status != 'Pending'">Đã từ chối</div>
+          <div class="editable-cell" v-if="record.status == 'Pending'">
             <a-popconfirm
               title="Bạn có xác nhận là chấp nhận lịch hẹn không?"
               @confirm="approve(record.appointmentId)"
@@ -32,14 +35,15 @@
 </template>
 <script>
 import { useApointment } from '@/stores/ApointmentManagement'
-import { useUserStore } from '@/stores/user';
-import { message } from 'ant-design-vue';
-import axios from 'axios';
+import { useUserStore } from '@/stores/user'
+import { message } from 'ant-design-vue'
+
+import axios from 'axios'
 import { ref } from 'vue'
 
 export default {
   mounted() {
-    this.loadData()
+    this.loadData(1, 10)
   },
   methods: {
     async approve(id) {
@@ -47,54 +51,52 @@ export default {
       const bodyParameter = {
         appointmentId: id
       }
-      await axios.post(
-        'http://localhost:5217/api/Appointments/approve/' + id,
-        bodyParameter,
-        {
+      await axios
+        .post('http://localhost:5217/api/Appointments/approve/' + id, bodyParameter, {
           headers: {
             Authorization: `Bearer ${userStore.token}`
           }
-        }
-      ).then(
-        async () => {
-          message.success("Đã chấp nhận yêu cầu.")
+        })
+        .then(async () => {
+          message.success('Đã chấp nhận yêu cầu.')
           await this.loadData()
-        }
-      ).catch(
-        () => {
-          message.error("Có lỗi xảy ra.")
-        }
-      )
+        })
+        .catch(() => {
+          message.error('Có lỗi xảy ra.')
+        })
     },
     async reject(id) {
       const userStore = useUserStore()
       const bodyParameter = {
         appointmentId: id
       }
-      await axios.post(
-        'http://localhost:5217/api/Appointments/reject/' + id,
-        bodyParameter,
-        {
+      await axios
+        .post('http://localhost:5217/api/Appointments/reject/' + id, bodyParameter, {
           headers: {
             Authorization: `Bearer ${userStore.token}`
           }
-        }
-      ).then(
-        async () => {
-          message.success("Đã từ chối yêu cầu.")
+        })
+        .then(async () => {
+          message.success('Đã từ chối yêu cầu.')
           await this.loadData()
-        }
-      ).catch(
-        () => {
-          message.error("Có lỗi xảy ra.")
-        }
-      )
+        })
+        .catch(() => {
+          message.error('Có lỗi xảy ra.')
+        })
     },
     async loadData() {
       const user = useApointment()
-      var res = await user.getApoinmentDoctor()
+      var res = await user.getApoinmentDoctor(1, 10)
       this.listApointment = res.data.items
-      console.log(this.listApointment)
+
+      var n = res.data.totalPages
+      for (let i = 2; i <= n; i++) {
+        let resz = await user.getApoinmentDoctor(i, 10)
+        this.listApointment = this.mergeArray(this.listApointment, resz.data.items)
+      }
+    },
+    mergeArray(list1, list2) {
+      return list1.concat(list2)
     }
   },
   data() {

@@ -75,7 +75,7 @@ export default {
             },
             {
               key: '5',
-              label: h(RouterLink, { to: '/profileHealth/medical_record/testing' }, 'Xét Nghiệm'),
+              label: h(RouterLink, { to: `/profileHealth/medical_record/testing/${this.$route.params.id}` }, 'Xét Nghiệm'),
               title: 'Xét nghiệm'
             },
             {

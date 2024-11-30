@@ -59,6 +59,7 @@ async function registerDeviceToken() {
 // Automatically get the deviceToken when the component is mounted
 onMounted(() => {
 })
+// import { noticeStore } from './stores/Notice'
 </script>
 
 <template>
@@ -73,6 +74,10 @@ onMounted(() => {
 export default {
   components: {
     TheHeader
+  },
+  mounted() {
+    // const noti = noticeStore()
+    // noti.registerDeviceToken()
   },
   data() {
     return {}

@@ -94,7 +94,7 @@ const routes = [
   {
     path: '/dailymetric',
     name: 'upload',
-    component: HomeView,
+    component: DailyMetricView,
     children: [
       {
         path: 'add',
@@ -148,6 +148,11 @@ const routes = [
     component: () => import('@/components/dailymetric/Chat')
   },
   {
+    path: '/callVideo',
+    name: 'videoCall',
+    component: () => import('@/views/VideoCallView.vue')
+  },
+  {
     path: '/profileHealth/medical_record',
     name: 'medicalrecord',
     component: ProfileHealth,
@@ -183,9 +188,14 @@ const routes = [
         component: () => import('@/components/medical/PrescriptionDetail')
       },
       {
-        path: 'testing',
+        path: 'testing/:id',
         name: 'tesing result',
         component: () => import('@/components/medical/TestingPage')
+      },
+      {
+        path: 'testing/:id/detail/:idD',
+        name: 'tesing result detail',
+        component: () => import('@/components/medical/TestingPageDetail')
       },
       {
         path: 'vaccination/:id',

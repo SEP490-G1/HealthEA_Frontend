@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia'
 import { message } from 'ant-design-vue'
-import { deleteData, getData, patchData, getAppointment } from '@/service/main'
+import { getAppointment } from '@/service/main'
 import { useUserStore } from '@/stores/user'
-const API_URL = 'http://localhost:5217/api/Appointments/'
 
 const headers = {
   headers: {
@@ -17,7 +16,6 @@ export const useAppointment = defineStore('dailyMetric', {
         headers.headers.Authorization = `Bearer ${userStore.token}`
         const data = await getAppointment(link)
         message.success('Lấy dữ liệu thành công')
-
         return data
       } catch (error) {
         console.log(error)
