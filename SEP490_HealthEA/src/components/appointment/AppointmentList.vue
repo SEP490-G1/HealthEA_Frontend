@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="pricing-header text-center">
     <h2 class="display-4">Danh sách cuộc hẹn</h2>
   </div>
@@ -16,6 +16,7 @@
           <th scope="col">Địa điểm</th>
           <th scope="col">Trạng thái</th>
           <th scope="col">Hành động</th>
+          <th scope="col">Call</th>
         </tr>
       </thead>
       <tbody>
@@ -36,6 +37,11 @@
               Từ chối
             </button>
             <!-- </router-link> -->
+          </td>
+          <td>
+            <button class="btn btn-success" @click="callAppointment(appointment)">
+              Call
+            </button>
           </td>
         </tr>
       </tbody>
@@ -104,7 +110,7 @@ export default {
           Authorization: `Bearer ${userStore.token}`
         }
       }
-      const user = await axios.get('http://localhost:9090/identity/users/myinfo', headers)
+      const user = await axios.get('http://160.25.233.36:9090/identity/users/myinfo', headers)
       this.userId = user.data.result.id
     },
     async getAppointment(page = this.currentPage, size = this.pageSize) {
@@ -116,7 +122,11 @@ export default {
         }
         const userStore = useUserStore()
         const response = await axios.get(
-          'http://localhost:5217/api/Appointments' + '?pageNumber=' + this.currentPage + '&pageSize=' + this.pageSize,
+          'http://localhost:5217/api/Appointments' +
+            '?pageNumber=' +
+            this.currentPage +
+            '&pageSize=' +
+            this.pageSize,
           {
             headers: {
               Authorization: `Bearer ${userStore.token}`
@@ -358,4 +368,4 @@ td {
   background-color: #007bff;
   color: white;
 }
-</style>
+</style> -->

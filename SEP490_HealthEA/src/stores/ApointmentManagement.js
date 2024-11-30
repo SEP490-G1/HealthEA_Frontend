@@ -25,7 +25,7 @@ export const useApointment = defineStore('apointment', {
       const userStore = useUserStore()
       headers.headers.Authorization = `Bearer ${userStore.token}`
       var statusString = status == true ? 'approve' : 'reject'
-      const data = await postData(API_URL + `/${statusString}/${id}`, {} , headers)
+      const data = await postData(API_URL + `/${statusString}/${id}`, {}, headers)
       return data
     }
   }
