@@ -59,6 +59,7 @@ import AlertOutlined from '@ant-design/icons-vue';
 import axios from 'axios';
 import { notificationState } from '@/stores/NotificationStore';
 const colorList = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'];
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   setup() {

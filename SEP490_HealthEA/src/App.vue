@@ -7,6 +7,8 @@ import { onMounted } from 'vue'
 import { getToken, messaging } from './firebase';
 import { useUserStore } from './stores/user';
 
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
+
 // Register Service Worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
@@ -34,7 +36,7 @@ async function registerDeviceToken() {
         console.log('Device Token:', deviceToken)
         const userStore = useUserStore()
         // Send deviceToken to backend to register
-        await axios.post('http://localhost:5217/api/Notification/register-token', {
+        await axios.post(`${API_URL}/api/Notification/register-token`, {
           userId: '47863E73-E00C-4EBF-8F2A-1E8753359C4D',
           deviceToken: deviceToken,
           deviceType: 'web'
