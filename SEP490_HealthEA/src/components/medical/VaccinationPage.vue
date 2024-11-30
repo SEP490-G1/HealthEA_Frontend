@@ -57,7 +57,7 @@ export default {
     async loadData() {
       const res = useMedicalRecordStore()
       var listnew = []
-      var list = await res.getListAType(this.idHP, 1)
+      var list = await res.getListAType(this.idHP, 2)
       list.data.data.forEach((element) => {
         listnew.push({
           id: element.id,

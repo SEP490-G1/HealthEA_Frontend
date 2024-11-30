@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { getData, putData } from '@/service/main'
 import { useUserStore } from '@/stores/user'
-const API_URL = 'http://localhost:5217/api/Doctor'
+const API_URL = `${import.meta.env.VITE_API_URL_DOTNET}/api/Doctor`
 
 const headers = {
   // Các tùy chọn cấu hình khác

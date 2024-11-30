@@ -44,6 +44,7 @@ export default {
     jump(id) {
       this.$router.push(`/profileHealth/medical_record/prescription/${this.idHP}/detail/${id}`)
     },
+
     getTitle(value){     
       var obj = JSON.parse(value.contentMedical)
       if(undefined == obj.title){
@@ -51,6 +52,7 @@ export default {
       }
       return obj.title
     },
+    
     async loadData() {
       const res = useMedicalRecordStore()
       var listnew = []
