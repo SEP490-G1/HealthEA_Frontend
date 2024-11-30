@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { getData, postData, deleteData, patchData, putData } from '@/service/main'
 import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue'
-const API_URL = 'http://localhost:5217/api/customer'
+const API_URL = `${import.meta.env.VITE_API_URL_DOTNET}/api/customer`
 
 const headers = {
   // Các tùy chọn cấu hình khác

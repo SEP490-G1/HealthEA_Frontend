@@ -278,6 +278,11 @@ const routes = [
     component: () => DoctorRedirectView
   },
   {
+    path: '/doctors/call',
+    name: 'Doctor Call',
+    component: () => DoctorCall
+  },
+  {
     path: '/remind',
     name: 'Remind',
     component: RemindView,
@@ -287,6 +292,11 @@ const routes = [
         component: CalendarRemind
       }
     ]
+  },
+  {
+    path: '/call',
+    name: 'Video Call ',
+    component: () => CustomerCall
   },
   {
     path: '/notifications',
@@ -332,6 +342,8 @@ import Profile from '@/views/common/MyProfile.vue'
 import DoctorManagementView from '@/views/admin/DoctorManagementView.vue'
 import DoctorApoinment from '@/components/doctor/DoctorApoinment.vue'
 import NotificationListView from '@/views/notifications/NotificationListView.vue'
+import CustomerCall from '@/views/CustomerCall.vue'
+import DoctorCall from '@/views/DoctorCall.vue'
 function exitUser() {
   // gọi store
   const userStore = useUserStore()

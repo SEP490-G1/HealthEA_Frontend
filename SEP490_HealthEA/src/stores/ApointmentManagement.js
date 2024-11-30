@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { getData, postData } from '@/service/main'
 import { useUserStore } from '@/stores/user'
-const API_URL = 'http://localhost:5217/api/Appointments'
+const API_URL = `${import.meta.env.VITE_API_URL_DOTNET}/api/Appointments`
 
 const headers = {
   // Các tùy chọn cấu hình khác
@@ -25,7 +25,7 @@ export const useApointment = defineStore('apointment', {
       const userStore = useUserStore()
       headers.headers.Authorization = `Bearer ${userStore.token}`
       var statusString = status == true ? 'approve' : 'reject'
-      const data = await postData(API_URL + `/${statusString}/${id}`, {} , headers)
+      const data = await postData(API_URL + `/${statusString}/${id}`, {}, headers)
       return data
     }
   }

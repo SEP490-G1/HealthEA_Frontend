@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+
 // import { getData } from '@/service/main'
 import { message } from 'ant-design-vue'
 import {
@@ -11,7 +12,7 @@ import {
   clearUser
 } from '@/service/main'
 
-const API_URL = 'http://localhost:9090/identity'
+const API_URL = `${import.meta.env.VITE_API_URL_JAVA}/identity`
 const headers = {
   headers: {
     'Content-Type': 'application/json'
