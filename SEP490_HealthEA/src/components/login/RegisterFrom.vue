@@ -139,7 +139,6 @@ export default {
       }
     },
     onFinish(value) {
-      console.log(value)
       this.register(value)
     },
     onFinishFailed() {
@@ -147,16 +146,18 @@ export default {
     },
     async register(value) {
       let newValue = value
-      delete value.acp;
-      delete value.re_password;
+      delete value.acp
+      delete value.re_password
       var userStoreLogin = useUserStore()
       const Response = await userStoreLogin.Register(newValue)
-      console.log(Response);
-      
-      // if (registerResponse == false) {
-      //   return
-      // }
-      // console.log(registerResponse)
+      if (Response.status != 200) {
+        var str = 'Có lỗi xảy ra!'
+  
+        if (Response.response.data.code == 1001) {
+          str = 'Tài khoản đã tồn tại'
+        }
+        message.error(str, 4)
+      }
       // this.$router.push({ path: '/client/login' })
     }
   }
