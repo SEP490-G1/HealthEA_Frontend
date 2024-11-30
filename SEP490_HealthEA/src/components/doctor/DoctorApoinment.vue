@@ -45,6 +45,7 @@ import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue'
 import axios from 'axios'
 import { ref } from 'vue'
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   mounted() {
@@ -57,7 +58,7 @@ export default {
         appointmentId: id
       }
       await axios
-        .post('http://localhost:5217/api/Appointments/approve/' + id, bodyParameter, {
+        .post(`${API_URL}/api/Appointments/approve/` + id, bodyParameter, {
           headers: {
             Authorization: `Bearer ${userStore.token}`
           }
@@ -76,7 +77,7 @@ export default {
         appointmentId: id
       }
       await axios
-        .post('http://localhost:5217/api/Appointments/reject/' + id, bodyParameter, {
+        .post(`${API_URL}/api/Appointments/reject/` + id, bodyParameter, {
           headers: {
             Authorization: `Bearer ${userStore.token}`
           }

@@ -210,11 +210,6 @@ const routes = [
     component: () => import('@/components/medical/ListMedicalRecord')
   },
   {
-    path: '/appointment',
-    name: 'Appointment List',
-    component: () => import('@/components/appointment/AppointmentList')
-  },
-  {
     path: '/about',
     name: 'about',
     // route level code-splitting

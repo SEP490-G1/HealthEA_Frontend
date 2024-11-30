@@ -168,6 +168,7 @@ import {
 } from 'ant-design-vue'
 import axios from 'axios'
 import { useUserStore } from '@/stores/user'
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   components: {
@@ -211,7 +212,7 @@ export default {
       const doctorId = this.$route.params.id
       const userStore = useUserStore()
       try {
-        const response = await axios.get(`http://localhost:5217/api/Doctor/${doctorId}`, {
+        const response = await axios.get(`${API_URL}/api/Doctor/${doctorId}`, {
           headers: { Authorization: `Bearer ${userStore.token}` }
         })
         this.doctor = response.data || {}
@@ -231,7 +232,7 @@ export default {
       const userStore = useUserStore()
       try {
         const response = await axios.get(
-          `http://localhost:5217/api/Schedules/is-user/${doctorId}`,
+          `${API_URL}/api/Schedules/is-user/${doctorId}`,
           {
             headers: { Authorization: `Bearer ${userStore.token}` }
           }
@@ -256,7 +257,7 @@ export default {
       const userStore = useUserStore()
 
       try {
-        const response = await axios.get(`http://localhost:5217/api/Schedules/by-day`, {
+        const response = await axios.get(`${API_URL}/api/Schedules/by-day`, {
           params: { date: formattedDate, doctorId },
           headers: { Authorization: `Bearer ${userStore.token}` }
         })
@@ -292,7 +293,7 @@ export default {
       const userStore = useUserStore()
 
       try {
-        await axios.delete(`http://localhost:5217/api/Schedules/${this.deleteScheduleId}`, {
+        await axios.delete(`${API_URL}/api/Schedules/${this.deleteScheduleId}`, {
           headers: { Authorization: `Bearer ${userStore.token}` }
         })
         this.$message.success('Xoá lịch thành công!')
@@ -316,7 +317,7 @@ export default {
       }
 
       try {
-        await axios.post('http://localhost:5217/api/Appointments', appointment, {
+        await axios.post(`${API_URL}/api/Appointments`, appointment, {
           headers: { Authorization: `Bearer ${userStore.token}` }
         })
         this.isModalVisible = false

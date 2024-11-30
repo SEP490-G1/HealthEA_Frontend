@@ -93,6 +93,7 @@
 <script>
 import axios from 'axios';
 import { useUserStore } from '@/stores/user';
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   data() {
@@ -114,7 +115,7 @@ export default {
       this.loading = true;
       const userStore = useUserStore();
       try {
-        const response = await axios.get('http://localhost:5217/api/Doctor', {
+        const response = await axios.get(`${API_URL}/api/Doctor`, {
           params: {
             name: this.filters.name,
             city: this.filters.city
@@ -140,7 +141,7 @@ export default {
     async checkUserIsDoctor(){
       const userStore = useUserStore();
       try {
-        const response = await axios.get('http://localhost:5217/api/Doctor/me', {
+        const response = await axios.get(`${API_URL}/api/Doctor/me`, {
           headers: { Authorization: `Bearer ${userStore.token}` }
         });
         this.isDoctor = true

@@ -53,6 +53,7 @@ import { ref, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import axios from 'axios'
 import { message } from 'ant-design-vue'
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   name: 'NotificationPage',
@@ -69,7 +70,7 @@ export default {
       isLoading.value = true
       try {
         const response = await axios.get(
-          `http://localhost:5217/api/Notification?pageNumber=${pageNumber.value}&pageSize=${pageSize}`,
+          `${API_URL}/api/Notification?pageNumber=${pageNumber.value}&pageSize=${pageSize}`,
           {
             headers: {
               Authorization: `Bearer ${userStore.token}`
@@ -93,7 +94,7 @@ export default {
 
     const handleReadAll = async () => {
       try {
-        const response = await axios.get(`http://localhost:5217/api/Notification/readAll`, {
+        const response = await axios.get(`${API_URL}/api/Notification/readAll`, {
           headers: {
             Authorization: `Bearer ${userStore.token}`
           }

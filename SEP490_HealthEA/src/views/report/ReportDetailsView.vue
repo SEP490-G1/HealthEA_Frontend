@@ -43,6 +43,7 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { Modal } from 'ant-design-vue';
 import { useUserStore } from '@/stores/user';
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   data() {
@@ -66,7 +67,7 @@ export default {
       const id = this.$route.params.id;
       const userStore = useUserStore();
       try {
-        const response = await axios.get(`http://localhost:5217/api/UserReport/${id}`, {
+        const response = await axios.get(`${API_URL}/api/UserReport/${id}`, {
           headers: { Authorization: `Bearer ${userStore.token}` },
         });
         this.report = response.data;
@@ -81,7 +82,7 @@ export default {
     async toggleStatus() {
       const newStatus = this.report.status === 1 ? 0 : 1;
       try {
-        await axios.patch(`http://localhost:5217/api/UserReport/${this.report.id}/status`, { status: newStatus });
+        await axios.patch(`${API_URL}/api/UserReport/${this.report.id}/status`, { status: newStatus });
         this.report.status = newStatus;
         this.report.resolvedAt = newStatus === 1 ? new Date() : null;
       } catch (error) {

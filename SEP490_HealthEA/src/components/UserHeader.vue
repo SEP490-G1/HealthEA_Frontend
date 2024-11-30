@@ -115,7 +115,7 @@ export default {
           return
         }
         const userStore = useUserStore()
-        const response = await axios.get('http://localhost:5217/api/Notification/any', {
+        const response = await axios.get(`${API_URL}/api/Notification/any`, {
           headers: {
             Authorization: `Bearer ${userStore.token}`
           }

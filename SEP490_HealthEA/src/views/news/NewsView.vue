@@ -34,6 +34,7 @@ import axios from 'axios'
 import { marked } from 'marked' // Import markdown parser
 import { message } from 'ant-design-vue'
 import { format } from 'date-fns' // For date formatting
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   data() {
@@ -68,7 +69,7 @@ export default {
       this.isLoading = true
 
       try {
-        const response = await axios.get(`http://localhost:5217/api/News/${id}`)
+        const response = await axios.get(`${API_URL}/api/News/${id}`)
         this.news = response.data
         this.convertedContent = marked(response.data.content) // Convert Markdown content to HTML
       } catch (error) {
