@@ -94,9 +94,9 @@ export default {
   },
   mounted() {
     this.checkNotifications()
-    this.notifInterval = setInterval(async () => {
-      await this.checkNotifications();
-    },10000)
+    // this.notifInterval = setInterval(async () => {
+    //   await this.checkNotifications();
+    // },10000)
   },
   beforeUnmount() {
     // Clear the interval when the component is destroyed
