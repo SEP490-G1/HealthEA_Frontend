@@ -11,7 +11,7 @@ import {
   clearUser
 } from '@/service/main'
 
-const API_URL = 'http://160.25.233.36:9090/identity'
+const API_URL = 'http://localhost:9090/identity'
 const headers = {
   headers: {
     'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ export const useUserStore = defineStore('user', {
     },
     async getUser() {
       try {
-        headers.headers.Authorization = `Bearer ${await this.token}`
+        headers.headers.Authorization = `Bearer ${this.token}`
         const response = await getData(API_URL + '/users/myinfo', headers)
         var data = response.data.result
         var obj = {
@@ -100,7 +100,6 @@ export const useUserStore = defineStore('user', {
       const response = await postData(API_URL + '/auth/token', body)
       try {
         if (response.data.code == 0) {
-          this.getUser()
           this.token = response.data.result.token
           //save token session
           if (bodyParameters.remember == false) {

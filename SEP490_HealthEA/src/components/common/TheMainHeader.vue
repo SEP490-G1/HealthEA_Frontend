@@ -14,7 +14,9 @@ import { RouterLink } from 'vue-router'
             <RouterLink class="text-decoration-none" :to="item.path">{{ item.text }}</RouterLink>
           </a-menu-item>
         </div>
-        <UserHeader v-model:role="role" />
+        <div class="flex horizon">
+          <UserHeader v-model:role="role" />
+        </div>
       </a-flex>
     </a-menu>
   </div>
@@ -47,6 +49,13 @@ export default {
   methods: {
     async checkRole() {
       const store = useUserStore()
+      if (store.token === null){
+        this.listHeader = [
+          { path: '/', text: 'Trang chủ' },
+          { path: '/about', text: 'Về chúng tôi' }
+        ]
+        return
+      }
       try {
         const role = await (await store.getUser()).role
         if (role == 'CUSTOMER') {
