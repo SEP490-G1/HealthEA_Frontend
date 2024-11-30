@@ -55,8 +55,6 @@ export default {
   },
   watch: {
     async 'userStore.token'() {
-      console.log('Change')
-
       const response = await this.userStore.getUser()
       if (response == undefined) {
         this.userStorez = { auth: false }

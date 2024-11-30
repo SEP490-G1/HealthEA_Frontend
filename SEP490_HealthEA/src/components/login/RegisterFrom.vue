@@ -147,13 +147,17 @@ export default {
     },
     async register(value) {
       let newValue = value
+      delete value.acp;
+      delete value.re_password;
       var userStoreLogin = useUserStore()
-      const registerResponse = await userStoreLogin.Register(newValue)
-      if (registerResponse == false) {
-        return
-      }
-      console.log(registerResponse)
-      this.$router.push({ path: '/client/login' })
+      const Response = await userStoreLogin.Register(newValue)
+      console.log(Response);
+      
+      // if (registerResponse == false) {
+      //   return
+      // }
+      // console.log(registerResponse)
+      // this.$router.push({ path: '/client/login' })
     }
   }
 }
