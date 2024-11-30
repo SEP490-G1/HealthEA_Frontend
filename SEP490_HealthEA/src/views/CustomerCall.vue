@@ -16,7 +16,7 @@
 export default {
   methods: {
     handleCall(customerId, doctorId) {
-      const url = `http://127.0.0.1:5500/web-sdk/video-call-demo/customer.html?customerId=${customerId}&doctorId=${doctorId}`
+      const url = `https://manhvv15.github.io/CallCustomer/?customerId=${customerId}&doctorId=${doctorId}`
       // const url = `http://127.0.0.1:5501/web-sdk/video-call-demo/user2.html`
       window.open(url, '_blank')
     }
