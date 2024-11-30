@@ -4,13 +4,16 @@
     <a-table :dataSource="listApointment" :columns="columns">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'status'">
-            <!-- //status: success | processing | default | error | warning -->
-            <a-badge :status="record.status == 'Pending' ? 'processing' : 'success'" :text="record.status" />
+          <!-- status: success | processing | default | error | warning -->
+          <a-badge
+            :status="record.status == 'Pending' ? 'processing' : 'success'"
+            :text="record.status"
+          />
         </template>
         <template v-if="column.dataIndex === 'action' && record.status == 'Pending'">
-            <div v-if="record.status != 'Pending'">Đã hoàn thành</div>
-            <div v-if="record.status != 'Pending'">Đã từ chối</div>
-            <div class="editable-cell" v-if="record.status == 'Pending'">
+          <div v-if="record.status != 'Pending'">Đã hoàn thành</div>
+          <div v-if="record.status != 'Pending'">Đã từ chối</div>
+          <div class="editable-cell" v-if="record.status == 'Pending'">
             <a-popconfirm
               title="Bạn có xác nhận là chấp nhận lịch hẹn không?"
               @confirm="approve(record.appointmentId)"
@@ -26,15 +29,21 @@
             </a-popconfirm>
           </div>
         </template>
+        <template v-if="column.dataIndex === 'call'">
+          <button class="btn btn-success" @click="handleCall(record.customerId, record.doctorId)">
+            Gọi
+          </button>
+        </template>
       </template>
     </a-table>
   </div>
 </template>
+
 <script>
 import { useApointment } from '@/stores/ApointmentManagement'
-import { useUserStore } from '@/stores/user';
-import { message } from 'ant-design-vue';
-import axios from 'axios';
+import { useUserStore } from '@/stores/user'
+import { message } from 'ant-design-vue'
+import axios from 'axios'
 import { ref } from 'vue'
 
 export default {
@@ -47,54 +56,51 @@ export default {
       const bodyParameter = {
         appointmentId: id
       }
-      await axios.post(
-        'http://localhost:5217/api/Appointments/approve/' + id,
-        bodyParameter,
-        {
+      await axios
+        .post('http://localhost:5217/api/Appointments/approve/' + id, bodyParameter, {
           headers: {
             Authorization: `Bearer ${userStore.token}`
           }
-        }
-      ).then(
-        async () => {
-          message.success("Đã chấp nhận yêu cầu.")
+        })
+        .then(async () => {
+          message.success('Đã chấp nhận yêu cầu.')
           await this.loadData()
-        }
-      ).catch(
-        () => {
-          message.error("Có lỗi xảy ra.")
-        }
-      )
+        })
+        .catch(() => {
+          message.error('Có lỗi xảy ra.')
+        })
     },
     async reject(id) {
       const userStore = useUserStore()
       const bodyParameter = {
         appointmentId: id
       }
-      await axios.post(
-        'http://localhost:5217/api/Appointments/reject/' + id,
-        bodyParameter,
-        {
+      await axios
+        .post('http://localhost:5217/api/Appointments/reject/' + id, bodyParameter, {
           headers: {
             Authorization: `Bearer ${userStore.token}`
           }
-        }
-      ).then(
-        async () => {
-          message.success("Đã từ chối yêu cầu.")
+        })
+        .then(async () => {
+          message.success('Đã từ chối yêu cầu.')
           await this.loadData()
-        }
-      ).catch(
-        () => {
-          message.error("Có lỗi xảy ra.")
-        }
-      )
+        })
+        .catch(() => {
+          message.error('Có lỗi xảy ra.')
+        })
     },
     async loadData() {
       const user = useApointment()
       var res = await user.getApoinmentDoctor()
       this.listApointment = res.data.items
       console.log(this.listApointment)
+      console.log('list appoint', this.listApointment)
+    },
+    handleCall(customerId, doctorId) {
+      const url = `http://127.0.0.1:5500/web-sdk/video-call-demo/doctor.html?doctorId=${doctorId}&customerId=${customerId}`
+      // const url = `http://127.0.0.1:5501/web-sdk/video-call-demo/user1.html`
+
+      window.open(url, '_blank')
     }
   },
   data() {
@@ -154,10 +160,17 @@ export default {
           dataIndex: 'action',
           key: 'action',
           width: 200
+        },
+        {
+          title: 'Call',
+          dataIndex: 'call',
+          key: 'call',
+          width: 200
         }
       ]
     }
   }
 }
 </script>
+
 <style lang=""></style>
