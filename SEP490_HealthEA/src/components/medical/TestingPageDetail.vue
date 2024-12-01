@@ -181,6 +181,8 @@ export default {
         contentMedical: JSON.stringify(content),
         image: []
       }
+      console.log(obj.contentMedical);
+      
       var id = this.$route.params.idD
       const mdStore = useMedicalRecordStore()
       var response = await mdStore.updateDP(id, obj)

@@ -70,6 +70,7 @@ export const useUserStore = defineStore('user', {
           status: data.status == 'ACTIVE' ? true : false,
           auth: true
         }
+        // this.user = obj
         var strings = JSON.stringify(obj)
         setLocalStoregare(MEMORY_STOGARE_USER, strings)
         return obj

@@ -18,6 +18,7 @@
           @handleDeleteAllBtn="deleteAllRemind"
           @handleEditBtn="editRemind"
           v-model:dateSelect="valueDate"
+          
         />
       </a-col>
     </a-row>
@@ -255,6 +256,7 @@ export default {
     this.getListEvent()
   },
   methods: {
+  
     async deleteAllRemind(id) {
       const store = useRemindStore()
       const response = await store.deleteRemind(id)
@@ -289,7 +291,10 @@ export default {
     },
     async onFinish() {
       await this.submitz()
+      
       await this.getListEvent()
+      this.valueDate = dayjs()
+      this.getListEvent()
     },
     onFinishFailed(errorInfo) {
       console.log('Failed:', errorInfo)
@@ -321,7 +326,8 @@ export default {
         console.log('loghere', obj)
         const store = await useRemindStore()
         const result = await store.updateRemind(obj)
-        console.log('sssss', result)
+        console.log('Update remind', result)
+        this.onClose()
       }
     },
     editRemind(obj) {
