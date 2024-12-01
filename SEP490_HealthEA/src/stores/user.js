@@ -50,10 +50,11 @@ export const useUserStore = defineStore('user', {
     },
     async getUser() {
       try {
-        if(this.token == null){
+        if (this.token == null) {
           return
         }
-        headers.headers.Authorization =  `Bearer ${await this.token}`
+
+        headers.headers.Authorization = `Bearer ${await this.token}`
         const response = await getData(API_URL + '/users/myinfo', headers)
         var data = response.data.result
         var obj = {
@@ -69,7 +70,6 @@ export const useUserStore = defineStore('user', {
           status: data.status == 'ACTIVE' ? true : false,
           auth: true
         }
-
         var strings = JSON.stringify(obj)
         setLocalStoregare(MEMORY_STOGARE_USER, strings)
         return obj
@@ -96,8 +96,8 @@ export const useUserStore = defineStore('user', {
       const response = await postData(API_URL + '/auth/token', body)
       try {
         if (response.data.code == 0) {
-          this.getUser()
-          this.token = response.data.result.token
+          this.token = await response.data.result.token
+          this.user = await this.getUser()
           //save token session
           if (bodyParameters.remember == false) {
             await setSessionStogare(MEMORY_STOGARE, this.token)

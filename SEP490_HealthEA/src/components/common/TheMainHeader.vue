@@ -46,6 +46,7 @@ export default {
   },
   methods: {
     async checkRole() {
+      
       const store = useUserStore()
       try {
         const role = await (await store.getUser()).role
@@ -67,6 +68,12 @@ export default {
           this.listHeader.push({ path: '/doctors/call', text: 'Video Call' })
         }
       } catch (error) {
+        this.listHeader = [
+          { path: '/', text: 'Trang chủ' },
+          { path: '/about', text: 'Về chúng tôi' }
+        ]
+      }
+      if (this.listHeader.length <= 0) {
         this.listHeader = [
           { path: '/', text: 'Trang chủ' },
           { path: '/about', text: 'Về chúng tôi' }

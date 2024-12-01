@@ -10,9 +10,6 @@ const headers = {
   }
 }
 
-// const storeApoint = useApointment()
-// storeApoint.updateStatus(idApoint, )
-
 export const useApointment = defineStore('apointment', {
   actions: {
     async getApoinmentDoctor(pagenumber, pagesize) {

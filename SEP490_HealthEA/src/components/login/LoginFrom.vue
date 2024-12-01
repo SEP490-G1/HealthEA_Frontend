@@ -83,9 +83,9 @@ export default {
       var obj = { username, password, remember }
       
       var response = await userStoreLogin.Login(obj)
-      console.log(response);
       
       if (response == true) {
+        
         this.$router.push('/')
       }
       if (response == 1020) {
