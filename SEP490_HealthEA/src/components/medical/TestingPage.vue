@@ -10,7 +10,9 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
       <template #overlay>
         <a-menu>
           <a-menu-item @click="addNew" key="1"> Thêm một tài liệu trống </a-menu-item>
-          <a-menu-item @click="scanImage" key="2"> Scan ảnh của bạn </a-menu-item>
+          <a-menu-item @click="addNew1" key="2"> Thêm xét nghiệm nước tiểu mẫu </a-menu-item>
+          <a-menu-item @click="addNew2" key="3"> Thêm xét nghiệm nước máu mẫu </a-menu-item>
+          <a-menu-item @click="scanImage" key="4"> Scan ảnh của bạn </a-menu-item>
         </a-menu>
       </template>
       <a-button>
@@ -116,8 +118,8 @@ export default {
         for (let i = 0; i < response.data.length; i++) {
           response.data[i].key = i + 1
         }
-        console.log(response.data);
-        
+        console.log(response.data)
+
         var object = {
           date: dayjs(),
           doctor: '',
@@ -167,6 +169,34 @@ export default {
       this.showDrawer()
     },
     async addNew() {
+      var obj = {
+        image: [],
+        type: 3,
+        healthProfileId: this.idHP,
+        contentMedical: '{}'
+      }
+      const res = useMedicalRecordStore()
+      var response = await res.addNewDP(obj)
+
+      console.log(response)
+
+      this.jump(response.data.data.id)
+    },
+    async addNew1() {
+      var obj = {
+        image: [],
+        type: 3,
+        healthProfileId: this.idHP,
+        contentMedical: '{}'
+      }
+      const res = useMedicalRecordStore()
+      var response = await res.addNewDP(obj)
+
+      console.log(response)
+
+      this.jump(response.data.data.id)
+    },
+    async addNew2() {
       var obj = {
         image: [],
         type: 3,

@@ -1,18 +1,25 @@
 <template>
   <div>
-    <div v-if="userStorez.auth">
+    <div v-if="display == true">
+
       <a-dropdown :trigger="['click']">
         <a class="ant-dropdown-link" @click.prevent>
           <a-avatar
             :src="userStorez.imageSrc"
             size="large"
-            :style="{ backgroundColor: color, verticalAlign: 'middle' }"
+            :style="{
+            border: '1px, solid',
+              color: `${getColorOpposite(color)}`,
+              backgroundColor: `${stringToHexColor(
+                !userStorez.userLastName ? userStorez.userFirstName : userStorez.userLastName
+              )}`,
+              verticalAlign: 'middle'
+            }"
           >
-            {{
-              userStorez.userLastName == null ? userStorez.userFirstName : userStorez.userLastName
-            }}
+            {{ !userStorez.userLastName ? userStorez.userFirstName : userStorez.userLastName }}
           </a-avatar>
         </a>
+
         <template #overlay>
           <a-menu>
             <a-menu-item key="0">
@@ -28,7 +35,7 @@
         </template>
       </a-dropdown>
     </div>
-    <div v-if:="!userStorez.auth">
+    <div v-else>
       <a-button type="primary" shape="round" style="margin-right: 10px" @click="gotoLogin">
         Login now
       </a-button>
@@ -44,7 +51,8 @@ const colorList = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae']
 export default {
   setup() {
     const userStore = useUserStore()
-    return { userStore }
+    var display = ref(userStore.user == null ? false : userStore.user.auth)
+    return { userStore, display }
   },
   data() {
     return {
@@ -54,15 +62,9 @@ export default {
     }
   },
   watch: {
-    async 'userStore.token'() {
-      console.log('Change')
-
-      const response = await this.userStore.getUser()
-      if (response == undefined) {
-        this.userStorez = { auth: false }
-        return
-      }
-      this.userStorez = response
+    async 'userStore.user'() {
+      this.display = this.userStore.user == null ? false : this.userStore.user.auth
+      this.userStorez = this.userStore.user
     }
   },
   mounted() {},
@@ -70,6 +72,48 @@ export default {
     AlertOutlined
   },
   methods: {
+    stringToHexColor(str) {
+      if(str == null){
+        return '#7265e6'
+      }
+      // Tạo một số hash đơn giản dựa trên chuỗi đầu vào
+      let hash = 0
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash)
+      }
+
+      // Chuyển đổi hash thành một số nguyên dương
+      hash = Math.abs(hash)
+
+      // Tạo một màu hex ngẫu nhiên dựa trên hash
+      let color = '#'
+      for (let i = 0; i < 3; i++) {
+        const value = (hash >> (i * 8)) & 0xff
+        color += value.toString(16).padStart(2, '0')
+      }
+      this.color = color
+      return color
+    },
+    getColorOpposite(hexColor) {
+      // Bỏ dấu # nếu có
+      hexColor = hexColor.replace('#', '')
+
+      // Chuyển đổi Hex sang RGB
+      const r = parseInt(hexColor.substring(0, 2), 16)
+      const g = parseInt(hexColor.substring(2, 4), 16)
+      const b = parseInt(hexColor.substring(4, 6), 16)
+      // Tính màu đối nghịch (đảo ngược các giá trị RGB)
+      const oppositeR = 255 - r
+      const oppositeG = 255 - g
+      const oppositeB = 255 - b
+
+      // Chuyển đổi RGB trở lại Hex
+      const oppositeHex = ((1 << 24) + (oppositeR << 16) + (oppositeG << 8) + oppositeB)
+        .toString(16)
+        .slice(1)
+
+      return `#${oppositeHex}`
+    },
     gotoLogin() {
       this.$router.push('/client/login')
     },
@@ -82,7 +126,7 @@ export default {
       this.$router.push('/client/login')
     },
     moveMyProfile() {
-      this.$router.push('/myprofile')
+      this.$router.push('/myprofile/myInfo')
     }
   }
 }

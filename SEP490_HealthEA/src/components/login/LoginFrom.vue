@@ -81,8 +81,11 @@ export default {
     async onLoginEvent(username, password, remember) {
       var userStoreLogin = useUserStore()
       var obj = { username, password, remember }
+      
       var response = await userStoreLogin.Login(obj)
+      
       if (response == true) {
+        
         this.$router.push('/')
       }
       if (response == 1020) {
