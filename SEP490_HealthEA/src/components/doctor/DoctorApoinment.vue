@@ -98,7 +98,7 @@ export default {
       console.log('list appoint', this.listApointment)
     },
     handleCall(customerId, doctorId) {
-      const url = `http://127.0.0.1:5500/web-sdk/video-call-demo/doctor.html?doctorId=${doctorId}&customerId=${customerId}`
+      const url = `https://manhvv15.github.io/DoctorCall/?doctorId=${doctorId}&customerId=${customerId}`
       // const url = `http://127.0.0.1:5501/web-sdk/video-call-demo/user1.html`
 
       window.open(url, '_blank')

@@ -12,7 +12,7 @@ import {
   clearUser
 } from '@/service/main'
 
-const API_URL = `${import.meta.env.VITE_API_URL_JAVA}/identity`
+const API_URL = `http://160.25.233.36:9090/identity`
 const headers = {
   headers: {
     'Content-Type': 'application/json'
@@ -45,20 +45,15 @@ export const useUserStore = defineStore('user', {
       this.token = null
     },
     async Register(bodyParameters) {
-      try {
-        const response = await postData(API_URL + '/users', bodyParameters, {})
-        message.success('Đăng ký thành công!')
-        return response
-      } catch (error) {
-        console.log(error)
-        message.error('Đăng ký thất bại', 3)
-        message.error(error, 3)
-        return false
-      }
+      const response = await postData(API_URL + '/users', bodyParameters, headers)
+      return response
     },
     async getUser() {
       try {
-        headers.headers.Authorization = `Bearer ${this.token}`
+        if(this.token == null){
+          return
+        }
+        headers.headers.Authorization =  `Bearer ${await this.token}`
         const response = await getData(API_URL + '/users/myinfo', headers)
         var data = response.data.result
         var obj = {
