@@ -1,23 +1,25 @@
 <template>
   <div>
-    <div v-if="userStorez && userStorez.auth">
+    <div v-if="display == true">
+
       <a-dropdown :trigger="['click']">
         <a class="ant-dropdown-link" @click.prevent>
-          <a-badge :dot="hasUnreadNotifications" :offset="[0, 5]">
-            <a-avatar
-              :src="userStorez.imageSrc"
-              size="large"
-              :style="{ backgroundColor: color, verticalAlign: 'middle' }"
-            >
-              {{
-                this.userStorez === null ? "" :
-                this.userStorez.userLastName == null
-                  ? this.userStorez.userFirstName
-                  : this.userStorez.userLastName
-              }}
-            </a-avatar>
-          </a-badge>
+          <a-avatar
+            :src="userStorez.imageSrc"
+            :dot="hasUnreadNotifications"
+            size="large"
+            :style="{
+              color: `${getColorOpposite(color)}`,
+              backgroundColor: `${stringToHexColor(
+                !userStorez.userLastName ? userStorez.userFirstName : userStorez.userLastName
+              )}`,
+              verticalAlign: 'middle'
+            }"
+          >
+            {{ !userStorez.userLastName ? userStorez.userFirstName : userStorez.userLastName }}
+          </a-avatar>
         </a>
+
         <template #overlay>
           <a-menu>
             <a-menu-item key="0">
@@ -39,12 +41,7 @@
       </a-dropdown>
     </div>
     <div v-else>
-      <a-button
-        type="primary"
-        shape="round"
-        style="margin-right: 10px"
-        @click="gotoLogin"
-      >
+      <a-button type="primary" shape="round" style="margin-right: 10px" @click="gotoLogin">
         Login now
       </a-button>
       <a-button shape="round" @click="gotoRegister"> Register </a-button>
@@ -63,8 +60,9 @@ const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   setup() {
-    const userStore = useUserStore();
-    return { userStore, notificationState };
+    const userStore = useUserStore()
+    var display = ref(userStore.user == null ? false : userStore.user.auth)
+    return { userStore, display }
   },
   data() {
     return {
@@ -76,17 +74,9 @@ export default {
     };
   },
   watch: {
-    async 'userStore.token'() {
-      const response = await this.userStore.getUser()
-      if (response == undefined) {
-        this.userStorez = { auth: false };
-        return;
-      }
-      this.userStorez = response;
-    },
-    async 'notificationState.hasUnread'() {
-      console.log("Notification Received?")
-      this.hasUnreadNotifications = true
+    async 'userStore.user'() {
+      this.display = this.userStore.user == null ? false : this.userStore.user.auth
+      this.userStorez = this.userStore.user
     }
   },
   mounted() {
@@ -105,6 +95,48 @@ export default {
     AlertOutlined;
   },
   methods: {
+    stringToHexColor(str) {
+      if(str == null){
+        return '#7265e6'
+      }
+      // Tạo một số hash đơn giản dựa trên chuỗi đầu vào
+      let hash = 0
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash)
+      }
+
+      // Chuyển đổi hash thành một số nguyên dương
+      hash = Math.abs(hash)
+
+      // Tạo một màu hex ngẫu nhiên dựa trên hash
+      let color = '#'
+      for (let i = 0; i < 3; i++) {
+        const value = (hash >> (i * 8)) & 0xff
+        color += value.toString(16).padStart(2, '0')
+      }
+      this.color = color
+      return color
+    },
+    getColorOpposite(hexColor) {
+      // Bỏ dấu # nếu có
+      hexColor = hexColor.replace('#', '')
+
+      // Chuyển đổi Hex sang RGB
+      const r = parseInt(hexColor.substring(0, 2), 16)
+      const g = parseInt(hexColor.substring(2, 4), 16)
+      const b = parseInt(hexColor.substring(4, 6), 16)
+      // Tính màu đối nghịch (đảo ngược các giá trị RGB)
+      const oppositeR = 255 - r
+      const oppositeG = 255 - g
+      const oppositeB = 255 - b
+
+      // Chuyển đổi RGB trở lại Hex
+      const oppositeHex = ((1 << 24) + (oppositeR << 16) + (oppositeG << 8) + oppositeB)
+        .toString(16)
+        .slice(1)
+
+      return `#${oppositeHex}`
+    },
     async checkNotifications() {
       try {
         if (this.userStore.token === null){
@@ -133,7 +165,7 @@ export default {
       this.$router.push('/client/login');
     },
     moveMyProfile() {
-      this.$router.push('/myprofile');
+      this.$router.push('/myprofile/myInfo');
     },
     viewNotifications() {
       this.$router.push('/notifications');

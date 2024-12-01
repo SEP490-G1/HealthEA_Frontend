@@ -52,7 +52,6 @@
           </a-row>
         </a-form>
       </div>
-      {{ formState }}
     </div>
   </div>
 </template>
@@ -65,12 +64,14 @@ export default {
     const myInfo = userStore.user
     return { myInfo }
   },
-  mounted() {},
+  mounted() {
+    this.formState = Object.assign({}, this.myInfo);
+  },
   data() {
     return {
       labelCol: { span: 12 },
       wrapperCol: { span: 200 },
-      formState: ref(this.myInfo)
+      formState: ref({})
     }
   }
 }
