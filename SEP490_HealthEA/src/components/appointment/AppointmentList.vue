@@ -114,6 +114,7 @@ export default {
       this.userId = user.data.result.id
     },
     async getAppointment(page = this.currentPage, size = this.pageSize) {
+      debugger
       this.totalPages = Math.ceil(this.totalElements / this.pageSize)
       try {
         const bodyParameter = {
