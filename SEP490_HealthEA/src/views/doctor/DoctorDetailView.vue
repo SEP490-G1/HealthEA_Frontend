@@ -322,6 +322,7 @@ export default {
         })
         this.isModalVisible = false
         this.$message.success('Cuộc hẹn đã được đặt thành công!')
+        this.fetchAvailableHours()
       } catch (error) {
         console.error('Lỗi khi tạo cuộc hẹn:', error)
         this.$message.error('Không thể tạo cuộc hẹn. Vui lòng thử lại sau.')
