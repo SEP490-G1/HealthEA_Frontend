@@ -46,7 +46,7 @@ export const useUserStore = defineStore('user', {
     },
     async Register(bodyParameters) {
       try {
-        const response = await postData(API_URL + '/users', bodyParameters, headers)
+        const response = await postData(API_URL + '/users', bodyParameters, {})
         message.success('Đăng ký thành công!')
         return response
       } catch (error) {

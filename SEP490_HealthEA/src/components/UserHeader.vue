@@ -77,10 +77,6 @@ export default {
   },
   watch: {
     async 'userStore.token'() {
-      if (this.userStore.token !== null){
-        await checkNotifications()
-      }
-      console.log(this.userStore.token)
       const response = await this.userStore.getUser();
       if (response == undefined) {
         this.userStorez = { auth: false };
