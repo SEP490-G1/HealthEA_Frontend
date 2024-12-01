@@ -79,15 +79,7 @@ export default {
     async loadData() {
       const store = doctorManagementStore()
       var response = await store.getAllDoctor()
-      var listNew = []
-      listNew.push(response.data[0])
-      listNew.push(response.data[0])
-      listNew.push(response.data[1])
-      listNew.push(response.data[1])
-      listNew.push(response.data[0])
-      listNew.push(response.data[0])
-      listNew.push(response.data[1])
-      listNew.push(response.data[1])
+      var listNew = response.data
       this.listDoctor = this.sliceArray(listNew, 5)
       console.log(this.listDoctor)
     },
