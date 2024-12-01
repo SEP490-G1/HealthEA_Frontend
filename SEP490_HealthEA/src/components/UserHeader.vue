@@ -8,6 +8,7 @@
             :src="userStorez.imageSrc"
             size="large"
             :style="{
+            border: '1px, solid',
               color: `${getColorOpposite(color)}`,
               backgroundColor: `${stringToHexColor(
                 !userStorez.userLastName ? userStorez.userFirstName : userStorez.userLastName
