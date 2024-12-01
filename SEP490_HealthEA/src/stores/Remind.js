@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { deleteData, getData, postData, putData } from '@/service/main'
 import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue'
-const API_URL = `${import.meta.env.VITE}/api/Events`
+const API_URL = `${import.meta.env.VITE_API_URL_DOTNET}/api/Events`
 
 const headers = {
   // Các tùy chọn cấu hình khác
@@ -40,6 +40,7 @@ export const useRemindStore = defineStore('remindStore', {
     },
     async AddNewRemind(body) {
       try {
+        
         const userStore = useUserStore()
 
         headers.headers.Authorization = `Bearer ${userStore.token}`
@@ -54,7 +55,6 @@ export const useRemindStore = defineStore('remindStore', {
     async getListEventRange(startDate, endDate) {
       try {
         const userStore = useUserStore()
-
         headers.headers.Authorization = `Bearer ${userStore.token}`
         const data = await getData(
           API_URL + `/eventList?startDate=${startDate}&endDate=${endDate}`,

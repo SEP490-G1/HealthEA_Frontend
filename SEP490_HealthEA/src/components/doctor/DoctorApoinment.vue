@@ -92,7 +92,7 @@ export default {
     },
     async loadData() {
       const user = useApointment()
-      var res = await user.getApoinmentDoctor()
+      var res = await user.getApoinmentDoctor(1, 10)
       this.listApointment = res.data.items
       console.log(this.listApointment)
       console.log('list appoint', this.listApointment)
