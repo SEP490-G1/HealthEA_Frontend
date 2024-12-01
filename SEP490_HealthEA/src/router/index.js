@@ -133,6 +133,11 @@ const routes = [
     ]
   },
   {
+    path: '/appointments',
+    name: 'Appointments List',
+    component: UserAppointment
+  },
+  {
     path: '/dailymetric',
     name: 'DailyMetric',
     component: DailyMetricView
@@ -339,6 +344,7 @@ import DoctorApoinment from '@/components/doctor/DoctorApoinment.vue'
 import NotificationListView from '@/views/notifications/NotificationListView.vue'
 import CustomerCall from '@/views/CustomerCall.vue'
 import DoctorCall from '@/views/DoctorCall.vue'
+import UserAppointment from '@/components/doctor/UserAppointment.vue'
 function exitUser() {
   // gọi store
   const userStore = useUserStore()

@@ -63,6 +63,7 @@ export default {
           this.listHeader.push({ path: '/profileHealth', text: 'Hồ sơ sức khỏe' })
           this.listHeader.push({ path: '/dailymetric', text: 'Chỉ số sức khỏe định kỳ' })
           this.listHeader.push({ path: '/remind/calendar', text: 'Lịch của bạn' })
+          this.listHeader.push({ path: '/appointments', text: 'Lịch hẹn khám của bạn' })
           this.listHeader.push({ path: '/listDoctor', text: 'Danh sách bác sĩ' })
           this.listHeader.push({ path: '/news', text: 'Tin tức' })
           this.listHeader.push({ path: '/call', text: 'Video Call' })
