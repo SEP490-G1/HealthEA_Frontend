@@ -60,6 +60,7 @@ async function registerDeviceToken() {
 
 // Automatically get the deviceToken when the component is mounted
 onMounted(() => {
+  registerDeviceToken()
 })
 // import { noticeStore } from './stores/Notice'
 </script>
