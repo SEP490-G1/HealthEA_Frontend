@@ -30,7 +30,7 @@
           </div>
         </template>
         <template v-if="column.dataIndex === 'call'">
-          <button class="btn btn-success" @click="handleCall(record.customerId, record.doctorId)">
+          <button :disabled="!isValid(record)" class="btn btn-success" @click="handleCall(record.customerId, record.doctorId)">
             Gọi
           </button>
         </template>
@@ -44,6 +44,7 @@ import { useApointment } from '@/stores/ApointmentManagement'
 import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue'
 import axios from 'axios'
+import { isValid } from 'date-fns'
 import { ref } from 'vue'
 const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
@@ -102,6 +103,20 @@ export default {
       // const url = `http://127.0.0.1:5501/web-sdk/video-call-demo/user1.html`
 
       window.open(url, '_blank')
+    },
+    isValid(record){
+      if (record.status !== "Approved"){
+        return false
+      }
+      var now = new Date();
+      var current = new Date(record.date);
+      const [hours, minutes, seconds] = record.endTime.split(':').map(Number);
+      current.setHours(hours,minutes,seconds);
+      console.log("Now: " + now + " Current: " + current)
+      if (current < now){
+        return false
+      }
+      return true
     }
   },
   data() {
