@@ -289,6 +289,7 @@ export default {
     },
     async onFinish() {
       await this.submitz()
+      
       await this.getListEvent()
     },
     onFinishFailed(errorInfo) {
@@ -321,7 +322,8 @@ export default {
         console.log('loghere', obj)
         const store = await useRemindStore()
         const result = await store.updateRemind(obj)
-        console.log('sssss', result)
+        console.log('Update remind', result)
+        this.onClose()
       }
     },
     editRemind(obj) {
