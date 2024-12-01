@@ -94,7 +94,6 @@
     }
   }
   
-  const beforeUpload = () => false
   
   const handlePreview = (file) => {
     const reader = new FileReader()

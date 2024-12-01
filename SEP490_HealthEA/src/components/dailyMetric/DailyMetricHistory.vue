@@ -4,7 +4,7 @@ import { useDailyMetricStore } from '@/stores/DailyMetricView'
 import { ref } from 'vue'
 </script>
 <template lang="">
-  <ContentFooter>
+  <ContentFooter style="">
     <a-typography-title style="display: flex; justify-content: center">
       Lịch sử nhập chỉ số sức khỏe
     </a-typography-title>
@@ -27,7 +27,11 @@ import { ref } from 'vue'
       </div>
     </div>
     <div class="container-list">
-      <listMetric @handleClickDelete="deleteClick" v-model:list="listValue.data" />
+      <listMetric
+        @handleClickAdd="loadData"
+        @handleClickDelete="deleteClick"
+        v-model:list="listValue.data"
+      />
     </div>
   </ContentFooter>
 </template>
@@ -47,15 +51,7 @@ export default {
   },
   data() {
     return {
-      rangeConfig: {
-        rules: [
-          {
-            type: 'array',
-            required: true,
-            message: 'Please select time!'
-          }
-        ]
-      },
+      rangeConfig: {},
       listValue: {},
       formState: {
         rangePicker: [this.subtractDay(this.getTodayInYYYYMMDD(), 7), this.getTodayInYYYYMMDD()]
@@ -64,16 +60,13 @@ export default {
       chartOptions: ref({
         chart: {
           height: 100,
-          type: 'line',
+          type: 'area',
           zoom: {
-            enabled: false
+            enabled: true
           }
         },
-        dataLabels: {
-          enabled: true
-        },
         stroke: {
-          curve: 'straight'
+          curve: 'smooth'
         },
         title: {
           text: 'Product Trends by Month',
@@ -93,6 +86,7 @@ export default {
   },
   beforeMount() {
     this.loadData()
+    console.log('series', this.series)
   },
   methods: {
     async deleteClick(id) {
@@ -100,7 +94,6 @@ export default {
       await store.deleteDailyMetricToday(id)
       this.loadData()
       console.log('Xóa thành công')
-      console.log(this.series)
     },
     subtractMonth(dateString, monthz) {
       // Chuyển đổi chuỗi ngày thành đối tượng Date
@@ -160,6 +153,11 @@ export default {
 
       this.chartOptions.xaxis.categories = list
     },
+    fillBetween(obj, list, index) {
+      for (let i = obj.index + 1; i < index; i++) {
+        list[i] = obj.value
+      }
+    },
     async loadData() {
       var startDate = this.formState.rangePicker[0]
       var endDate = this.formState.rangePicker[1]
@@ -169,22 +167,65 @@ export default {
       //setup value
       const store = useDailyMetricStore()
       this.listValue = await store.getRangeDailyMetric(startDate, endDate)
-      console.log(this.listValue.data)
       var n = this.chartOptions.xaxis.categories.length
       this.series = []
-      var heartRate = Array.from({ length: n }, () => 0)
-      var height = Array.from({ length: n }, () => 0)
-      var weight = Array.from({ length: n }, () => 0)
-      var bloodSugar = Array.from({ length: n }, () => 0)
-      var systolicBloodPressure = Array.from({ length: n }, () => 0)
-      var diastolicBloodPressure = Array.from({ length: n }, () => 0)
-      var bodyTemperature = Array.from({ length: n }, () => 0)
-      var oxygenSaturation = Array.from({ length: n }, () => 0)
+      var heartRate = Array.from({ length: n }, () => null)
+      var height = Array.from({ length: n }, () => null)
+      var weight = Array.from({ length: n }, () => null)
+      var bloodSugar = Array.from({ length: n }, () => null)
+      var systolicBloodPressure = Array.from({ length: n }, () => null)
+      var diastolicBloodPressure = Array.from({ length: n }, () => null)
+      var bodyTemperature = Array.from({ length: n }, () => null)
+      var oxygenSaturation = Array.from({ length: n }, () => null)
+      var lastWeight = { value: -1, index: -1 }
+      var lastHeight = { value: -1, index: -1 }
+      var lastHeartRate = { value: -1, index: -1 }
+
       this.listValue.data.forEach((element) => {
         var index = this.calculateDaysBetweenDates(element.date, startDate)
-        heartRate[index] = element.heartRate
-        height[index] = element.height
-        weight[index] = element.weight
+        if (element.weight != null) {
+          weight[index] = element.weight == null ? lastWeight.value : element.weight
+          if (lastWeight.index == -1) {
+            lastWeight.value = element.weight
+            lastWeight.index = index
+          }
+          if (lastWeight.index >= 0) {
+            this.fillBetween(lastWeight, weight, index)
+            if (element.weight != null) {
+              lastWeight.value = element.weight
+              lastWeight.index = index
+            }
+          }
+        }
+        if (element.height != null) {
+          height[index] = element.height == null ? lastHeight.value : element.height
+          if (lastHeight.index == -1) {
+            lastHeight.value = element.height
+            lastHeight.index = index
+          }
+          if (lastHeight.index >= 0) {
+            this.fillBetween(lastHeight, height, index)
+            if (element.height != null) {
+              lastHeight.value = element.height
+              lastHeight.index = index
+            }
+          }
+        }
+        if (element.heartRate != null) {
+          heartRate[index] = element.heartRate == null ? lastHeartRate.value : element.heartRate
+          if (lastHeartRate.index == -1) {
+            lastHeartRate.value = element.heartRate
+            lastHeartRate.index = index
+          }
+          if (lastHeartRate.index >= 0) {
+            this.fillBetween(lastHeartRate, heartRate, index)
+            if (element.heartRate != null) {
+              lastHeartRate.value = element.heartRate
+              lastHeartRate.index = index
+            }
+          }
+        }
+
         bloodSugar[index] = element.bloodSugar
         systolicBloodPressure[index] = element.systolicBloodPressure
         diastolicBloodPressure[index] = element.diastolicBloodPressure

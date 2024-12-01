@@ -1,42 +1,54 @@
 <template>
   <div class="doctor-list-container">
     <!-- Banner Section -->
-    <div class="banner bg-primary text-white text-center py-4">
+    <div class="banner text-white text-center py-4">
       <h1>Chào mừng đến với Dịch vụ Bác sĩ</h1>
       <p>Chúng tôi giúp bạn tìm bác sĩ phù hợp nhất cho nhu cầu của bạn</p>
     </div>
 
-    <!-- Search Filters -->
-    <a-form layout="inline" @submit.prevent="fetchDoctors" class="search-form mt-4">
-      <a-form-item>
-        <a-input
-          v-model:value="filters.name"
-          placeholder="Tìm theo tên bác sĩ"
-          allow-clear
-          size="large"
-        />
-      </a-form-item>
-      <a-form-item>
-        <a-input
-        v-model:value="filters.city"
-          placeholder="Tìm theo thành phố"
-          allow-clear
-          size="large"
-        />
-      </a-form-item>
-      <a-form-item>
-        <a-button
-          type="primary"
-          @click="fetchDoctors"
-          size="large"
-        >
-          Tìm kiếm
-        </a-button>
-      </a-form-item>
-    </a-form>
+    <!-- Search Header -->
+    <div class="search-header text-center mt-4">
+      <h2>Tìm kiếm bác sĩ</h2>
+      <p>Điền thông tin dưới đây để tìm bác sĩ bạn cần</p>
+    </div>
+
+    <!-- Centered Search Filters -->
+    <div class="search-container mt-3">
+      <a-form layout="inline" @submit.prevent="fetchDoctors" class="search-form">
+        <a-form-item>
+          <a-input
+            v-model:value="filters.name"
+            placeholder="Tìm theo tên bác sĩ"
+            allow-clear
+            size="large"
+          />
+        </a-form-item>
+        <a-form-item>
+          <a-input
+            v-model:value="filters.city"
+            placeholder="Tìm theo thành phố"
+            allow-clear
+            size="large"
+          />
+        </a-form-item>
+        <a-form-item>
+          <a-button
+            type="primary"
+            @click="fetchDoctors"
+            size="large"
+          >
+            Tìm kiếm
+          </a-button>
+        </a-form-item>
+        <router-link v-if="isDoctor" to="/doctors/me">Thông tin của bạn</router-link>
+      </a-form>
+    </div>
+
+    <!-- Display number of results found -->
+    <p class="results-count mt-4" v-if="doctors.length > 0">Found {{ doctors.length }} results</p>
 
     <!-- Doctor Cards Section -->
-    <div class="doctor-cards mt-5">
+    <div class="doctor-cards mt-3">
       <a-row gutter="16" v-if="displayedDoctors.length > 0">
         <a-col
           v-for="doctor in displayedDoctors"
@@ -45,7 +57,7 @@
           :sm="12"
           :md="6"
         >
-          <router-link :to="`/doctors/${doctor.id}`">
+          <router-link :to="`/listDoctor/${doctor.id}`">
             <a-card class="doctor-card" hoverable>
               <div class="profile-image-container">
                 <img
@@ -56,8 +68,8 @@
               </div>
               <div class="doctor-info">
                 <h3>{{ doctor.displayName }}</h3>
-                <p><strong>Chuyên khoa:</strong> {{ doctor.specialization }}</p>
-                <p><strong>Thành phố:</strong> {{ doctor.clinicCity }}</p>
+                <p class="doctor-details"><strong>Chuyên khoa:</strong> {{ doctor.specialization }}</p>
+                <p class="doctor-details"><strong>Thành phố:</strong> {{ doctor.clinicCity }}</p>
               </div>
             </a-card>
           </router-link>
@@ -80,6 +92,8 @@
 
 <script>
 import axios from 'axios';
+import { useUserStore } from '@/stores/user';
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   data() {
@@ -92,18 +106,21 @@ export default {
       displayedDoctors: [],
       loading: false,
       currentPage: 1,
-      pageSize: 8
+      pageSize: 8,
+      isDoctor: false,
     };
   },
   methods: {
     async fetchDoctors() {
       this.loading = true;
+      const userStore = useUserStore();
       try {
-        const response = await axios.get('http://localhost:5217/api/Doctor', {
+        const response = await axios.get(`${API_URL}/api/Doctor`, {
           params: {
             name: this.filters.name,
             city: this.filters.city
-          }
+          },
+          headers: { Authorization: `Bearer ${userStore.token}` }
         });
         this.doctors = response.data;
         this.updateDisplayedDoctors();
@@ -120,6 +137,17 @@ export default {
     handlePageChange(page) {
       this.currentPage = page;
       this.updateDisplayedDoctors();
+    },
+    async checkUserIsDoctor(){
+      const userStore = useUserStore();
+      try {
+        const response = await axios.get(`${API_URL}/api/Doctor/me`, {
+          headers: { Authorization: `Bearer ${userStore.token}` }
+        });
+        this.isDoctor = true
+      } catch (error) {
+      } finally {
+      }
     }
   },
   watch: {
@@ -130,6 +158,7 @@ export default {
   },
   created() {
     this.fetchDoctors();
+    this.checkUserIsDoctor();
   }
 };
 </script>
@@ -137,13 +166,13 @@ export default {
 <style scoped>
 /* Banner Section */
 .banner {
-  background-image: url('https://via.placeholder.com/1200x300');
-  background-size: cover;
-  background-position: center;
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  padding: 50px 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .banner h1 {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: bold;
 }
 
@@ -152,14 +181,42 @@ export default {
   font-weight: 400;
 }
 
+/* Search Header */
+.search-header h2 {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.search-header p {
+  font-size: 1rem;
+  color: #555;
+}
+
 /* Doctor List Container */
 .doctor-list-container {
   padding: 16px;
 }
 
-/* Search Form Styling */
+/* Centered Search Form */
+.search-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f0f4ff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .search-form .a-form-item {
   margin-right: 16px;
+}
+
+/* Results Count Text */
+.results-count {
+  color: #555;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 /* Doctor Cards Styling */
@@ -194,13 +251,12 @@ export default {
 
 .doctor-info h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
 }
 
-.doctor-info p {
-  margin: 4px 0;
-  font-size: 14px;
+.doctor-details {
+  font-size: 16px;
   color: #555;
 }
 
@@ -208,10 +264,5 @@ export default {
 .pagination {
   text-align: center;
   margin-top: 16px;
-}
-
-/* Loading Spinner */
-.spinner-border {
-  margin-right: 8px;
 }
 </style>

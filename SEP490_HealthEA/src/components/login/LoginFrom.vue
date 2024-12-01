@@ -52,8 +52,12 @@
 </template>
 
 <script>
+import { messaging } from '@/firebase';
 import { useUserStore } from '@/stores/user'
+import axios from 'axios';
+import { getToken } from 'firebase/messaging';
 import { ref } from 'vue'
+const DOTNET_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   data() {
@@ -81,14 +85,56 @@ export default {
     async onLoginEvent(username, password, remember) {
       var userStoreLogin = useUserStore()
       var obj = { username, password, remember }
+
       var response = await userStoreLogin.Login(obj)
-      if (!response) {
-        this.status.password = 'error'
-        this.status.username = 'error'
-        return
+
+      if (response == true) {
+        this.$router.push('/')
+        await this.registerDeviceToken()
       }
-      this.$router.push('/')
+      if (response == 1020) {
+        this.$router.push('/client/verifyEmail')
+      }
       return
+    },
+    async registerDeviceToken() {
+      const permission = await Notification.requestPermission()
+      if (permission === 'granted') {
+        try {
+          // Obtain the device token
+          const deviceToken = await getToken(messaging, {
+            vapidKey:
+              'BMpBVwTRbkxvoJzImRosbrGc8EiFhx2tFU1ezoY7VjdjxAygDzXWYrbm_iDpnhMdFXFu1U0LNqnXUQf1g1TXfmk'
+          })
+
+          if (deviceToken) {
+            console.log('Device Token:', deviceToken)
+            const userStore = useUserStore()
+            // Send deviceToken to backend to register
+            await axios.post(
+              `${DOTNET_URL}/api/Notification/register-token`,
+              {
+                userId: '47863E73-E00C-4EBF-8F2A-1E8753359C4D',
+                deviceToken: deviceToken,
+                deviceType: 'web'
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${userStore.token}`
+                }
+              }
+            )
+
+            console.log('Device token registered successfully.')
+          } else {
+            console.log('No registration token available.')
+          }
+        } catch (error) {
+          console.error('Error retrieving device token:', error)
+        }
+      } else {
+        console.log('Notification permission denied.')
+      }
     }
   }
 }

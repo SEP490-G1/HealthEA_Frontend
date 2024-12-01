@@ -1,6 +1,6 @@
 <script setup>
 import { PieChartOutlined } from '@ant-design/icons-vue'
-import { reactive, h, ref } from 'vue'
+import {  h, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import TheMenu from '@/components/common/TheMenu.vue'
 import CommonLayout from '@/components/medical/CommonLayout'
@@ -15,8 +15,7 @@ import CommonLayout from '@/components/medical/CommonLayout'
       <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '10px' }"
       >
-        
-        <common-layout :listBread="routes">
+        <common-layout>
           <RouterView />
         </common-layout>
       </a-layout-content>
@@ -27,35 +26,22 @@ import CommonLayout from '@/components/medical/CommonLayout'
 export default {
   data() {
     return {
-      routes: [
-        {
-          path: 'index',
-          breadcrumbName: 'First-level Menu'
-        },
-        {
-          path: 'first',
-          breadcrumbName: 'Second-level Menu'
-        },
-        {
-          path: 'second',
-          breadcrumbName: 'Third-level Menu'
-        }
-      ],
-      key: ref(['sub1']),
+      idNew: this.$route.params.id,
+      key: ref(['1']),
       selectedKeys: ref(['0']),
-      items: reactive([
+      items: [
         {
           key: '0',
           icon: () => h(PieChartOutlined),
           label: h(
             RouterLink,
-            { to: '/profileHealth/medical_record/information' },
+            { to: `/profileHealth/medical_record/information/` + this.$route.params.id },
             'Thông tin chung'
           ),
           title: 'Thông tin chung'
         },
         {
-          key: 'sub1',
+          key: '1',
           icon: () => h(PieChartOutlined),
           label: 'Loại hồ sơ',
           title: 'Các loại hồ sơ',
@@ -64,7 +50,7 @@ export default {
               key: '2',
               label: h(
                 RouterLink,
-                { to: '/profileHealth/medical_record/prehistoric' },
+                { to: '/profileHealth/medical_record/prehistoric/' + this.$route.params.id },
                 'Tiền Sử Bệnh'
               ),
               title: 'Tiền sử bệnh'
@@ -73,7 +59,7 @@ export default {
               key: '3',
               label: h(
                 RouterLink,
-                { to: '/profileHealth/medical_record/vaccination' },
+                { to: '/profileHealth/medical_record/vaccination/' + this.$route.params.id },
                 'Tiêm Chủng'
               ),
               title: 'Lịch sử tiêm chủng'
@@ -82,37 +68,28 @@ export default {
               key: '4',
               label: h(
                 RouterLink,
-                { to: '/profileHealth/medical_record/prescription' },
+                { to: `/profileHealth/medical_record/prescription/${this.$route.params.id}` },
                 'Đơn Thuốc'
               ),
               title: 'Đơn thuốc'
             },
             {
               key: '5',
-              label: h(RouterLink, { to: '/profileHealth/medical_record/testing' }, 'Xét Nghiệm'),
+              label: h(RouterLink, { to: `/profileHealth/medical_record/testing/${this.$route.params.id}` }, 'Xét Nghiệm'),
               title: 'Xét nghiệm'
             },
             {
               key: '6',
               label: h(
                 RouterLink,
-                { to: '/profileHealth/medical_record/diagnostic_image' },
-                'Chẩn đoán hình ảnh'
+                { to: `/profileHealth/medical_record/diagnostic_image/${this.$route.params.id}` },
+                'Hình ảnh khác'
               ),
-              title: 'Hình ảnh chẩn đoán'
-            },
-            {
-              key: '7',
-              label: h(
-                RouterLink,
-                { to: '/profileHealth/medical_record/history_examination' },
-                'Lịch Sử Khám'
-              ),
-              title: 'Lịch sử khám bệnh'
+              title: 'Danh sách ảnh của hồ sơ'
             }
           ]
         }
-      ])
+      ]
     }
   }
 }

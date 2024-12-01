@@ -1,6 +1,6 @@
 <template>
     <div class="container mt-4">
-      <h2>Báo cáo Người dùng</h2>
+      <h2>Quản lí báo cáo</h2>
   
       <!-- Filter by Status -->
       <a-select
@@ -45,6 +45,7 @@
   <script>
   import axios from 'axios';
   import { format } from 'date-fns';
+  const API_URL = import.meta.env.VITE_API_URL_DOTNET
   
   export default {
     data() {
@@ -66,7 +67,7 @@
       async fetchReports() {
         this.loading = true;
         try {
-          const response = await axios.get('http://localhost:5217/api/UserReport', { params: { status: this.statusFilter } });
+          const response = await axios.get(`${API_URL}/api/UserReport`, { params: { status: this.statusFilter } });
           this.reports = response.data;
         } catch (error) {
           console.error("Lỗi khi lấy báo cáo", error);

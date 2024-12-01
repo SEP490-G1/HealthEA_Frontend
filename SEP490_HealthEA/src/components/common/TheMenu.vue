@@ -1,5 +1,4 @@
 <script setup>
-import { reactive } from 'vue'
 /**
  * This component for menu is layout have menu
  * @prop:  items: reactive([
@@ -28,11 +27,8 @@ import { reactive } from 'vue'
 </template>
 <script>
 export default {
-  props: {
-    itemList: reactive([]),
-    openKeys: [],
-    selectedKeys: []
-  },
+  props: ['itemList', 'openKeys', 'selectedKeys'],
+
   data() {
     return {
       selected: this.selectedKeys,
