@@ -28,7 +28,7 @@
     </div>
     <div class="ThePage">
       <div class="Content_ThePage">
-        <a-typography-title v-model:content="formState.title" :level="2" editable />
+        <a-typography-title v-model:content="formState.title" :level="2" />
 
         <div style="width: 100%">
           <a-form style="width: 100%" :model="formState" name="basic" autocomplete="off">
@@ -80,6 +80,7 @@
 import { cloneDeep } from 'lodash-es'
 import { reactive, ref } from 'vue'
 import dayjs from 'dayjs'
+import { message } from 'ant-design-vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 import { useMedicalRecordStore } from '@/stores/medicalRecord'
 import ListImageDrawer from '@/components/medical/ListImageDrawer.vue'
@@ -143,8 +144,10 @@ export default {
       this.stageEditor = await true
     },
     async exportSave() {
+      var title = `${this.formState.doctor}`
+      this.formState.title = title
       var content = {
-        title: this.formState.title,
+        title: title,
         date: this.formState.date,
         diagnose: this.formState.diagnose,
         doctorRecomend: this.formState.doctorRecomend,
@@ -163,6 +166,7 @@ export default {
       const mdStore = useMedicalRecordStore()
       var response = await mdStore.updateDP(id, obj)
       console.log(response)
+      message.success("Lưu thành công")
       this.stageEditor = true
     },
     edit(key) {

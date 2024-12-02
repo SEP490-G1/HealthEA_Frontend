@@ -364,6 +364,7 @@ export default {
 
       var response = await mdStore.updateDP(id, obj)
       console.log(response)
+      message.success('Lưu thành công', 3)
       this.stageEditor = true
     },
     showDrawer() {

@@ -101,6 +101,7 @@ import { reactive, ref } from 'vue'
 import dayjs from 'dayjs'
 import { useMedicalRecordStore } from '@/stores/medicalRecord'
 import ListImageDrawer from '@/components/medical/ListImageDrawer.vue'
+import { message } from 'ant-design-vue'
 export default {
   components: {
     ListImageDrawer
@@ -188,6 +189,7 @@ export default {
       const mdStore = useMedicalRecordStore()
       var response = await mdStore.updateDP(id, obj)
       console.log(response)
+      message.success(response.data.userMsg)
       this.stageEditor = true
     },
     edit(key) {
