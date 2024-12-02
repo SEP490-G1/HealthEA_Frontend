@@ -152,9 +152,13 @@ export default {
       const Response = await userStoreLogin.Register(newValue)
       if (Response.status != 200) {
         var str = 'Có lỗi xảy ra!'
-  
+        console.log(Response);
+        
         if (Response.response.data.code == 1001) {
           str = 'Tài khoản đã tồn tại'
+        }
+        if(Response.response.data.code == 1010){
+          str = 'Email không tồn tại'
         }
         message.error(str, 4)
       }
