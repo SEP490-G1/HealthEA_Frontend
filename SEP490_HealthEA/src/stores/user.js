@@ -22,9 +22,9 @@ const MEMORY_STOGARE = 'USERTOKEN'
 const MEMORY_STOGARE_USER = 'USEROBJECT'
 export const useUserStore = defineStore('user', {
   state: () => ({
-    user: getLocalStogare(MEMORY_STOGARE_USER)
-      ? JSON.parse(getLocalStogare(MEMORY_STOGARE_USER))
-      : { auth: false },
+    user: JSON.parse(getSessionStogare(MEMORY_STOGARE_USER))
+      ? JSON.parse(getSessionStogare(MEMORY_STOGARE_USER))
+      : JSON.parse(getLocalStogare(MEMORY_STOGARE_USER)),
     token: getLocalStogare(MEMORY_STOGARE)
       ? getLocalStogare(MEMORY_STOGARE)
       : getSessionStogare(MEMORY_STOGARE)
@@ -71,8 +71,6 @@ export const useUserStore = defineStore('user', {
           auth: true
         }
         // this.user = obj
-        var strings = JSON.stringify(obj)
-        setLocalStoregare(MEMORY_STOGARE_USER, strings)
         return obj
       } catch (error) {
         // this.ClearUser()
@@ -102,9 +100,13 @@ export const useUserStore = defineStore('user', {
           //save token session
           if (bodyParameters.remember == false) {
             await setSessionStogare(MEMORY_STOGARE, this.token)
+            let strings = JSON.stringify(this.user)
+            setSessionStogare(MEMORY_STOGARE_USER, strings)
           }
           if (bodyParameters.remember == true) {
             await setLocalStoregare(MEMORY_STOGARE, this.token)
+            let strings = JSON.stringify(this.user)
+            setLocalStoregare(MEMORY_STOGARE_USER, strings)
           }
 
           message.success('Đăng nhập thành công', 3)
