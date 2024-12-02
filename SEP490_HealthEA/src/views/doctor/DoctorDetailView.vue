@@ -7,7 +7,7 @@
           <div class="d-flex align-items-center mb-4">
             <a-avatar
               :size="150"
-              :src="doctor?.profileImage || 'https://via.placeholder.com/150'"
+              :src="doctor?.user?.avatar || 'https://via.placeholder.com/150'"
               class="me-3"
             />
             <div>

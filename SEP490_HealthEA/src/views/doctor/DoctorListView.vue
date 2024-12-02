@@ -61,7 +61,7 @@
             <a-card class="doctor-card" hoverable>
               <div class="profile-image-container">
                 <img
-                  src="https://via.placeholder.com/100"
+                  :src="doctor?.user?.avatar || 'https://via.placeholder.com/100'"
                   alt="Hình ảnh"
                   class="profile-image"
                 />
