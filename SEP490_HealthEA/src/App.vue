@@ -78,10 +78,6 @@ export default {
   components: {
     TheHeader
   },
-  mounted() {
-    // const noti = noticeStore()
-    // noti.registerDeviceToken()
-  },
   data() {
     return {}
   },
