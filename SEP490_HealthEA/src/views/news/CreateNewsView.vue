@@ -57,6 +57,7 @@ import axios from 'axios'
 import { MdEditor } from 'md-editor-v3'
 import { Input, Button, List, message } from 'ant-design-vue'
 import 'md-editor-v3/lib/style.css'
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   components: {
@@ -88,7 +89,7 @@ export default {
     async fetchNews() {
       this.isLoading = true
       try {
-        const response = await axios.get('http://localhost:5217/api/News')
+        const response = await axios.get(`${API_URL}/api/News`)
         this.newsList = response.data
       } catch (error) {
         message.error('Error fetching news!')
@@ -116,11 +117,11 @@ export default {
 
         if (this.newsToEditId) {
           // Update existing news
-          await axios.put(`http://localhost:5217/api/News/${this.newsToEditId}`, newsData)
+          await axios.put(`${API_URL}/api/News/${this.newsToEditId}`, newsData)
           message.success('News updated successfully!')
         } else {
           // Create new news
-          await axios.post('http://localhost:5217/api/News', newsData)
+          await axios.post(`${API_URL}/api/News`, newsData)
           message.success('News saved successfully!')
         }
 
@@ -145,12 +146,12 @@ export default {
       formData.append('Files', this.selectedFile)
 
       try {
-        const response = await axios.post('http://localhost:5217/api/Images', formData, {
+        const response = await axios.post(`${API_URL}/api/Images`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         })
         const imageId = response.data[0]?.id
         if (imageId) {
-          this.newsImageUrl = `http://localhost:5217/api/Images/img/${imageId}`
+          this.newsImageUrl = `${API_URL}/api/Images/img/${imageId}`
           message.success('Image uploaded successfully!')
         } else {
           message.error('Error retrieving image ID!')
@@ -170,7 +171,7 @@ export default {
     // Delete news
     async deleteNews(id) {
       try {
-        await axios.delete(`http://localhost:5217/api/News/${id}`)
+        await axios.delete(`${API_URL}/api/News/${id}`)
         message.success('News deleted successfully!')
         this.fetchNews()
       } catch (error) {

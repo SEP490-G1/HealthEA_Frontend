@@ -104,14 +104,14 @@ import CommonLayout from '@/components/common/TheModal'
             >
             <TheQRCode
               v-if="this.qr.Status"
-              :LINK="`http://localhost:5173/profileHealth/medical_record/information/${this.userData.id}`"
+              :LINK="`/profileHealth/medical_record/information/${this.userData.id}`"
             />
           </a-form-item>
         </a-col>
         <a-col :span="12">
           <a-input-group compact style="display: flex">
             <a-input
-              :value="`http://localhost:5173/profileHealth/medical_record/information/${this.userData.id}`"
+              :value="`/profileHealth/medical_record/information/${this.userData.id}`"
             />
             <a-tooltip title="copy url">
               <a-button>
