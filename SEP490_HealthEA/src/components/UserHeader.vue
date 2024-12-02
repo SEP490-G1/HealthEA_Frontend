@@ -1,14 +1,14 @@
 <template>
   <div>
     <div v-if="display == true">
-
       <a-dropdown :trigger="['click']">
         <a class="ant-dropdown-link" @click.prevent>
           <a-avatar
             :src="userStorez.imageSrc"
+            :dot="hasUnreadNotifications"
             size="large"
             :style="{
-            border: '1px, solid',
+              border: '1px, solid',
               color: `${getColorOpposite(color)}`,
               backgroundColor: `${stringToHexColor(
                 !userStorez.userLastName ? userStorez.userFirstName : userStorez.userLastName
@@ -26,9 +26,14 @@
               <a @click="moveMyProfile">Xem hồ sơ</a>
             </a-menu-item>
             <a-menu-item key="1">
-              <a href="http://www.taobao.com/">Đổi mật khẩu</a>
+              <a @click="changePassword">Đổi mật khẩu</a>
             </a-menu-item>
             <a-menu-item key="2">
+              <a-badge :dot="hasUnreadNotifications" :offset="[10, 0]">
+                <a @click="viewNotifications">Notification</a>
+              </a-badge>
+            </a-menu-item>
+            <a-menu-item key="3">
               <a @click="logOut">Đăng Xuất</a>
             </a-menu-item>
           </a-menu>
@@ -43,11 +48,16 @@
     </div>
   </div>
 </template>
+
 <script>
-import { ref } from 'vue'
-import { useUserStore } from '@/stores/user'
-import AlertOutlined from '@ant-design/icons-vue'
-const colorList = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae']
+import { ref, onMounted, watch } from 'vue';
+import { useUserStore } from '@/stores/user';
+import AlertOutlined from '@ant-design/icons-vue';
+import axios from 'axios';
+import { notificationState } from '@/stores/NotificationStore';
+const colorList = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'];
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
+
 export default {
   setup() {
     const userStore = useUserStore()
@@ -58,8 +68,10 @@ export default {
     return {
       userStorez: ref(this.userStore.user),
       varCheck: ref(this.userStore.token != null),
-      color: ref(colorList[0])
-    }
+      color: ref(colorList[0]),
+      hasUnreadNotifications: false,
+      notifInterval: null
+    };
   },
   watch: {
     async 'userStore.user'() {
@@ -67,13 +79,24 @@ export default {
       this.userStorez = this.userStore.user
     }
   },
-  mounted() {},
+  mounted() {
+    this.checkNotifications()
+    // this.notifInterval = setInterval(async () => {
+    //   await this.checkNotifications();
+    // },10000)
+  },
+  beforeUnmount() {
+    // Clear the interval when the component is destroyed
+    if (this.notifInterval) {
+      clearInterval(this.notifInterval);
+    }
+  },
   components() {
-    AlertOutlined
+    AlertOutlined;
   },
   methods: {
     stringToHexColor(str) {
-      if(str == null){
+      if (str == null) {
         return '#7265e6'
       }
       // Tạo một số hash đơn giản dựa trên chuỗi đầu vào
@@ -114,21 +137,44 @@ export default {
 
       return `#${oppositeHex}`
     },
+    async checkNotifications() {
+      try {
+        if (this.userStore.token === null){
+          return
+        }
+        const userStore = useUserStore()
+        const response = await axios.get(`${API_URL}/api/Notification/any`, {
+          headers: {
+            Authorization: `Bearer ${userStore.token}`
+          }
+        });
+        this.hasUnreadNotifications = response.data.result === true;
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    },
     gotoLogin() {
-      this.$router.push('/client/login')
+      this.$router.push('/client/login');
     },
     gotoRegister() {
-      this.$router.push('/client/register')
+      this.$router.push('/client/register');
     },
     logOut() {
-      this.userStore.Logout()
-      this.varCheck = false
-      this.$router.push('/client/login')
+      this.userStore.Logout();
+      this.varCheck = false;
+      this.$router.push('/client/login');
     },
     moveMyProfile() {
-      this.$router.push('/myprofile/myInfo')
-    }
-  }
-}
+      this.$router.push('/myprofile/myInfo');
+    },
+    viewNotifications() {
+      this.$router.push('/notifications');
+    },
+    changePassword() {
+      this.$router.push('/myprofile/password')
+    },
+  },
+};
 </script>
+
 <style lang=""></style>

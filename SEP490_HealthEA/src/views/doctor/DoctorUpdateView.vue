@@ -115,6 +115,7 @@
 import { useUserStore } from '@/stores/user'
 import { Card, Form, Input, Button, message } from 'ant-design-vue'
 import axios from 'axios'
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   components: {
@@ -141,7 +142,7 @@ export default {
   async created() {
     const userStore = useUserStore()
     try {
-      const response = await axios.get('http://localhost:5217/api/Doctor/me', {
+      const response = await axios.get(`${API_URL}/api/Doctor/me`, {
         headers: { Authorization: `Bearer ${userStore.token}` }
       })
       const data = response.data
@@ -191,7 +192,7 @@ export default {
       const userStore = useUserStore()
       try {
         this.doctorInfo.historyOfWork = JSON.stringify(this.historyOfWork)
-        await axios.put('http://localhost:5217/api/Doctor/me', this.doctorInfo, {
+        await axios.put(`${API_URL}/api/Doctor/me`, this.doctorInfo, {
           headers: { Authorization: `Bearer ${userStore.token}` }
         })
         message.success('Cập nhật hồ sơ thành công')

@@ -13,8 +13,9 @@ import axios from "axios";
   export default {
     name: "DoctorRedirect",
     data() {
+      const API_URL = import.meta.env.VITE_API_URL_DOTNET
       return {
-        apiUrl: "http://localhost:5217/api/Doctor/me",
+        apiUrl: `${API_URL}/api/Doctor/me`,
       };
     },
     mounted() {

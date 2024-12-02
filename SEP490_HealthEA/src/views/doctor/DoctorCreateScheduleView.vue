@@ -45,6 +45,7 @@
 import { Card, Form, DatePicker, TimePicker, InputNumber, Button, message } from 'ant-design-vue'
 import axios from 'axios'
 import { useUserStore } from '@/stores/user'
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   components: {
@@ -84,11 +85,10 @@ export default {
       }
 
       try {
-        await axios.post('http://localhost:5217/api/Schedules', payload, {
+        await axios.post(`${API_URL}/api/Schedules`, payload, {
           headers: { Authorization: `Bearer ${userStore.token}` }
         })
         message.success('Lịch làm việc đã được tạo thành công!')
-        this.resetForm()
       } catch (error) {
         console.error('Lỗi khi tạo lịch làm việc:', error)
         message.error('Không thể tạo lịch làm việc. Vui lòng thử lại sau.')

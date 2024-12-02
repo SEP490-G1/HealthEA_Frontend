@@ -77,6 +77,7 @@ import dayjs from 'dayjs'
 import { DownOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import axios from 'axios'
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   async mounted() {
@@ -110,7 +111,7 @@ export default {
         contentMedical: '{}'
       }
       try {
-        const response = await axios.post('http://localhost:5217/api/Scan/urinalyst', formData1, {
+        const response = await axios.post(`${API_URL}/api/Scan/urinalyst`, formData1, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -137,7 +138,7 @@ export default {
         return
       }
       try {
-        const objUpload = await axios.post('http://localhost:5217/api/Images', formData2, {
+        const objUpload = await axios.post(`${API_URL}/api/Images`, formData2, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }

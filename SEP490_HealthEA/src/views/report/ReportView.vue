@@ -35,6 +35,7 @@
 <script>
 import axios from 'axios';
 import { useUserStore } from '@/stores/user';
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   data() {
@@ -71,7 +72,7 @@ export default {
         const userStore = useUserStore();
         const token = userStore.token;
 
-        await axios.post('http://localhost:5217/api/UserReport', reportData, {
+        await axios.post(`${API_URL}/api/UserReport`, reportData, {
           headers: {
             Authorization: `Bearer ${token}`
           }
