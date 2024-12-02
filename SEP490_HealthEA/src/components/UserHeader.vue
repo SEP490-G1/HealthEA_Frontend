@@ -1,14 +1,13 @@
 <template>
   <div>
     <div v-if="display == true">
-
       <a-dropdown :trigger="['click']">
         <a class="ant-dropdown-link" @click.prevent>
           <a-avatar
             :src="userStorez.imageSrc"
             size="large"
             :style="{
-            border: '1px, solid',
+              border: '1px, solid',
               color: `${getColorOpposite(color)}`,
               backgroundColor: `${stringToHexColor(
                 !userStorez.userLastName ? userStorez.userFirstName : userStorez.userLastName
@@ -26,7 +25,7 @@
               <a @click="moveMyProfile">Xem hồ sơ</a>
             </a-menu-item>
             <a-menu-item key="1">
-              <a href="http://www.taobao.com/">Đổi mật khẩu</a>
+              <a @click="changePassword">Đổi mật khẩu</a>
             </a-menu-item>
             <a-menu-item key="2">
               <a @click="logOut">Đăng Xuất</a>
@@ -73,7 +72,7 @@ export default {
   },
   methods: {
     stringToHexColor(str) {
-      if(str == null){
+      if (str == null) {
         return '#7265e6'
       }
       // Tạo một số hash đơn giản dựa trên chuỗi đầu vào
@@ -127,6 +126,9 @@ export default {
     },
     moveMyProfile() {
       this.$router.push('/myprofile/myInfo')
+    },
+    changePassword() {
+      this.$router.push('/myprofile/password')
     }
   }
 }

@@ -88,6 +88,10 @@ const routes = [
       {
         path: 'myInfo',
         component: () => import('@/components/personal/MyInformation.vue')
+      },
+      {
+        path: 'password',
+        component: () => import('@/components/personal/Password.vue')
       }
     ]
   },
