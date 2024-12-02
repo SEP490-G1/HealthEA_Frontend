@@ -82,7 +82,12 @@ export default {
     async toggleStatus() {
       const newStatus = this.report.status === 1 ? 0 : 1;
       try {
-        await axios.patch(`${API_URL}/api/UserReport/${this.report.id}/status`, { status: newStatus });
+        const store = useUserStore()
+        await axios.patch(`${API_URL}/api/UserReport/${this.report.id}/status`, { status: newStatus }, {
+          headers: {
+            Authorization: `Bearer ${store.token}`
+          }
+        });
         this.report.status = newStatus;
         this.report.resolvedAt = newStatus === 1 ? new Date() : null;
       } catch (error) {
