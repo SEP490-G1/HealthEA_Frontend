@@ -43,7 +43,8 @@
   </template>
   
   <script>
-  import axios from 'axios';
+  import { useUserStore } from '@/stores/user';
+import axios from 'axios';
   import { format } from 'date-fns';
   const API_URL = import.meta.env.VITE_API_URL_DOTNET
   
@@ -67,7 +68,10 @@
       async fetchReports() {
         this.loading = true;
         try {
-          const response = await axios.get(`${API_URL}/api/UserReport`, { params: { status: this.statusFilter } });
+          const store = useUserStore()
+          const response = await axios.get(`${API_URL}/api/UserReport`, { params: { status: this.statusFilter }, headers: {
+            Authorization: `Bearer ${store.token}`
+          } }, );
           this.reports = response.data;
         } catch (error) {
           console.error("Lỗi khi lấy báo cáo", error);
