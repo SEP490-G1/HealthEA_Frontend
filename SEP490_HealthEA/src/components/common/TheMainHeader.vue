@@ -14,7 +14,9 @@ import { RouterLink } from 'vue-router'
             <RouterLink class="text-decoration-none" :to="item.path">{{ item.text }}</RouterLink>
           </a-menu-item>
         </div>
-        <UserHeader v-model:role="role" />
+        <div class="flex horizon">
+          <UserHeader v-model:role="role" />
+        </div>
       </a-flex>
     </a-menu>
   </div>
@@ -48,12 +50,20 @@ export default {
     async checkRole() {
       
       const store = useUserStore()
+      if (store.token === null){
+        this.listHeader = [
+          { path: '/', text: 'Trang chủ' },
+          { path: '/about', text: 'Về chúng tôi' }
+        ]
+        return
+      }
       try {
         const role = await (await store.getUser()).role
         if (role == 'CUSTOMER') {
           this.listHeader.push({ path: '/profileHealth', text: 'Hồ sơ sức khỏe' })
           this.listHeader.push({ path: '/dailymetric', text: 'Chỉ số sức khỏe định kỳ' })
           this.listHeader.push({ path: '/remind/calendar', text: 'Lịch của bạn' })
+          this.listHeader.push({ path: '/appointments', text: 'Lịch hẹn khám của bạn' })
           this.listHeader.push({ path: '/listDoctor', text: 'Danh sách bác sĩ' })
           this.listHeader.push({ path: '/news', text: 'Tin tức' })
           this.listHeader.push({ path: '/call', text: 'Video Call' })
@@ -61,6 +71,8 @@ export default {
         if (role == 'ADMIN') {
           this.listHeader.push({ path: '/admin/UserManagement', text: 'Quản lý tài khoản' })
           this.listHeader.push({ path: '/admin/DoctorManagement', text: 'Quản lý bác sĩ' })
+          this.listHeader.push({ path: '/admin/reports', text: 'Quản lý báo cáo' })
+          this.listHeader.push({ path: '/admin/news/create', text: 'Quản lý tin tức' })
         }
         if (role == 'DOCTOR') {
           this.listHeader.push({ path: '/doctor/apoinemnt', text: 'Xem lịch hẹn' })

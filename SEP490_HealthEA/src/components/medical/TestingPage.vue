@@ -11,7 +11,7 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
         <a-menu>
           <a-menu-item @click="addNew" key="1"> Thêm một tài liệu trống </a-menu-item>
           <a-menu-item @click="addNew1" key="2"> Thêm xét nghiệm nước tiểu mẫu </a-menu-item>
-          <a-menu-item @click="addNew2" key="3"> Thêm xét nghiệm nước máu mẫu </a-menu-item>
+          <a-menu-item @click="addNew2" key="3"> Thêm xét nghiệm máu mẫu </a-menu-item>
           <a-menu-item @click="scanImage" key="4"> Scan ảnh của bạn </a-menu-item>
         </a-menu>
       </template>
@@ -77,6 +77,7 @@ import dayjs from 'dayjs'
 import { DownOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import axios from 'axios'
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   async mounted() {
@@ -110,7 +111,7 @@ export default {
         contentMedical: '{}'
       }
       try {
-        const response = await axios.post('http://localhost:5217/api/Scan/urinalyst', formData1, {
+        const response = await axios.post(`${API_URL}/api/Scan/urinalyst`, formData1, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -137,7 +138,7 @@ export default {
         return
       }
       try {
-        const objUpload = await axios.post('http://localhost:5217/api/Images', formData2, {
+        const objUpload = await axios.post(`${API_URL}/api/Images`, formData2, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -187,7 +188,8 @@ export default {
         image: [],
         type: 3,
         healthProfileId: this.idHP,
-        contentMedical: '{}'
+        contentMedical:
+          '{"title":"Xét nghiệm nước tiểu mẫu","date":"2024-12-01T13:38:37.133Z","doctorRecomend":"Thụy test lỗi","drug":[{"key":1,"name":"LEU (Leukocytes)","value":0,"result":"10 - 25","unit":"Leu/UL"},{"key":2,"name":"NIT (Nitrite)","value":0,"result":"0.05 - 0.1","unit":"mg/dL"},{"key":3,"name":"pH (độ pH)","value":0,"result":"6,7-7.0","unit":"pH"},{"key":4,"name":"GLU (Glucose - đường huyết)","value":0,"result":"50-100","unit":"mg/dL"},{"key":5,"name":"BLD (hồng cầu)","value":0,"result":"4,6 - 8","unit":"pH"},{"key":6,"name":"PRO (Protein)","value":0,"result":"7.5 - 20/Âm tính","unit":"mg/dL"},{"key":7,"name":"KET (Ketone)","value":0,"result":"2,5 - 5/ âm tính","unit":"mg/dL"},{"key":8,"name":"ASC","value":0,"result":"5 - 10/âm tính","unit":"mg/dL"},{"key":9,"name":"BIL (Bilirubin)","value":0,"result":"âm tính / 0.4 - 0.8","unit":"mg/dL"}]}'
       }
       const res = useMedicalRecordStore()
       var response = await res.addNewDP(obj)
@@ -201,7 +203,7 @@ export default {
         image: [],
         type: 3,
         healthProfileId: this.idHP,
-        contentMedical: '{}'
+        contentMedical: `{"title":"Xét nghiệm máu mẫu ngày ${dayjs().format('DD-MM-YYYY')}","date":"${dayjs()}","drug":[{"key":1,"name":"WBC","value":"","result":"4 – 10","unit":"g/L"},{"key":2,"name":"LYM","value":"","result":"17 - 48","unit":"%"},{"key":3,"name":"NEU","value":"","result":"43 - 76","unit":"%"},{"key":4,"name":"MONO","value":"","result":"4 - 8","unit":"%"},{"key":5,"name":"EOS","value":"","result":"2 - 4","unit":"%"},{"key":6,"name":"BASO","value":"","result":"0 - 1","unit":"%"},{"key":7,"name":"RBC","value":"","result":"4,5 – 5,8","unit":"T/L"},{"key":8,"name":"HGB","value":"","result":"130 – 180","unit":"g/L"},{"key":9,"name":"HCT","value":"","result":"0,39 – 0,49","unit":"L/L"},{"key":10,"name":"MCV","value":"","result":"85 – 95","unit":"fL"},{"key":11,"name":"MCH","value":"","result":"28 – 32","unit":"pg"},{"key":12,"name":"MCHC","value":"","result":"320 – 360","unit":"g/L"},{"key":13,"name":"RDW","value":"","result":"11 - 15","unit":"%"},{"key":14,"name":"PLT","value":"","result":"150 – 400","unit":"G/L"},{"key":15,"name":"PCT","value":"","result":"0,016 – 0,036","unit":"L/L"},{"key":16,"name":"PDW","value":"","result":"11 - 15","unit":"%"},{"key":17,"name":"MPV","value":"","result":"5 – 8","unit":"fL"},{"key":18,"name":"P-LCR","value":"","result":"0,13 – 0,43","unit":"%"}]}`
       }
       const res = useMedicalRecordStore()
       var response = await res.addNewDP(obj)

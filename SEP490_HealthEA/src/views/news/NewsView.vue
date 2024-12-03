@@ -6,34 +6,34 @@
 
     <div v-else>
       <h1 class="text-center font-bold">{{ news.title }}</h1>
-      
+
       <!-- Banner Image -->
-      <img 
-        v-if="news.imageUrl" 
-        :src="news.imageUrl" 
-        alt="News Banner" 
-        class="news-banner my-4" 
-      />
-      
+      <img v-if="news.imageUrl" :src="news.imageUrl" alt="News Banner" class="news-banner my-4" />
+
       <div class="d-flex justify-content-end mb-4">
         <div>
           <span class="fw-bold">{{ news.author }}</span>
           <div>Created: {{ formattedCreatedAt }}</div>
           <div>Updated: {{ formattedUpdatedAt }}</div>
+          <div>
+            <router-link class="btn btn-danger" :to="`/report?type=news&id=${$route.params.id}`">
+              Báo cáo bài viết
+            </router-link>
+          </div>
         </div>
       </div>
-      
+
       <div v-html="convertedContent" class="news-content"></div>
     </div>
   </div>
 </template>
-
 
 <script>
 import axios from 'axios'
 import { marked } from 'marked' // Import markdown parser
 import { message } from 'ant-design-vue'
 import { format } from 'date-fns' // For date formatting
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   data() {
@@ -68,7 +68,7 @@ export default {
       this.isLoading = true
 
       try {
-        const response = await axios.get(`http://localhost:5217/api/News/${id}`)
+        const response = await axios.get(`${API_URL}/api/News/${id}`)
         this.news = response.data
         this.convertedContent = marked(response.data.content) // Convert Markdown content to HTML
       } catch (error) {

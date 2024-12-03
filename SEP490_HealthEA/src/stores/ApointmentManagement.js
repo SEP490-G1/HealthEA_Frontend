@@ -18,6 +18,12 @@ export const useApointment = defineStore('apointment', {
       const data = await getData(API_URL + `?PageNumber=${pagenumber}&PageSize=${pagesize}`, headers)
       return data
     },
+    async getAppointmentUser(pagenumber, pagesize) {
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      const data = await getData(API_URL + `/customer?PageNumber=${pagenumber}&PageSize=${pagesize}`, headers)
+      return data
+    },
     async updateStatus(id, status) {
       const userStore = useUserStore()
       headers.headers.Authorization = `Bearer ${userStore.token}`

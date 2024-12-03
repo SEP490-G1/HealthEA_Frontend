@@ -88,7 +88,7 @@ export const useDailyMetricStore = defineStore('dailyMetric', {
         }
         const userStore = useUserStore()
         headers.headers.Authorization = `Bearer ${userStore.token}`
-        const data = await putData(API_URL + `${object.id}`, newObject, headers)
+        const data = await putData(API_URL + '/' + `${object.id}`, newObject, headers)
         message.success('Lấy dữ liệu thành công')
         return data
       } catch (error) {

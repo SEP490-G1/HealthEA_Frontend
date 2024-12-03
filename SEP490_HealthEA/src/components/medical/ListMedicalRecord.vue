@@ -30,9 +30,7 @@ import CommonLayout from '@/components/common/TheModal'
               </template>
               <template v-if="!loading" #extra>
                 <a-dropdown :trigger="['click']">
-                  <a class="ant-dropdown-link" @click.prevent>
-                    More
-                  </a>
+                  <a class="ant-dropdown-link" @click.prevent> More </a>
                   <template #overlay v-if="!loading">
                     <a-menu>
                       <a-menu-item @click="Delete(item.id)" key="1">Delete</a-menu-item>
@@ -104,18 +102,17 @@ import CommonLayout from '@/components/common/TheModal'
             >
             <TheQRCode
               v-if="this.qr.Status"
-              :LINK="`http://localhost:5173/profileHealth/medical_record/information/${this.userData.id}`"
+              :LINK="`/profileHealth/medical_record/information/${this.userData.id}`"
             />
           </a-form-item>
         </a-col>
         <a-col :span="12">
           <a-input-group compact style="display: flex">
             <a-input
-              :value="`http://localhost:5173/profileHealth/medical_record/information/${this.userData.id}`"
+              :value="`/profileHealth/medical_record/information/${this.userData.id}`"
             />
             <a-tooltip title="copy url">
-              <a-button>
-              </a-button>
+              <a-button> </a-button>
             </a-tooltip>
           </a-input-group>
         </a-col>
@@ -209,15 +206,16 @@ export default {
   },
   watch: {
     'userData.sharedStatus'(newValue) {
-      // console.log(this.userData.id)
-      // console.log(newValue)
-      this.changeShare(this.userData.id, newValue)
+
+      if (this.openShare == true) {
+        this.changeShare(this.userData.id, newValue)
+      }
     }
   },
   methods: {
     async Share(item) {
       this.openShare = !this.openShare
-      console.log(item)
+
       this.userData = item
     },
     async changeShare(id, number) {
@@ -228,7 +226,6 @@ export default {
     async Modified(id) {
       const store = useMedicalRecordStore()
       var st = await store.getHealthProfileByID(id)
-      console.log(st.gender)
       this.open = true
       this.userData.fullName = st.fullName
       this.userData.gender = `${st.gender}`
@@ -259,22 +256,17 @@ export default {
       return prime
     },
     async Delete(i) {
-      console.log(i)
       await store.deleteHealthProfile(i)
       await store.loadHealthProfile()
       this.info = await store.storeHealthProfile
     },
     async handleOk() {
       if (!this.validateName(this.userData.fullName)) {
-        console.log(this.userData.fullName)
-
         return
       }
       if (!this.validateDateTime(this.userData.dateOfBirth)) {
         return
       }
-      console.log(this.userData.dateOfBirth)
-
       await store.addNewHealthProfile(this.userData)
       this.open = false
       await store.loadHealthProfile()
@@ -297,7 +289,6 @@ export default {
     try {
       await store.loadHealthProfile()
       this.info = await store.storeHealthProfile
-      console.log(this.info)
       this.loading = false
     } catch (error) {
       console.error('Error fetching data:', error)
