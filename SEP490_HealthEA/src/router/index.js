@@ -210,6 +210,11 @@ const routes = [
         path: 'vaccination/:id',
         name: 'Vaccination',
         component: () => import('@/components/medical/VaccinationPage')
+      },
+      {
+        path: 'vaccination/:id/detail/:idD',
+        name: 'VaccinationDetail',
+        component: () => import('@/components/medical/VaccinationDetailPage')
       }
     ]
   },

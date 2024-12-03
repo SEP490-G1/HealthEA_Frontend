@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getData } from '@/service/main'
+import { getData, postData } from '@/service/main'
 const API_URL = `${import.meta.env.VITE_API_URL_DOTNET}/api/Images`
 
 const headers = {
@@ -11,11 +11,14 @@ const headers = {
 }
 
 export const imageStore = defineStore('imageStore', {
-
   actions: {
     async getLinkImage(id) {
-        const data = await getData(API_URL + `/get/${id}`, headers)
-        return data
+      const data = await getData(API_URL + `/get/${id}`, headers)
+      return data
+    },
+    async postImage(iamge) {
+      const response = await postData(API_URL, iamge, headers)
+      return response
     }
   }
 })

@@ -3,7 +3,9 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
 </script>
 <template>
   <div>
-    <a-typography-title :level="2" style="margin-top: 30px">Danh sách tiêm chủng</a-typography-title>
+    <a-typography-title :level="2" style="margin-top: 30px"
+      >Danh sách tiêm chủng</a-typography-title
+    >
     <a-button type="primary" @click="addNew">Thêm mới</a-button>
     <div>
       <a-list item-layout="horizontal" :data-source="listPre">
@@ -11,9 +13,6 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
           <a-list-item>
             <a-list-item-meta :description="item.lastModified">
               <template #title>
-                <a @click="jump(item.id)">{{ item.title }}</a>
-              </template>
-              <template #avatar>
                 <a @click="jump(item.id)">{{ item.title }}</a>
               </template>
             </a-list-item-meta>
@@ -45,7 +44,7 @@ export default {
     },
 
     jump(id) {
-      this.$router.push(`/profileHealth/medical_record/prescription/${this.idHP}/detail/${id}`)
+      this.$router.push(`/profileHealth/medical_record/vaccination/${this.idHP}/detail/${id}`)
     },
     getTitle(value) {
       var obj = JSON.parse(value.contentMedical)
@@ -63,7 +62,7 @@ export default {
           id: element.id,
           date: dayjs(element.createDate).format('YYYY-MM-DD'),
           title: this.getTitle(element),
-          lastModified: `Lần thay đổi cuối  ${dayjs(element.lastModifyDate).format('YYYY-MM-DD, HH:mm:ss')}`
+          lastModified: `Lịch hẹn ${dayjs(JSON.parse(element.contentMedical).date).format('HH:MM:ss ngày DD-MM-YYYY')}`
         })
       })
       listnew.sort((a, b) => -(new Date(a.date) - new Date(b.date)))
