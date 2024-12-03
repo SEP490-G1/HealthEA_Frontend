@@ -88,6 +88,10 @@ const routes = [
       {
         path: 'myInfo',
         component: () => import('@/components/personal/MyInformation.vue')
+      },
+      {
+        path: 'password',
+        component: () => import('@/components/personal/Password.vue')
       }
     ]
   },
@@ -131,6 +135,11 @@ const routes = [
         component: () => import('@/components/doctor/doctorList')
       }
     ]
+  },
+  {
+    path: '/appointments',
+    name: 'Appointments List',
+    component: UserAppointment
   },
   {
     path: '/dailymetric',
@@ -208,11 +217,6 @@ const routes = [
     path: '/profileHealth',
     name: 'Profile hearlth',
     component: () => import('@/components/medical/ListMedicalRecord')
-  },
-  {
-    path: '/appointment',
-    name: 'Appointment List',
-    component: () => import('@/components/appointment/AppointmentList')
   },
   {
     path: '/about',
@@ -299,6 +303,11 @@ const routes = [
     component: () => CustomerCall
   },
   {
+    path: '/notifications',
+    name: 'Notifications',
+    component: () => NotificationListView
+  },
+  {
     path: '/error/404',
     name: 'Not Found',
     component: PageNotFound
@@ -336,8 +345,10 @@ import AccpetVerify from '@/components/login/AccpetVerify.vue'
 import Profile from '@/views/common/MyProfile.vue'
 import DoctorManagementView from '@/views/admin/DoctorManagementView.vue'
 import DoctorApoinment from '@/components/doctor/DoctorApoinment.vue'
+import NotificationListView from '@/views/notifications/NotificationListView.vue'
 import CustomerCall from '@/views/CustomerCall.vue'
 import DoctorCall from '@/views/DoctorCall.vue'
+import UserAppointment from '@/components/doctor/UserAppointment.vue'
 function exitUser() {
   // gọi store
   const userStore = useUserStore()

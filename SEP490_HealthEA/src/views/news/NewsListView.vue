@@ -83,6 +83,7 @@
 
 <script>
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
   data() {
@@ -111,8 +112,8 @@ export default {
       this.isLoading = true;
       try {
         const [allNews, latestNews] = await Promise.all([
-          axios.get("http://localhost:5217/api/News"),
-          axios.get("http://localhost:5217/api/News/latest"),
+          axios.get(`${API_URL}/api/News`),
+          axios.get(`${API_URL}/api/News/latest`),
         ]);
         this.newsList = allNews.data;
         this.latestNews = latestNews.data;
@@ -126,7 +127,7 @@ export default {
       this.isLoadingRandom = true;
       try {
         const response = await axios.get(
-          "http://localhost:5217/api/News/random?count=5"
+          `${API_URL}/api/News/random?count=5`
         );
         this.randomNews = response.data;
       } catch (err) {
