@@ -65,6 +65,12 @@
                 />
                 <template v-else>
                   {{ text }}
+                  <a-popover :title="text" v-if="description[text]">
+                    <template #content>
+                      <p v-html="description[text]"></p>
+                    </template>
+                    <InfoCircleOutlined />
+                  </a-popover>
                 </template>
               </div>
             </template>
@@ -96,16 +102,21 @@
   </div>
 </template>
 <script>
+import mappingIndex from '@/resource/DescriptionTitle'
 import { cloneDeep } from 'lodash-es'
 import { reactive, ref } from 'vue'
 import dayjs from 'dayjs'
+import { InfoCircleOutlined } from '@ant-design/icons-vue'
 import { useMedicalRecordStore } from '@/stores/medicalRecord'
 import ListImageDrawer from '@/components/medical/ListImageDrawer.vue'
 export default {
   components: {
-    ListImageDrawer
+    ListImageDrawer,
+    InfoCircleOutlined
   },
   mounted() {
+    console.log(mappingIndex['NIT']);
+    
     this.loadDate()
     this.stageEditor = true
   },
@@ -181,8 +192,8 @@ export default {
         contentMedical: JSON.stringify(content),
         image: []
       }
-      console.log(obj.contentMedical);
-      
+      console.log(obj.contentMedical)
+
       var id = this.$route.params.idD
       const mdStore = useMedicalRecordStore()
       var response = await mdStore.updateDP(id, obj)
@@ -223,6 +234,7 @@ export default {
   },
   data() {
     return {
+      description: mappingIndex,
       listImg: ref([]),
       childrenDrawer: ref(false),
       open: ref(false),
