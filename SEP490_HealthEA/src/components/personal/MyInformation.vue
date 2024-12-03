@@ -30,8 +30,8 @@
                 v-model:value="formState.gender"
                 placeholder="Chọn giới tính"
               >
-                <a-select-option value="1">Nam</a-select-option>
-                <a-select-option value="2">Nữ</a-select-option>
+                <a-select-option value="true">Nam</a-select-option>
+                <a-select-option value="false">Nữ</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>

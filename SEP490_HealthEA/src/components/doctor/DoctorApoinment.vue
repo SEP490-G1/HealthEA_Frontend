@@ -30,7 +30,11 @@
           </div>
         </template>
         <template v-if="column.dataIndex === 'call'">
-          <button :disabled="!isValid(record)" class="btn btn-success" @click="handleCall(record.customerId, record.doctorId)">
+          <button
+            :disabled="!isValid(record)"
+            class="btn btn-success"
+            @click="handleCall(record.customerId, record.doctorId)"
+          >
             Gọi
           </button>
         </template>
@@ -104,16 +108,16 @@ export default {
 
       window.open(url, '_blank')
     },
-    isValid(record){
-      if (record.status !== "Approved"){
+    isValid(record) {
+      if (record.status !== 'Approved') {
         return false
       }
-      var now = new Date();
-      var current = new Date(record.date);
-      const [hours, minutes, seconds] = record.endTime.split(':').map(Number);
-      current.setHours(hours,minutes,seconds);
-      console.log("Now: " + now + " Current: " + current)
-      if (current < now){
+      var now = new Date()
+      var current = new Date(record.date)
+      const [hours, minutes, seconds] = record.endTime.split(':').map(Number)
+      current.setHours(hours, minutes, seconds)
+      console.log('Now: ' + now + ' Current: ' + current)
+      if (current < now) {
         return false
       }
       return true
