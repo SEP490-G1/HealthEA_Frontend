@@ -206,12 +206,12 @@ export default {
         myInfo.value = response.data.result
         this.formState.avatar = myInfo.value.avatar
         this.idUpdate = myInfo.value.id
-        this.formState.userFirstName = myInfo.value.firstName || ''
-        this.formState.userLastName = myInfo.value.lastName || ''
-        this.formState.gender = myInfo.value.gender || ''
-        this.formState.dob = dayjs(myInfo.value.dob) || ''
-        this.formState.email = myInfo.value.email || ''
-        this.formState.phone = myInfo.value.phone || ''
+        this.formState.userFirstName = myInfo.value.firstName
+        this.formState.userLastName = myInfo.value.lastName
+        this.formState.gender = myInfo.value.gender
+        this.formState.dob = dayjs(myInfo.value.dob)
+        this.formState.email = myInfo.value.email
+        this.formState.phone = myInfo.value.phone
       } catch (error) {
         message.error('Gặp lỗi khi lấy thông tin người dùng!', 10)
       }
