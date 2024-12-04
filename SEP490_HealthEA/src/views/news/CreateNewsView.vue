@@ -26,8 +26,13 @@
       />
 
       <div class="actions mt-3">
-        <a-button type="primary" @click="saveNews" :loading="isSaving"> Lưu </a-button>
+        <a-button type="primary" @click="saveNews" :loading="isSaving">
+          {{ newsToEditId ? 'Cập nhật' : 'Lưu' }}
+        </a-button>
         <a-button type="default" @click="resetForm" class="ml-2"> Reset </a-button>
+        <a-button v-if="newsToEditId" type="default" @click="cancelEdit" class="ml-2">
+          Hủy chỉnh sửa
+        </a-button>
       </div>
     </div>
 
@@ -43,7 +48,7 @@
             />
             <template #actions>
               <a-button type="link" @click="editNews(item)"> Chỉnh sửa </a-button>
-              <a-button type="link" @click="deleteNews(item.id)"> Xóa </a-button>
+              <a-button type="link" @click="confirmDelete(item.id)"> Xóa </a-button>
             </template>
           </a-list-item>
         </template>
@@ -198,6 +203,25 @@ export default {
       this.newsCategory = ''
       this.newsImageUrl = ''
       this.selectedFile = null
+    },
+
+    // Cancel editing
+    cancelEdit() {
+      this.resetForm()
+      message.info('Đã hủy chỉnh sửa.')
+    },
+
+    confirmDelete(id) {
+      this.$confirm({
+        title: 'Bạn có chắc muốn xóa bài viết này?',
+        content: 'Thao tác này không thể hoàn tác.',
+        okText: 'Xóa',
+        okType: 'danger',
+        cancelText: 'Hủy',
+        onOk: () => this.deleteNews(id),
+        onCancel() {
+        }
+      })
     }
   },
   mounted() {
