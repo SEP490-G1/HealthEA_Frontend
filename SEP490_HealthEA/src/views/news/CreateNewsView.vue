@@ -9,7 +9,7 @@
 
       <div class="image-upload-section mb-3">
         <h3>Ảnh</h3>
-        <a-input v-model:value="newsImageUrl" placeholder="Image URL" class="mb-2" />
+        <a-input v-model:value="newsImageUrl" placeholder="Image URL" class="mb-2" disabled />
         <div>
           <input type="file" @change="handleFileSelect" />
           <a-button type="primary" @click="uploadImage" :loading="isUploading" class="ml-2">
