@@ -204,17 +204,16 @@
               <a-form-item style="width: 100%" :name="['ReminderOffsets']">
                 <a-row>
                   <a-col :span="4">
-                    <a-form-item :name="offsetUnit">
-                      <a-input-number v-model:value="item.offsetUnit" />
+                    <a-form-item :name="offsetValue">
+                      <a-input-number v-model:value="item.offsetValue" />
                     </a-form-item>
                   </a-col>
                   <a-col :span="12">
-                    <a-form-item :name="offsetValue">
-                      <a-select v-model:value="item.offsetValue">
+                    <a-form-item :name="offsetUnit">
+                      <a-select v-model:value="item.offsetUnit">
                         <a-select-option :value="1">phút</a-select-option>
                         <a-select-option :value="2">giờ</a-select-option>
                         <a-select-option :value="3">ngày</a-select-option>
-                        <a-select-option :value="4">tuần</a-select-option>
                       </a-select>
                     </a-form-item>
                   </a-col>
