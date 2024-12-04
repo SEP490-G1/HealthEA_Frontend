@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
-import FeatureOne from '@/views/home/FeatureOne'
-import FeatureTwo from '@/views/home/FeatureTwo'
 import PageNotFound from '@/views/common/NotFoundView'
 import ClientView from '@/views/ClientView'
 import LoginFrom from '@/components/login/LoginFrom'
@@ -16,20 +14,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView,
-    meta: {
-      headerClass: '1'
-    },
-    children: [
-      {
-        path: 'function1',
-        component: FeatureOne
-      },
-      {
-        path: 'function2',
-        component: FeatureTwo
-      }
-    ]
+    component: HomeView
   },
   {
     path: '/remind',
@@ -95,7 +80,7 @@ const routes = [
       },
       {
         path: 'notification',
-        component: () => import('@/views/notifications/NotificationListView') 
+        component: () => import('@/views/notifications/NotificationListView')
       }
     ]
   },
@@ -368,7 +353,7 @@ function exitUser() {
 router.beforeEach(async (to) => {
   // gọi store
   const userStore = useUserStore()
-  if(to.path == '/' || to.path == '/about'){
+  if (to.path == '/' || to.path == '/about') {
     return
   }
   if (to.path.includes('/profileHealth/medical_record')) {

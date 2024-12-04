@@ -1,13 +1,6 @@
 <template>
   <div>
-    <a-flex justify="center" align="center" vertical>
-      <a-typography-title :level="1"> Dịch vụ bác sĩ </a-typography-title>
-      <a-typography-text style="font-size: 1.3em" type="secondary"
-        >Chào mừng bạn đến với dịch vụ bác sĩ</a-typography-text
-      >
-    </a-flex>
     <a-flex vertical style="margin-top: 30">
-      <a-typography-title :level="3"> Danh sách bác sĩ nổi bật </a-typography-title>
       <a-carousel arrows>
         <template #prevArrow>
           <div class="custom-slick-arrow" style="left: 10px; z-index: 1">
@@ -33,7 +26,11 @@
                   <img
                     style="width: 100%"
                     alt="example"
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJgCpoJWxPrW-qqRTgNA_mwv3DrikuJ4e3cA&s"
+                    :src="
+                      item.user.avatar == null
+                        ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJgCpoJWxPrW-qqRTgNA_mwv3DrikuJ4e3cA&s'
+                        : item.user.avatar
+                    "
                   />
                 </div>
               </template>
@@ -73,13 +70,15 @@ export default {
   },
   methods: {
     handleClickCard(id) {
-        console.log(id);
-        this.$router.push(`detail/${id}`)
+      console.log(id)
+      this.$router.push(`detail/${id}`)
     },
     async loadData() {
       const store = doctorManagementStore()
       var response = await store.getAllDoctor()
       var listNew = response.data
+      console.log(response.data);
+      
       this.listDoctor = this.sliceArray(listNew, 5)
       console.log(this.listDoctor)
     },
