@@ -2,18 +2,18 @@
   <div class="news-management">
     <!-- Markdown Editor -->
     <div class="editor-section">
-      <h2>Create or Edit News</h2>
+      <h2>Quản lí tin tức</h2>
       <a-input v-model:value="newsTitle" placeholder="Tiêu đề bài viết" class="mb-3" />
       <a-input v-model:value="newsAuthor" placeholder="Tác giả" class="mb-3" />
       <a-input v-model:value="newsCategory" placeholder="Loại" class="mb-3" />
 
       <div class="image-upload-section mb-3">
-        <h3>Image</h3>
-        <a-input v-model:value="newsImageUrl" placeholder="Image URL" class="mb-2" />
+        <h3>Ảnh</h3>
+        <a-input v-model:value="newsImageUrl" placeholder="Image URL" class="mb-2" disabled />
         <div>
           <input type="file" @change="handleFileSelect" />
           <a-button type="primary" @click="uploadImage" :loading="isUploading" class="ml-2">
-            Confirm Upload
+            Đăng
           </a-button>
         </div>
       </div>
@@ -26,24 +26,29 @@
       />
 
       <div class="actions mt-3">
-        <a-button type="primary" @click="saveNews" :loading="isSaving"> Lưu </a-button>
+        <a-button type="primary" @click="saveNews" :loading="isSaving">
+          {{ newsToEditId ? 'Cập nhật' : 'Lưu' }}
+        </a-button>
         <a-button type="default" @click="resetForm" class="ml-2"> Reset </a-button>
+        <a-button v-if="newsToEditId" type="default" @click="cancelEdit" class="ml-2">
+          Hủy chỉnh sửa
+        </a-button>
       </div>
     </div>
 
     <!-- Existing News List -->
     <div class="news-list mt-5">
-      <h2>News List</h2>
+      <h2>Danh sách tin tức</h2>
       <a-list bordered :data-source="newsList" :loading="isLoading" item-layout="horizontal">
         <template v-for="item in newsList" :key="item.id">
           <a-list-item>
             <a-list-item-meta
               :title="item.title"
-              :description="`Author: ${item.author} | Category: ${item.category}`"
+              :description="`Tác giả: ${item.author} | Loại: ${item.category}`"
             />
             <template #actions>
               <a-button type="link" @click="editNews(item)"> Chỉnh sửa </a-button>
-              <a-button type="link" @click="deleteNews(item.id)"> Xóa </a-button>
+              <a-button type="link" @click="confirmDelete(item.id)"> Xóa </a-button>
             </template>
           </a-list-item>
         </template>
@@ -100,7 +105,7 @@ export default {
 
     // Save or update news
     async saveNews() {
-      if (!this.newsTitle || !this.newsAuthor || !this.newsContent || !this.newsCategory || !this.newsImageUrl) {
+      if (!this.newsTitle || !this.newsAuthor || !this.newsContent || !this.newsCategory) {
         message.error('Vui lòng điền toàn bộ các thông tin!')
         return
       }
@@ -198,6 +203,25 @@ export default {
       this.newsCategory = ''
       this.newsImageUrl = ''
       this.selectedFile = null
+    },
+
+    // Cancel editing
+    cancelEdit() {
+      this.resetForm()
+      message.info('Đã hủy chỉnh sửa.')
+    },
+
+    confirmDelete(id) {
+      this.$confirm({
+        title: 'Bạn có chắc muốn xóa bài viết này?',
+        content: 'Thao tác này không thể hoàn tác.',
+        okText: 'Xóa',
+        okType: 'danger',
+        cancelText: 'Hủy',
+        onOk: () => this.deleteNews(id),
+        onCancel() {
+        }
+      })
     }
   },
   mounted() {

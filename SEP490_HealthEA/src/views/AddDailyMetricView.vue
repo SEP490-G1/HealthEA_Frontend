@@ -38,11 +38,12 @@
     </div>
   </template>
   
-  <script lang="ts" setup>
+  <script setup>
   import { ref } from 'vue'
   import axios from 'axios'
   import { message } from 'ant-design-vue'
   import { PlusOutlined } from '@ant-design/icons-vue'
+  const API_URL = import.meta.env.VITE_API_URL_DOTNET
   
   // Form values for height, weight, blood pressure
   const form = ref({
@@ -72,7 +73,7 @@
   
     loading.value = true // Start loading
     try {
-      const response = await axios.post('http://localhost:5217/api/Images/scan', formData, {
+      const response = await axios.post(`${API_URL}/api/Images/scan`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

@@ -196,6 +196,7 @@ export default {
           headers: { Authorization: `Bearer ${userStore.token}` }
         })
         message.success('Cập nhật hồ sơ thành công')
+        this.$router.push("/doctors/me")
       } catch (error) {
         console.error('Lỗi khi cập nhật hồ sơ:', error)
         message.error('Không thể cập nhật hồ sơ')

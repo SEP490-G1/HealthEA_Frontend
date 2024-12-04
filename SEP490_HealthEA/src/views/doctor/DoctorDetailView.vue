@@ -29,7 +29,7 @@
                 </router-link>
               </div>
             </div>
-          </div>s
+          </div>
 
           <!-- Clinic Address Section -->
           <div class="mb-4">
