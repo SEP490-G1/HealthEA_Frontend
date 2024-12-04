@@ -92,6 +92,10 @@ const routes = [
       {
         path: 'password',
         component: () => import('@/components/personal/Password.vue')
+      },
+      {
+        path: 'notification',
+        component: () => import('@/views/notifications/NotificationListView') 
       }
     ]
   },

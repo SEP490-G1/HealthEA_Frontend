@@ -1,6 +1,5 @@
 <script setup>
 import ContentFooter from '@/components/layout/ContentFooter'
-import { message } from 'ant-design-vue'
 import { RouterLink } from 'vue-router'
 import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons-vue'
 import { ref, h } from 'vue'
@@ -25,14 +24,14 @@ export default {
         {
           key: 'notification',
           icon: () => h(AppstoreOutlined),
-          label: 'Thông báo',
+          label: h(RouterLink, { to: '/myprofile/notification' }, 'Thông báo'),
           title: 'Thông báo của bạn'
         },
         {
           key: 'transaction',
           icon: () => h(SettingOutlined),
-          label: 'Ví của bạn',
-          title: 'Thông báo của bạn'
+          label: h(RouterLink, { to: '/myprofile/password' }, 'Đổi mật khẩu tài khoản'),
+          title: 'Đổi mật khẩu của bạn'
         }
       ])
     }

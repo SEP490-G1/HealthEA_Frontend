@@ -52,7 +52,7 @@
             { len: 10, message: 'Độ dài số điện thoại phải 10 chữ số' },
             {
               pattern: /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/,
-              message: 'Độ dài số điện thoại không hợp lệ'
+              message: 'Số điện thoại không hợp lệ'
             }
           ]"
         >
