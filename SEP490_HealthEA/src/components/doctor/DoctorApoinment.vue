@@ -48,7 +48,6 @@ import { useApointment } from '@/stores/ApointmentManagement'
 import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue'
 import axios from 'axios'
-import { isValid } from 'date-fns'
 import { ref } from 'vue'
 const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
@@ -96,11 +95,15 @@ export default {
         })
     },
     async loadData() {
+      this.listApointment = []
       const user = useApointment()
       var res = await user.getApoinmentDoctor(1, 10)
-      this.listApointment = res.data.items
-      console.log(this.listApointment)
-      console.log('list appoint', this.listApointment)
+      
+      for(let i = 1; i <= res.data.totalPages; i++){
+        let ress = await user.getApoinmentDoctor(i, 10)
+        this.listApointment.push(...ress.data.items)
+      }
+      console.log(res.data.totalPages)
     },
     handleCall(customerId, doctorId) {
       const url = `https://manhvv15.github.io/DoctorCall/?doctorId=${doctorId}&customerId=${customerId}`

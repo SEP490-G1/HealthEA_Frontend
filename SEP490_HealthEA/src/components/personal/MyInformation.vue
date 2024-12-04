@@ -4,7 +4,7 @@
       <a-upload
         v-model:file-list="fileList"
         list-type="picture-card"
-        beforeUpload="beforeUpload"
+        :before-upload="beforeUpload"
         @preview="handlePreview"
       >
         <div v-if="fileList.length < 1">
@@ -12,6 +12,7 @@
           <div style="margin-top: 8px">Upload</div>
         </div>
       </a-upload>
+      (Chỉ cho ảnh png, và jpg)<br />
       <a-button
         type="primary"
         class="submit-button"
@@ -110,7 +111,7 @@
 <script>
 import { PlusOutlined } from '@ant-design/icons-vue'
 import { useUserStore } from '@/stores/user'
-import { message } from 'ant-design-vue'
+import { message, Upload } from 'ant-design-vue'
 import axios from 'axios'
 import { ref } from 'vue'
 import dayjs from 'dayjs'
@@ -149,6 +150,15 @@ export default {
     this.loadData()
   },
   methods: {
+    beforeUpload(file) {
+      const isPNG = file.type === 'image/png'
+      const isJPG = file.type === 'image/jpg'
+
+      if (!(isPNG || isJPG)) {
+        message.error(`Chỉ chấp nhận file png và jpg`)
+      }
+      return isPNG || isJPG || Upload.LIST_IGNORE
+    },
     async handleSubmit() {
       if (this.fileList.length === 0) {
         message.warning('Please upload at least one image!')
@@ -254,11 +264,9 @@ export default {
 }
 .ant-upload-select-picture-card i {
   font-size: 32px;
-  color: #999;
 }
 
 .ant-upload-select-picture-card .ant-upload-text {
   margin-top: 8px;
-  color: #666;
 }
 </style>

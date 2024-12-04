@@ -29,7 +29,7 @@
                 </router-link>
               </div>
             </div>
-          </div>s
+          </div>
 
           <!-- Clinic Address Section -->
           <div class="mb-4">
@@ -208,7 +208,7 @@ export default {
         this.doctor = response.data || {}
         try {
           this.workHistory = this.doctor.historyOfWork ? JSON.parse(this.doctor.historyOfWork) : []
-        } catch (error){
+        } catch (error) {
           this.workHistory = []
         }
         this.checkIfUserIsDoctor()
@@ -221,12 +221,9 @@ export default {
       const doctorId = this.$route.params.id
       const userStore = useUserStore()
       try {
-        const response = await axios.get(
-          `${API_URL}/api/Schedules/is-user/${doctorId}`,
-          {
-            headers: { Authorization: `Bearer ${userStore.token}` }
-          }
-        )
+        const response = await axios.get(`${API_URL}/api/Schedules/is-user/${doctorId}`, {
+          headers: { Authorization: `Bearer ${userStore.token}` }
+        })
         if (response.status === 200) {
           this.isDoctor = true // User is the doctor
         }
