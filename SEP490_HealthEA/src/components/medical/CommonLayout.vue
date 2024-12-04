@@ -3,10 +3,9 @@
     <a-page-header
       style="border: 1px solid rgb(235, 237, 240)"
       :title="this.healthProfie.fullName"
-      v-model:sub-title="subtitle"
       @back="back"
     />
-    <slot ></slot>
+    <slot></slot>
   </div>
 </template>
 <script>
@@ -26,7 +25,7 @@ export default {
     }
   },
   methods: {
-    back(){
+    back() {
       this.$router.back()
     }
   }

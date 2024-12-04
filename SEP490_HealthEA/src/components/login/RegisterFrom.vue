@@ -67,7 +67,8 @@
             { min: 8, max: 25, message: 'Độ dài mật khẩu phải từ 8 - 25 chữ số' },
             {
               pattern: /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,25}/,
-              message: 'Mật khẩu phải có ít nhất một chữ hoa một chữ thường một số'
+              message:
+                'Mật khẩu phải có ít nhất một chữ hoa một chữ thường một số, một ký tự đặc biệt'
             }
           ]"
         >
@@ -93,7 +94,12 @@
           >
         </a-form-item>
         <a-form-item align="center" style="width: 100%; margin: 0; display: flex">
-          <a-button size="large" style="width: 100%" html-type="submit" type="primary"
+          <a-button
+            :loading="loadingBTN"
+            size="large"
+            style="width: 100%"
+            html-type="submit"
+            type="primary"
             >Đăng ký ngay</a-button
           >
         </a-form-item>
@@ -104,12 +110,13 @@
 
 <script>
 import { useUserStore } from '@/stores/user'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 
 export default {
   data() {
     return {
+      loadingBTN: ref(false),
       labelCol: {
         style: {
           width: '150px'
@@ -145,6 +152,7 @@ export default {
       message.error('Kiểm tra lại form', 3)
     },
     async register(value) {
+      this.loadingBTN = true
       let newValue = value
       delete value.acp
       delete value.re_password
@@ -152,17 +160,22 @@ export default {
       const Response = await userStoreLogin.Register(newValue)
       if (Response.status != 200) {
         var str = 'Có lỗi xảy ra!'
-        console.log(Response);
-        
+        console.log(Response)
+
         if (Response.response.data.code == 1001) {
           str = 'Tài khoản đã tồn tại'
         }
-        if(Response.response.data.code == 1010){
-          str = 'Email không tồn tại'
+        if (Response.response.data.code == 1010) {
+          str = 'Email đã tồn tại'
         }
         message.error(str, 4)
+        return
       }
-      // this.$router.push({ path: '/client/login' })
+      console.log(newValue)
+
+      await userStoreLogin.verify(newValue.email)
+      message.success('Đăng ký thành công, hãy xác nhận địa chỉ email!', 15)
+      this.$router.push({ path: '/client/login' })
     }
   }
 }

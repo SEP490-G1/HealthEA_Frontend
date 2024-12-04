@@ -21,23 +21,21 @@
           <a-form-item label="Giới tính" name="gender">
             <a-select :bordered="false" v-model:value="formState.gender">
               <a-select-option :value="0">---</a-select-option>
-              <a-select-option :value="1">Nam</a-select-option>
-              <a-select-option :value="2">Nữ</a-select-option>
+              <a-select-option :value="2">Nam</a-select-option>
+              <a-select-option :value="1">Nữ</a-select-option>
             </a-select>
           </a-form-item>
         </a-col> </a-row
       ><a-row>
         <a-col class="gutter-row" :span="6">
           <a-form-item label="Ngày sinh" name="dateOfBirth">
-            {{ formState.dateOfBirth }}
-            <!-- <a-date-picker
-              :bordered="false"
-              format="YYYY-MM-DD"
+            <!-- {{ formState.dateOfBirth }} -->
+            <a-date-picker
               v-model:value="formState.dateOfBirth"
-              type="date"
-              placeholder="Pick a date"
-              style="width: 100%"
-            />-->
+              valueFormat="YYYY-MM-DD"
+              format="YYYY-MM-DD"
+              :bordered="false"
+            />
           </a-form-item>
         </a-col>
         <a-col class="gutter-row" :span="6">
@@ -48,21 +46,32 @@
       </a-row>
       <a-row>
         <a-col :span="24">
-          <a-form-item label="Ghi chú" name="residence">
+          <a-form-item label="Ghi chú" name="note">
             <a-textarea :bordered="false" style="width: 100%" v-model:value="formState.note" />
           </a-form-item>
         </a-col>
       </a-row>
+      <a-button :disabled="!status" type="primary" html-type="submit">Lưu thay đổi</a-button>
     </a-form>
   </div>
 </template>
 <script>
 import { useMedicalRecordStore } from '@/stores/medicalRecord'
+import { message } from 'ant-design-vue';
 import { ref } from 'vue'
 
 export default {
+  watch: {
+    formState: {
+      handler() {
+        this.status = true
+      },
+      deep: true // This is crucial for watching nested changes
+    }
+  },
   data() {
     return {
+      status: ref(false),
       formState: ref({}),
       healthProfie: ref({}),
       idNew: this.$route.params.id
@@ -71,12 +80,22 @@ export default {
   async mounted() {
     const store = await useMedicalRecordStore()
     this.healthProfie = await store.getHealthProfileByID(this.idNew)
-    this.formState = this.healthProfie
-    console.log('sssssssssss', this.formState)
+
+    this.formState = await this.healthProfie
+    this.status = await false
   },
   methods: {
-    onFinish() {},
-    onFinishFailed() {},
+    async onFinish() {
+      const store = await useMedicalRecordStore()
+      let log = await store.updateHealthProfile(this.formState.id, this.formState)
+      this.status = await false
+      message.success("Cập nhật thành công")
+      console.log(log)
+      
+    },
+    onFinishFailed() {
+      message.error('Kiểm tra lại các trường')
+    },
     buttonAS() {
       console.log(this.healthProfie)
     }

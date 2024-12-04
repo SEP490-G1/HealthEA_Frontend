@@ -53,7 +53,7 @@ export default {
         console.log(this.messageInput)
 
         try{
-            const response = await axios.post("http://localhost:9090/identity/chat/getAiResponse", this.messageInput,
+            const response = await axios.post(`${import.meta.env.VITE_API_URL_JAVA}/identity/chat/getAiResponse`, this.messageInput,
                 {
                     headers: {
                         'Content-Type': 'application/json; charset=UTF-8',
@@ -75,7 +75,7 @@ export default {
         console.log('Token:', userStore.token);
 
         try{
-            const response = await axios.get("http://localhost:9090/identity/chat",
+            const response = await axios.get(`${import.meta.env.VITE_API_URL_JAVA}/identity/chat`,
                 {
                     headers: {
                         Authorization: `Bearer ${userStore.token}`

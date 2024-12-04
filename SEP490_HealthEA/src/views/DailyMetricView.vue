@@ -5,6 +5,11 @@ import { message } from 'ant-design-vue'
 </script>
 <template lang="">
   <ContentFooter>
+    <a-float-button @click="toChat" :badge="{ dot: true }">
+      <template #icon>
+        <CommentOutlined />
+      </template>
+    </a-float-button>
     <a-typography-title style="display: flex; justify-content: center">
       Chỉ số sức khỏe của bạn
     </a-typography-title>
@@ -110,6 +115,7 @@ import { message } from 'ant-design-vue'
 
 <script>
 import CommonLayout from '@/components/common/TheModal'
+import {  CommentOutlined } from '@ant-design/icons-vue'
 export default {
   data() {
     return {
@@ -188,6 +194,9 @@ export default {
     }
   },
   methods: {
+    toChat() {
+      this.$router.push('/chat')
+    },
     toHistory() {
       this.$router.push('/dailymetric/history')
     },
