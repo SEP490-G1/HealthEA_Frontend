@@ -33,9 +33,11 @@ import CommonLayout from '@/components/common/TheModal'
                   <a class="ant-dropdown-link" @click.prevent> More </a>
                   <template #overlay v-if="!loading">
                     <a-menu>
-                      <a-menu-item @click="Delete(item.id)" key="1">Delete</a-menu-item>
-                      <a-menu-item @click="Modified(item.id)" key="2">Modified</a-menu-item>
-                      <a-menu-item @click="Share(item)" key="3">Share</a-menu-item>
+                      <a-menu-item @click="Delete(item.id)" key="1">Xóa</a-menu-item>
+                      <a-menu-item @click="Modified(item.id)" key="2">Chỉnh sửa</a-menu-item>
+                      <a-menu-item @click="Share(item)" key="3"
+                        >Thay đổi quyền truy cập</a-menu-item
+                      >
                     </a-menu>
                   </template>
                 </a-dropdown>
@@ -45,16 +47,16 @@ import CommonLayout from '@/components/common/TheModal'
               </template>
               <div style="backgroundcolor: blue">
                 <a-typography-text type="secondary" style="display: flex"
-                  ><p>Last modified:&nbsp;</p>
+                  ><p>Thay đổi lần cuối:&nbsp;</p>
                   {{ formatDate(item.lastModifyDate) }}</a-typography-text
                 >
               </div>
             </a-card>
             <template #overlay v-if="!loading">
               <a-menu>
-                <a-menu-item @click="Delete(item.id)" key="1">Delete</a-menu-item>
-                <a-menu-item @click="Modified(item.id)" key="2">Modified</a-menu-item>
-                <a-menu-item @click="Share(item)" key="3">Share</a-menu-item>
+                <a-menu-item @click="Delete(item.id)" key="1">Xóa</a-menu-item>
+                <a-menu-item @click="Modified(item.id)" key="2">Chỉnh sửa</a-menu-item>
+                <a-menu-item @click="Share(item)" key="3">Thay đổi quyền truy cập</a-menu-item>
               </a-menu>
             </template>
           </a-dropdown>
@@ -108,9 +110,7 @@ import CommonLayout from '@/components/common/TheModal'
         </a-col>
         <a-col :span="12">
           <a-input-group compact style="display: flex">
-            <a-input
-              :value="`/profileHealth/medical_record/information/${this.userData.id}`"
-            />
+            <a-input :value="`/profileHealth/medical_record/information/${this.userData.id}`" />
             <a-tooltip title="copy url">
               <a-button> </a-button>
             </a-tooltip>
@@ -123,7 +123,7 @@ import CommonLayout from '@/components/common/TheModal'
       :handleOk="handleOk"
       :open="open"
       title="Tạo mới hồ sơ sức khỏe"
-      okText="Tạo mới"
+      :okText="this.stageForm == 0 ? 'Tạo mới' : 'Lưu thay đổi'"
       cancelText="Hủy"
       :width="sizeForm"
     >
@@ -186,6 +186,8 @@ export default {
   data() {
     return {
       userData: {
+        //0 add , 1 edit
+        stageForm: '0',
         fullName: '',
         gender: '1',
         residence: '',
@@ -193,6 +195,7 @@ export default {
         note: '',
         sharedStatus: '0'
       },
+      idModi: '',
       qr: ref({ Status: false, Name: 'Lấy' }),
       msgName: '',
       msgdt: '',
@@ -206,7 +209,6 @@ export default {
   },
   watch: {
     'userData.sharedStatus'(newValue) {
-
       if (this.openShare == true) {
         this.changeShare(this.userData.id, newValue)
       }
@@ -225,6 +227,10 @@ export default {
     },
     async Modified(id) {
       const store = useMedicalRecordStore()
+      this.stageForm = 1
+      console.log(id)
+      this.idModi = id
+
       var st = await store.getHealthProfileByID(id)
       this.open = true
       this.userData.fullName = st.fullName
@@ -262,17 +268,31 @@ export default {
     },
     async handleOk() {
       if (!this.validateName(this.userData.fullName)) {
+        message.error('Bạn phải nhập Họ và tên của hồ sơ')
         return
       }
       if (!this.validateDateTime(this.userData.dateOfBirth)) {
+        message.error('Bạn phải nhập ngày tháng năm sinh của hồ sơ')
         return
       }
-      await store.addNewHealthProfile(this.userData)
+      if (this.stageForm == 0) {
+        await store.addNewHealthProfile(this.userData)
+        
+      }
+      
+      if (this.stageForm == 1) {
+        console.log(this.userData);
+        console.log(this.idModi);
+        
+        let res = await store.updateHealthProfile(this.idModi, this.userData)
+        console.log(res);
+      }
       this.open = false
       await store.loadHealthProfile()
       this.info = await store.storeHealthProfile
     },
     showModal() {
+      this.stageForm = 0
       this.open = true
     },
     formatDate(date) {

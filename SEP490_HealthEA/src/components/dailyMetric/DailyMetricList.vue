@@ -216,7 +216,6 @@
               label="Nhiệt độ"
               name="bodyTemperature"
               style="width: 90%; margin: 0 10px"
-              :rules="[{ min: 0, message: 'Phải là số lớn hơn 0' }]"
             >
               <a-input-number
                 style="width: 100%"

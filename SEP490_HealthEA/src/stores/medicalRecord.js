@@ -21,7 +21,7 @@ export const useMedicalRecordStore = defineStore('medicalRecord', {
     }
   },
   actions: {
-    async removeDP(id){
+    async removeDP(id) {
       const userStore = useUserStore()
       headers.headers.Authorization = `Bearer ${userStore.token}`
       const data = await deleteData(API_URL + `/DocumentProfile/${id}`, headers)
@@ -65,7 +65,12 @@ export const useMedicalRecordStore = defineStore('medicalRecord', {
         message.error('Error fetching data:' + error, 3)
       }
     },
-
+    async updateHealthProfile(id, body) {
+      const userStore = useUserStore()
+      headers.headers.Authorization = `Bearer ${userStore.token}`
+      const data = await patchData(API_URL + '/HealthProfile/' + id, body, headers)
+      return data
+    },
     async getHealthProfileByID(id) {
       const userStore = useUserStore()
       headers.headers.Authorization = `Bearer ${userStore.token}`
