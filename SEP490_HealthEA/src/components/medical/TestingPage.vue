@@ -66,7 +66,7 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
         :disabled="loading"
         @click="handleSubmit"
       >
-        Tạo với ảnh này ngay
+        Lưu avatar
       </a-button>
     </a-drawer>
   </div>
