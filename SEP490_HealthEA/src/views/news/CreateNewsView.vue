@@ -100,7 +100,7 @@ export default {
 
     // Save or update news
     async saveNews() {
-      if (!this.newsTitle || !this.newsAuthor || !this.newsContent || !this.newsCategory || !this.newsImageUrl) {
+      if (!this.newsTitle || !this.newsAuthor || !this.newsContent || !this.newsCategory) {
         message.error('Vui lòng điền toàn bộ các thông tin!')
         return
       }
