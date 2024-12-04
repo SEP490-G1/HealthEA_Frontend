@@ -15,8 +15,9 @@
           ></div>
         </template>
         <template #renderItem="{ item }">
+          
           <a-list-item>
-            <template #actions>
+            <template #actions v-if="item.type == 1">
               <a-dropdown :trigger="['click']">
                 <a class="ant-dropdown-link" key="list-loadmore-more" @click.prevent
                   >Option <DownOutlined

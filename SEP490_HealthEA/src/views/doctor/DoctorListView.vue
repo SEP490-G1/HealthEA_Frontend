@@ -1,98 +1,98 @@
 <template>
-  <div class="doctor-list-container">
-    <!-- Banner Section -->
-    <div class="banner text-white text-center py-4">
-      <h1>Chào mừng đến với Dịch vụ Bác sĩ</h1>
-      <p>Chúng tôi giúp bạn tìm bác sĩ phù hợp nhất cho nhu cầu của bạn</p>
-    </div>
+  <a-layout style="padding: 30px 50px">
+    <a-layout-content
+      :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '10px' }"
+    >
+      <div class="doctor-list-container">
+        <!-- Banner Section -->
+        <div class="banner text-white text-center py-4">
+          <h1>Chào mừng đến với Dịch vụ Bác sĩ</h1>
+          <p>Chúng tôi giúp bạn tìm bác sĩ phù hợp nhất cho nhu cầu của bạn</p>
+        </div>
 
-    <!-- Search Header -->
-    <div class="search-header text-center mt-4">
-      <h2>Tìm kiếm bác sĩ</h2>
-      <p>Điền thông tin dưới đây để tìm bác sĩ bạn cần</p>
-    </div>
+        <!-- Search Header -->
+        <div class="search-header text-center mt-4">
+          <h2>Tìm kiếm bác sĩ</h2>
+          <p>Điền thông tin dưới đây để tìm bác sĩ bạn cần</p>
+        </div>
 
-    <!-- Centered Search Filters -->
-    <div class="search-container mt-3">
-      <a-form layout="inline" @submit.prevent="fetchDoctors" class="search-form">
-        <a-form-item>
-          <a-input
-            v-model:value="filters.name"
-            placeholder="Tìm theo tên bác sĩ"
-            allow-clear
-            size="large"
-          />
-        </a-form-item>
-        <a-form-item>
-          <a-input
-            v-model:value="filters.city"
-            placeholder="Tìm theo thành phố"
-            allow-clear
-            size="large"
-          />
-        </a-form-item>
-        <a-form-item>
-          <a-button
-            type="primary"
-            @click="fetchDoctors"
-            size="large"
-          >
-            Tìm kiếm
-          </a-button>
-        </a-form-item>
-        <router-link v-if="isDoctor" to="/doctors/me">Thông tin của bạn</router-link>
-      </a-form>
-    </div>
+        <!-- Centered Search Filters -->
+        <div class="search-container mt-3">
+          <a-form layout="inline" @submit.prevent="fetchDoctors" class="search-form">
+            <a-form-item>
+              <a-input
+                v-model:value="filters.name"
+                placeholder="Tìm theo tên bác sĩ"
+                allow-clear
+                size="large"
+              />
+            </a-form-item>
+            <a-form-item>
+              <a-input
+                v-model:value="filters.city"
+                placeholder="Tìm theo thành phố"
+                allow-clear
+                size="large"
+              />
+            </a-form-item>
+            <a-form-item>
+              <a-button type="primary" @click="fetchDoctors" size="large"> Tìm kiếm </a-button>
+            </a-form-item>
+            <router-link v-if="isDoctor" to="/doctors/me">Thông tin của bạn</router-link>
+          </a-form>
+        </div>
 
-    <!-- Display number of results found -->
-    <p class="results-count mt-4" v-if="doctors.length > 0">Found {{ doctors.length }} results</p>
+        <!-- Display number of results found -->
+        <p class="results-count mt-4" v-if="doctors.length > 0">
+          Found {{ doctors.length }} results
+        </p>
 
-    <!-- Doctor Cards Section -->
-    <div class="doctor-cards mt-3">
-      <a-row gutter="16" v-if="displayedDoctors.length > 0">
-        <a-col
-          v-for="doctor in displayedDoctors"
-          :key="doctor.id"
-          :xs="24"
-          :sm="12"
-          :md="6"
-        >
-          <router-link :to="`/listDoctor/${doctor.id}`">
-            <a-card class="doctor-card" hoverable>
-              <div class="profile-image-container">
-                <img
-                  :src="doctor?.user?.avatar || 'https://via.placeholder.com/100'"
-                  alt="Hình ảnh"
-                  class="profile-image"
-                />
-              </div>
-              <div class="doctor-info">
-                <h3>{{ doctor.displayName }}</h3>
-                <p class="doctor-details"><strong>Chuyên khoa:</strong> {{ doctor.specialization }}</p>
-                <p class="doctor-details"><strong>Thành phố:</strong> {{ doctor.clinicCity }}</p>
-              </div>
-            </a-card>
-          </router-link>
-        </a-col>
-      </a-row>
-      <p v-else>Không tìm thấy bác sĩ nào</p>
-    </div>
+        <!-- Doctor Cards Section -->
+        <div class="doctor-cards mt-3">
+          <a-row gutter="16" v-if="displayedDoctors.length > 0">
+            <a-col v-for="doctor in displayedDoctors" :key="doctor.id" :xs="24" :sm="12" :md="6">
+              <router-link :to="`/listDoctor/${doctor.id}`">
+                <a-card class="doctor-card" hoverable>
+                  <div class="profile-image-container">
+                    <img
+                      :src="doctor?.user?.avatar || 'https://via.placeholder.com/100'"
+                      alt="Hình ảnh"
+                      class="profile-image"
+                    />
+                  </div>
+                  <div class="doctor-info">
+                    <h3>{{ doctor.displayName }}</h3>
+                    <p class="doctor-details">
+                      <strong>Chuyên khoa:</strong> {{ doctor.specialization }}
+                    </p>
+                    <p class="doctor-details">
+                      <strong>Thành phố:</strong> {{ doctor.clinicCity }}
+                    </p>
+                  </div>
+                </a-card>
+              </router-link>
+            </a-col>
+          </a-row>
+          <p v-else>Không tìm thấy bác sĩ nào</p>
+        </div>
 
-    <!-- Pagination Section -->
-    <a-pagination
-      v-if="doctors.length > pageSize"
-      :total="doctors.length"
-      :page-size="pageSize"
-      :current="currentPage"
-      @change="handlePageChange"
-      class="pagination"
-    />
-  </div>
+        <!-- Pagination Section -->
+        <a-pagination
+          v-if="doctors.length > pageSize"
+          :total="doctors.length"
+          :page-size="pageSize"
+          :current="currentPage"
+          @change="handlePageChange"
+          class="pagination"
+        />
+      </div>
+    </a-layout-content>
+  </a-layout>
 </template>
 
 <script>
-import axios from 'axios';
-import { useUserStore } from '@/stores/user';
+import axios from 'axios'
+import { useUserStore } from '@/stores/user'
 const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
@@ -107,13 +107,13 @@ export default {
       loading: false,
       currentPage: 1,
       pageSize: 8,
-      isDoctor: false,
-    };
+      isDoctor: false
+    }
   },
   methods: {
     async fetchDoctors() {
-      this.loading = true;
-      const userStore = useUserStore();
+      this.loading = true
+      const userStore = useUserStore()
       try {
         const response = await axios.get(`${API_URL}/api/Doctor`, {
           params: {
@@ -121,29 +121,29 @@ export default {
             city: this.filters.city
           },
           headers: { Authorization: `Bearer ${userStore.token}` }
-        });
-        this.doctors = response.data;
-        this.updateDisplayedDoctors();
+        })
+        this.doctors = response.data
+        this.updateDisplayedDoctors()
       } catch (error) {
-        console.error('Lỗi khi lấy danh sách bác sĩ:', error);
+        console.error('Lỗi khi lấy danh sách bác sĩ:', error)
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
     updateDisplayedDoctors() {
-      const startIndex = (this.currentPage - 1) * this.pageSize;
-      this.displayedDoctors = this.doctors.slice(startIndex, startIndex + this.pageSize);
+      const startIndex = (this.currentPage - 1) * this.pageSize
+      this.displayedDoctors = this.doctors.slice(startIndex, startIndex + this.pageSize)
     },
     handlePageChange(page) {
-      this.currentPage = page;
-      this.updateDisplayedDoctors();
+      this.currentPage = page
+      this.updateDisplayedDoctors()
     },
-    async checkUserIsDoctor(){
-      const userStore = useUserStore();
+    async checkUserIsDoctor() {
+      const userStore = useUserStore()
       try {
         const response = await axios.get(`${API_URL}/api/Doctor/me`, {
           headers: { Authorization: `Bearer ${userStore.token}` }
-        });
+        })
         this.isDoctor = true
       } catch (error) {
       } finally {
@@ -152,15 +152,15 @@ export default {
   },
   watch: {
     doctors() {
-      this.currentPage = 1;
-      this.updateDisplayedDoctors();
+      this.currentPage = 1
+      this.updateDisplayedDoctors()
     }
   },
   created() {
-    this.fetchDoctors();
-    this.checkUserIsDoctor();
+    this.fetchDoctors()
+    this.checkUserIsDoctor()
   }
-};
+}
 </script>
 
 <style scoped>
