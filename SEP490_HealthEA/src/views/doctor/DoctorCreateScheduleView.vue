@@ -89,6 +89,7 @@ export default {
           headers: { Authorization: `Bearer ${userStore.token}` }
         })
         message.success('Lịch làm việc đã được tạo thành công!')
+        this.$router.push("/doctors/me")
       } catch (error) {
         console.error('Lỗi khi tạo lịch làm việc:', error)
         message.error('Không thể tạo lịch làm việc. Vui lòng thử lại sau.')
