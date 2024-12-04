@@ -4,6 +4,11 @@ import { useDailyMetricStore } from '@/stores/DailyMetricView'
 import { ref } from 'vue'
 </script>
 <template lang="">
+  <a-float-button @click="toChat" :badge="{ dot: true }">
+    <template #icon>
+      <CommentOutlined />
+    </template>
+  </a-float-button>
   <ContentFooter style="">
     <a-typography-title style="display: flex; justify-content: center">
       Lịch sử nhập chỉ số sức khỏe
@@ -69,7 +74,7 @@ export default {
           curve: 'smooth'
         },
         title: {
-          text: 'Product Trends by Month',
+          text: '',
           align: 'left'
         },
         grid: {
@@ -89,6 +94,9 @@ export default {
     console.log('series', this.series)
   },
   methods: {
+    toChat() {
+      this.$router.push('/chat')
+    },
     async deleteClick(id) {
       const store = useDailyMetricStore()
       await store.deleteDailyMetricToday(id)

@@ -1,13 +1,12 @@
 <template>
   <div class="upload-container">
-    <h2 class="upload-title">Upload Your Images</h2>
     <a-upload
       v-model:file-list="fileList"
       list-type="picture-card"
       beforeUpload="beforeUpload"
       @preview="handlePreview"
     >
-      <div v-if="fileList.length < 8">
+      <div v-if="fileList.length < 1">
         <plus-outlined />
         <div style="margin-top: 8px">Upload</div>
       </div>
@@ -23,7 +22,7 @@
       :disabled="loading"
       @click="handleSubmit"
     >
-      Submit
+      Upload ảnh
     </a-button>
   </div>
 </template>
@@ -35,6 +34,8 @@ import type { UploadProps } from 'ant-design-vue'
 import axios from 'axios'
 import { message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
+
+
 
 function getBase64(file: File) {
   return new Promise((resolve, reject) => {
@@ -85,14 +86,19 @@ const handleSubmit = async () => {
   const uploadMessage = message.loading('Uploading images...', 0)
 
   try {
-    const response = await axios.post('http://localhost:5217/api/Images', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL_DOTNET}/api/Images`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       }
-    })
+    )
     uploadMessage() // Hide the loading message
     message.success('Upload successful!')
-    console.log('Upload successful:', response.data)
+    console.log('Upload successful:', response.data.imageUrl)
+
   } catch (error) {
     uploadMessage() // Hide the loading message
     message.error('Upload failed. Please try again.')
@@ -104,6 +110,8 @@ const handleSubmit = async () => {
 }
 
 const beforeUpload = () => false
+
+
 </script>
 
 <style scoped>

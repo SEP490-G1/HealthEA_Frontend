@@ -29,17 +29,7 @@
                 </router-link>
               </div>
             </div>
-          </div>
-
-          <!-- Appointment and Video Call Info -->
-          <div class="d-flex gap-3 mb-4">
-            <a-card class="flex-fill text-center">
-              <p><strong>Số lần hẹn:</strong> {{ doctor?.numberOfAppointments || 0 }}</p>
-            </a-card>
-            <a-card class="flex-fill text-center">
-              <p><strong>Cuộc gọi video:</strong> {{ doctor?.numberOfVideoCalls || 0 }}</p>
-            </a-card>
-          </div>
+          </div>s
 
           <!-- Clinic Address Section -->
           <div class="mb-4">

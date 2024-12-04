@@ -92,6 +92,10 @@ const routes = [
       {
         path: 'password',
         component: () => import('@/components/personal/Password.vue')
+      },
+      {
+        path: 'notification',
+        component: () => import('@/views/notifications/NotificationListView') 
       }
     ]
   },
@@ -364,9 +368,13 @@ function exitUser() {
 router.beforeEach(async (to) => {
   // gọi store
   const userStore = useUserStore()
-  if (to.path.includes('/profileHealth')) {
+  if(to.path == '/' || to.path == '/about'){
     return
   }
+  if (to.path.includes('/profileHealth/medical_record')) {
+    return
+  }
+
   // nếu truy cập vào các page:
   // - không có path /client
   // - không có quyền truy cập

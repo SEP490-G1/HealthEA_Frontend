@@ -50,11 +50,10 @@
 </template>
 
 <script>
-import { ref, onMounted, watch } from 'vue';
+import { ref } from 'vue';
 import { useUserStore } from '@/stores/user';
 import AlertOutlined from '@ant-design/icons-vue';
 import axios from 'axios';
-import { notificationState } from '@/stores/NotificationStore';
 const colorList = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'];
 const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
@@ -168,7 +167,7 @@ export default {
       this.$router.push('/myprofile/myInfo');
     },
     viewNotifications() {
-      this.$router.push('/notifications');
+      this.$router.push('/myprofile/notification');
     },
     changePassword() {
       this.$router.push('/myprofile/password')
