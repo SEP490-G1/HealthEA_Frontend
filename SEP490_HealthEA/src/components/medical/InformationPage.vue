@@ -57,7 +57,7 @@
 </template>
 <script>
 import { useMedicalRecordStore } from '@/stores/medicalRecord'
-import { message } from 'ant-design-vue';
+import { message } from 'ant-design-vue'
 import { ref } from 'vue'
 
 export default {
@@ -79,8 +79,12 @@ export default {
   },
   async mounted() {
     const store = await useMedicalRecordStore()
-    this.healthProfie = await store.getHealthProfileByID(this.idNew)
+    let response = await store.getHealthProfileByID(this.idNew)
+    if (response.data.statusCode == 401) {
+      return
+    }
 
+    this.healthProfie = response.data.data
     this.formState = await this.healthProfie
     this.status = await false
   },
@@ -89,9 +93,8 @@ export default {
       const store = await useMedicalRecordStore()
       let log = await store.updateHealthProfile(this.formState.id, this.formState)
       this.status = await false
-      message.success("Cập nhật thành công")
+      message.success('Cập nhật thành công')
       console.log(log)
-      
     },
     onFinishFailed() {
       message.error('Kiểm tra lại các trường')
