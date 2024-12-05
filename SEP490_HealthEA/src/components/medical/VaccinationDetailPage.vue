@@ -10,7 +10,7 @@
     "
   >
     <a-drawer
-      :title="titleEvent"
+      title="Tạo lịch nhắc uống thuốc"
       :width="720"
       :open="openz"
       :body-style="{ paddingBottom: '80px' }"
@@ -150,7 +150,7 @@
 
     <div style="width: 100%; display: flex; margin: 10px; justify-content: space-between">
       <div>
-        <a-button style="margin: 10px" type="primary" @click="showDrawer"
+        <a-button style="margin: 10px" type="primary" @click="onClosez"
           >Tạo nhắc nhở tiêm
         </a-button>
         <!-- <a-button style="margin: 10px" type="primary" @click="viewImage">Xem ảnh thực tế </a-button> -->
@@ -226,6 +226,7 @@ import { message } from 'ant-design-vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 import { useMedicalRecordStore } from '@/stores/medicalRecord'
 import ListImageDrawer from '@/components/medical/ListImageDrawer.vue'
+import { useRemindStore } from '@/stores/Remind'
 export default {
   components: {
     ListImageDrawer,
@@ -237,6 +238,36 @@ export default {
   },
 
   methods: {
+    onFinish() {
+      this.submitz()
+    },
+    async submitz() {
+      var obj = this.formState
+      try {
+        obj.EventDateTime = dayjs(obj.EventDateTime).format('YYYY-MM-DD')
+        obj.RepeatEndDate = dayjs(obj.RepeatEndDate).format('YYYY-MM-DDTHH:mm:ssZ')
+        console.log(obj.RepeatEndDate)
+      } catch (error) {
+        message.error('Các trường dữ liệu thời gian trống')
+        return
+      }
+      if (this.mayForm == 0) {
+        const store = await useRemindStore()
+        const result = await store.AddNewRemind(obj)
+        console.log(result.status)
+        let chuSoA = Math.floor(result.status / 100)
+        if (chuSoA != 2) {
+          message.error('Hãy kiểm tra lại input của bạn!')
+          return
+        }
+        this.openz = !this.openz
+      } else {
+        console.log('loghere', obj)
+        const store = await useRemindStore()
+        const result = await store.updateRemind(obj)
+        console.log('sssss', result)
+      }
+    },
     filterOption(input, option) {
       return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0
     },
@@ -326,6 +357,10 @@ export default {
     },
     cancel(key) {
       delete this.editableData[key]
+    },
+    onClosez() {
+      this.formStatez.Title = this.formState.title
+      this.openz = !this.openz
     }
   },
   watch: {
@@ -345,6 +380,61 @@ export default {
   },
   data() {
     return {
+      rules: {
+        Title: [
+          {
+            required: true,
+            message: 'Hãy nhập tiêu đề sự kiện'
+          }
+        ],
+        EventDateTime: [
+          {
+            required: true,
+            message: 'Bắt buộc phải nhập thời gian '
+          }
+        ],
+        StartTime: [
+          {
+            required: true,
+            message: 'Trường này bắt buộc'
+          }
+        ],
+        RepeatEndDate: [
+          {
+            required: true,
+            message: 'Trường này bắt buộc nhập'
+          }
+        ],
+        EndTime: [
+          {
+            required: true,
+            message: 'Trường này bắt buộc nhập'
+          }
+        ],
+        offsetUnit: [
+          {
+            required: true,
+            message: 'Trường này bắt buộc nhập'
+          }
+        ]
+      },
+      formStatez: reactive({
+        Title: 'Thụy',
+        EventDateTime: '2024-11-06',
+        StartTime: '04:04:26',
+        EndTime: '04:04:26',
+        Location: '',
+        RepeatFrequency: 1,
+        RepeatEndDate: '2024-11-08',
+        Description: '',
+        ReminderOffsets: [
+          {
+            offsetUnit: 1,
+            offsetValue: 1
+          }
+        ]
+      }),
+      openz: ref(false),
       options: [
         { value: 'Phòng bệnh lao' },
         { value: 'Phòng viêm gan B' },
