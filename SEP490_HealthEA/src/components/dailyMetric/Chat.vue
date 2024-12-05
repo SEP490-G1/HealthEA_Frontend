@@ -18,7 +18,7 @@
                 </div>
             </div>
         </div>
-
+        <p>*Thông tin chỉ mang tính chất tham khả, không thay thế được chỉ định của bác sĩ*</p>
         <!-- Chat Input and Send Button -->
         <div class="chat-input-area">
             <input v-model="messageInput" placeholder="Nhập câu hỏi của bạn" @keydown.enter="sendMessage" />

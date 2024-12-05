@@ -1,27 +1,31 @@
 <template>
-  <div>
-    <a-typography-title :level="3">Lịch hẹn của bạn</a-typography-title>
-    <a-table :dataSource="listApointment" :columns="columns">
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'status'">
-          <!-- status: success | processing | default | error | warning -->
-          <a-badge
-            :status="record.status == 'Pending' ? 'processing' : 'success'"
-            :text="record.status"
-          />
+  <a-layout style="padding: 30px 50px">
+    <a-layout-content
+      :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '10px' }"
+    >
+      <a-typography-title :level="3">Lịch hẹn của bạn</a-typography-title>
+      <a-table :dataSource="listApointment" :columns="columns">
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.dataIndex === 'status'">
+            <!-- status: success | processing | default | error | warning -->
+            <a-badge
+              :status="record.status == 'Pending' ? 'processing' : 'success'"
+              :text="record.status"
+            />
+          </template>
+          <template v-if="column.dataIndex === 'call'">
+            <button
+              :disabled="!isValid(record)"
+              class="btn btn-success"
+              @click="handleCall(record.customerId, record.doctorId)"
+            >
+              Gọi
+            </button>
+          </template>
         </template>
-        <template v-if="column.dataIndex === 'call'">
-          <button
-            :disabled="!isValid(record)"
-            class="btn btn-success"
-            @click="handleCall(record.customerId, record.doctorId)"
-          >
-            Gọi
-          </button>
-        </template>
-      </template>
-    </a-table>
-  </div>
+      </a-table>
+    </a-layout-content>
+  </a-layout>
 </template>
 
 <script>

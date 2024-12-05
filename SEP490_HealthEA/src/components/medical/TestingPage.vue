@@ -66,7 +66,7 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
         :disabled="loading"
         @click="handleSubmit"
       >
-        Lưu avatar
+        Quét kết quả xét nghiệm
       </a-button>
     </a-drawer>
   </div>
@@ -84,6 +84,17 @@ export default {
     this.loadData()
   },
   methods: {
+    getListFromVariable(variable) {
+      if (Array.isArray(variable)) {
+        // Nếu biến là một mảng, trả về mảng đó
+        return variable
+      } else if (typeof variable === 'object' && variable !== null) {
+        const properties = Object.keys(variable)
+        return variable[properties]
+      }
+      // Nếu không thuộc trường hợp nào trên, trả về null hoặc một giá trị mặc định khác
+      return null
+    },
     async handleSubmit() {
       if (this.fileList.length === 0) {
         message.warning('Please upload at least one image!')
@@ -102,8 +113,8 @@ export default {
 
       // Set loading to true to disable the button and show loading indicator
       this.loading = true
-      const uploadMessage1 = message.loading('Uploading images...', 0)
-      const uploadMessage2 = message.loading('Scan images...', 0)
+      const uploadMessage1 = message.loading('Scan images...', 0)
+      const uploadMessage2 = message.loading('Upload images...', 0)
       var obj = {
         image: [],
         type: 3,
@@ -119,8 +130,7 @@ export default {
         for (let i = 0; i < response.data.length; i++) {
           response.data[i].key = i + 1
         }
-        console.log(response.data)
-
+        response.data = this.getListFromVariable(response.data)
         var object = {
           date: dayjs(),
           doctor: '',
@@ -137,6 +147,7 @@ export default {
         console.error('Scan failed:', error)
         return
       }
+
       try {
         const objUpload = await axios.post(`${API_URL}/api/Images`, formData2, {
           headers: {

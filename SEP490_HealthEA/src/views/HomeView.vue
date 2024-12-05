@@ -1,36 +1,39 @@
-<script setup></script>
+<script setup>
+import doctorList from '@/components/doctor/doctorList'
+</script>
 
 <template>
-  <a-layout >
-    <a-layout-sider width="200" style="background: #fff">
-      <a-menu
-        mode="inline"
-        :style="{ height: '100%', borderRight: 0 }"
-      >
-        <a-sub-menu key="sub1">
-          <template #title>
-            <span>
-              subnav 1
-            </span>
-          </template>
-          <a-menu-item key="1"><RouterLink to="function1">Feature 1</RouterLink></a-menu-item>
-          <a-menu-item key="2"><RouterLink to="function2">Feature 2</RouterLink></a-menu-item>
-        </a-sub-menu>
+  <div style="display: flex; align-items: center">
+    <a-layout-content
+      style="flex-direction: column; align-items: center; height: 100%"
+      :style="{
+        margin: 0,
+        width: '1280px'
+      }"
+    >
+      <div
+        style="
+          background-image: linear-gradient(to top, #00c6fb 0%, #005bea 100%);
 
-        <a-menu-item key="1"><RouterLink to="function1">Feature 5</RouterLink></a-menu-item>
-      </a-menu>
-    </a-layout-sider>
-    <a-layout style="padding: 0 24px 24px">
-      <a-breadcrumb style="margin: 16px 0">
-        <a-breadcrumb-item>Home</a-breadcrumb-item>
-        <a-breadcrumb-item>List</a-breadcrumb-item>
-        <a-breadcrumb-item>App</a-breadcrumb-item>
-      </a-breadcrumb>
-      <a-layout-content
-        :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
+          width: 100%;
+          height: 50vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
       >
-        <RouterView />
-      </a-layout-content>
-    </a-layout>
-  </a-layout>
+        <a-typography-title style="color: aliceblue" :level="2"
+          >Chào mừng bạn đến với HEALTH EA
+        </a-typography-title>
+      </div>
+
+      <a-typography-title
+        style="display: flex; align-items: center; justify-content: center"
+        :level="2"
+      >
+        Danh sách bác sĩ nổi bật
+      </a-typography-title>
+      <doctorList />
+    </a-layout-content>
+  </div>
 </template>

@@ -52,7 +52,7 @@ import axios from 'axios';
     data() {
       return {
         reports: [],
-        statusFilter: null,
+        statusFilter: 0,
         loading: false,
         columns: [
           { title: 'ID', dataIndex: 'id', key: 'id', slots: { customRender: 'id' }},
