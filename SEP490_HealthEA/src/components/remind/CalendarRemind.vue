@@ -18,7 +18,6 @@
           @handleDeleteAllBtn="deleteAllRemind"
           @handleEditBtn="editRemind"
           v-model:dateSelect="valueDate"
-          
         />
       </a-col>
     </a-row>
@@ -256,7 +255,6 @@ export default {
     this.getListEvent()
   },
   methods: {
-  
     async deleteAllRemind(id) {
       const store = useRemindStore()
       const response = await store.deleteRemind(id)
@@ -291,7 +289,7 @@ export default {
     },
     async onFinish() {
       await this.submitz()
-      
+
       await this.getListEvent()
       this.valueDate = dayjs()
       this.getListEvent()
@@ -303,8 +301,8 @@ export default {
       var obj = this.formState
       console.log(obj)
       try {
-        console.log(obj);
-        
+        console.log(obj)
+
         obj.EventDateTime = dayjs(obj.EventDateTime).format('YYYY-MM-DD')
         obj.RepeatEndDate = dayjs(obj.RepeatEndDate).format('YYYY-MM-DDTHH:mm:ssZ')
         console.log(obj.RepeatEndDate)
