@@ -188,7 +188,6 @@ export default {
     },
     btnClick() {
       this.onClose()
-
       this.formState = {
         username: '',
         password: '',
