@@ -356,7 +356,7 @@ router.beforeEach(async (to) => {
   if (to.path == '/' || to.path == '/about') {
     return
   }
-  if (to.path.includes('/profileHealth/medical_record')) {
+  if (to.path.includes('/profileHealth/medical_record') || to.path.includes('listDoctor')) {
     return
   }
 
