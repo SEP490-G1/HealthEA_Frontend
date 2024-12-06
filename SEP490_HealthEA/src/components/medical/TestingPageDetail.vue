@@ -13,7 +13,7 @@
       <div>
         <a-button style="margin: 10px" type="primary" @click="viewImage">Xem ảnh thực tế </a-button>
       </div>
-      <div>
+      <div v-if="!editMode">
         <a-button style="margin: 10px" type="primary" @click="exportSave" :disabled="stageEditor"
           >Lưu thay đổi</a-button
         >
@@ -28,21 +28,26 @@
     </div>
     <div class="ThePage">
       <div class="Content_ThePage">
-        <a-typography-title v-model:content="formState.title" :level="2" editable />
+        <a-typography-title v-model:content="formState.title" :level="2" :editable="!editMode" />
 
         <div style="width: 100%">
           <a-form style="width: 100%" :model="formState" name="basic" autocomplete="off">
             <a-form-item label="Ngày khám:" name="date">
-              <a-date-picker :bordered="false" v-model:value="formState.date" />
+              <a-date-picker
+                :bordered="false"
+                v-model:value="formState.date"
+                :disabled="editMode"
+              />
             </a-form-item>
             <a-form-item label="Bác sĩ kê đơn:" name="date">
-              <a-input :bordered="false" v-model:value="formState.doctor" />
+              <a-input :bordered="false" v-model:value="formState.doctor" :disabled="editMode" />
             </a-form-item>
             <a-form-item label="Lời khuyên bác sĩ:" name="date">
               <a-textarea
                 :bordered="false"
                 v-model:value="formState.doctorRecomend"
                 :auto-size="{ minRows: 2, maxRows: 5 }"
+                :disabled="editMode"
               />
             </a-form-item>
             <a-form-item label="Chẩn đoán:" name="diagnose" style="height: 100px">
@@ -50,6 +55,7 @@
                 :bordered="false"
                 v-model:value="formState.diagnose"
                 :auto-size="{ minRows: 2, maxRows: 5 }"
+                :disabled="editMode"
               />
             </a-form-item>
           </a-form>
@@ -102,7 +108,7 @@
                 </template>
               </div>
             </template>
-            <template v-else-if="column.dataIndex === 'operation'">
+            <template v-else-if="column.dataIndex === 'operation' && !editMode">
               <div class="editable-row-operations">
                 <span v-if="editableData[record.key]">
                   <a-typography-link @click="save(record.key)">Save</a-typography-link>
@@ -118,12 +124,12 @@
             </template>
           </template>
         </a-table>
-        <a-button style="width: 100%" type="dashed" @click="add">Add new</a-button>
+        <a-button v-if="!editMode" style="width: 100%" type="dashed" @click="add">Add new</a-button>
       </div>
     </div>
     <a-drawer v-model:open="open" style="color: black" :width="1000" title="Ảnh của tài liệu này">
       <template #extra>
-        <a-button type="primary" @click="onCloseChild">Thêm ảnh</a-button>
+        <a-button v-if="!editMode" type="primary" @click="onCloseChild">Thêm ảnh</a-button>
       </template>
       <ListImageDrawer v-model:listImg="listImg" />
     </a-drawer>
@@ -137,6 +143,7 @@ import { InfoCircleOutlined, WarningTwoTone } from '@ant-design/icons-vue'
 import { useMedicalRecordStore } from '@/stores/medicalRecord'
 import ListImageDrawer from '@/components/medical/ListImageDrawer.vue'
 import { message } from 'ant-design-vue'
+import { useUserStore } from '@/stores/user'
 const valueIndex = {
   LEU: {
     Description: 'Là dấu hiệu giúp phát hiện tình trạng nhiễm trùng đường niệu. ',
@@ -240,7 +247,6 @@ export default {
         }
       })
 
-      console.log(value, ref, res)
       return res
     },
     checkTrueFalse(test) {
@@ -290,6 +296,9 @@ export default {
       var id = this.$route.params.idD
       const mdStore = useMedicalRecordStore()
       var response = await mdStore.getOneDP(id)
+      const storeUser = useUserStore()
+
+      this.editMode = !(storeUser.user.id.toLowerCase() == response.data.data.userId.toLowerCase())
       this.listImg = response.data.data.image
       var obj = JSON.parse(response.data.data.contentMedical)
       this.dataSource = obj.drug == null ? [] : obj.drug
@@ -321,7 +330,6 @@ export default {
         contentMedical: JSON.stringify(content),
         image: []
       }
-      console.log(obj.contentMedical)
 
       var id = this.$route.params.idD
       const mdStore = useMedicalRecordStore()
@@ -357,13 +365,14 @@ export default {
     dataSource: {
       handler(newValue) {
         this.stageEditor = false
-        console.log('list', newValue)
+        newValue
       },
       deep: true // This is crucial for watching nested changes
     }
   },
   data() {
     return {
+      editMode: ref(true),
       description: {
         'Leukocytes (LEU-BLO)': valueIndex['LEU'],
         Leukocytes: valueIndex['LEU'],
