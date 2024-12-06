@@ -21,7 +21,7 @@ export const userManagementStore = defineStore('userManagement', {
       try {
         const userStore = useUserStore()
         headers.headers.Authorization = `Bearer ${userStore.token}`
-        const data = await getData(API_URL, headers)
+        const data = await getData(API_URL + '?page=0&size=100', headers)
         if (data.data.code == 0) {
           message.success('Lấy dữ liệu thành công!', 10)
           return await data.data.result

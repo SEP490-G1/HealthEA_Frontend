@@ -75,7 +75,7 @@ export const useMedicalRecordStore = defineStore('medicalRecord', {
       const userStore = useUserStore()
       headers.headers.Authorization = `Bearer ${userStore.token}`
       const data = await getData(API_URL + '/HealthProfile/infomation/' + id, headers)
-      return data.data.data
+      return data
     },
     async deleteHealthProfile(id) {
       try {

@@ -9,9 +9,151 @@
       justify-content: center;
     "
   >
+    <a-drawer
+      title="Tạo lịch nhắc uống thuốc"
+      :width="720"
+      :open="openz"
+      :body-style="{ paddingBottom: '80px' }"
+      :footer-style="{ textAlign: 'right' }"
+      @close="onClosez"
+    >
+      <a-form
+        :model="formStatez"
+        autocomplete="off"
+        :rules="rules"
+        layout="vertical"
+        @finish="onFinish"
+        @finishFailed="onFinishFailed"
+      >
+        <a-row :gutter="16">
+          <a-col :span="24">
+            <a-form-item label="Tiêu đề" name="Title">
+              <a-input
+                v-model:value="formStatez.Title"
+                placeholder="Nhập tiêu đề của bạn tại đây"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col :span="10">
+            <a-form-item label="Sự kiện diễn ra ngày" name="EventDateTime">
+              <a-date-picker
+                v-model:value="formStatez.EventDateTime"
+                placeholder="Chọn ngày bắt đầu"
+                format="YYYY-MM-DD"
+                value-format="YYYY-MM-DD"
+                style="width: 100%"
+                :get-popup-container="(trigger) => trigger.parentElement"
+              /> </a-form-item
+          ></a-col>
+          <a-col :span="6">
+            <a-form-item name="StartTime" label="Thời gian bắt đầu">
+              <a-time-picker
+                v-model:value="formStatez.StartTime"
+                placeholder="Giờ bắt đầu"
+                format="HH:mm:ss"
+                value-format="HH:mm:ss"
+                :get-popup-container="(trigger) => trigger.parentElement"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col :span="10">
+            <a-form-item label="Sự kiện kết thúc ngày" name="RepeatEndDate">
+              <a-date-picker
+                v-model:value="formStatez.RepeatEndDate"
+                placeholder="Chọn ngày kết thúc"
+                format="YYYY-MM-DD"
+                value-format="YYYY-MM-DD"
+                style="width: 100%"
+                :get-popup-container="(trigger) => trigger.parentElement"
+              /> </a-form-item
+          ></a-col>
+          <a-col :span="6">
+            <a-form-item name="EndTime" label="Thời gian kết thúc">
+              <a-time-picker
+                v-model:value="formStatez.EndTime"
+                placeholder="Giờ kết thúc"
+                format="HH:mm:ss"
+                value-format="HH:mm:ss"
+                :get-popup-container="(trigger) => trigger.parentElement"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col :span="18">
+            <a-form-item label="Vị trí" name="Location">
+              <a-input v-model:value="formStatez.Location" placeholder="Vị trí" />
+            </a-form-item>
+          </a-col>
+          <a-col :span="6">
+            <a-form-item label="Kiểu lặp" name="RepeatFrequency">
+              <a-select v-model:value="formStatez.RepeatFrequency">
+                <a-select-option :value="1">No repeat</a-select-option>
+                <a-select-option :value="2">Daily</a-select-option>
+                <a-select-option :value="3">Weekly</a-select-option>
+                <a-select-option :value="4">Monthly</a-select-option>
+                <a-select-option :value="5">Yearly</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+        </a-row>
+
+        <a-form-item label="Tạo thông báo">
+          <a-row :gutter="16">
+            <a-col v-for="(item, index) in formStatez.ReminderOffsets" :key="index" :span="24">
+              <a-form-item style="width: 100%" :name="['ReminderOffsets']">
+                <a-row>
+                  <a-col :span="4">
+                    <a-form-item :name="offsetValue">
+                      <a-input-number v-model:value="item.offsetValue" />
+                    </a-form-item>
+                  </a-col>
+                  <a-col :span="12">
+                    <a-form-item :name="offsetUnit">
+                      <a-select v-model:value="item.offsetUnit">
+                        <a-select-option :value="1">phút</a-select-option>
+                        <a-select-option :value="2">giờ</a-select-option>
+                        <a-select-option :value="3">ngày</a-select-option>
+                      </a-select>
+                    </a-form-item>
+                  </a-col>
+
+                  <a-button style="margin-left: 3px" type="link" @click="remove(item)">
+                    Xóa
+                  </a-button>
+                </a-row>
+              </a-form-item>
+            </a-col>
+            <a-col :span="24">
+              <a-form-item>
+                <a-button type="dashed" block @click="addItem">
+                  <PlusOutlined />
+                  Thêm kiểu thông báo
+                </a-button>
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-form-item>
+
+        <a-row :gutter="16">
+          <a-col :span="24">
+            <a-form-item label="Mô tả" name="Description">
+              <a-textarea
+                v-model:value="formStatez.Description"
+                :rows="4"
+                placeholder="Hãy nhập mô tả của bạn"
+              />
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-button type="primary" html-type="submit">Lưu</a-button>
+      </a-form>
+    </a-drawer>
+
     <div style="width: 100%; display: flex; margin: 10px; justify-content: space-between">
       <div>
-        <a-button style="margin: 10px" type="primary" @click="viewImage">Xem ảnh thực tế </a-button>
+        <a-button style="margin: 10px" type="primary" @click="onClosez"
+          >Tạo nhắc nhở tiêm
+        </a-button>
+        <!-- <a-button style="margin: 10px" type="primary" @click="viewImage">Xem ảnh thực tế </a-button> -->
       </div>
       <div>
         <a-button style="margin: 10px" type="primary" @click="exportSave" :disabled="stageEditor"
@@ -84,6 +226,7 @@ import { message } from 'ant-design-vue'
 import { CloseOutlined } from '@ant-design/icons-vue'
 import { useMedicalRecordStore } from '@/stores/medicalRecord'
 import ListImageDrawer from '@/components/medical/ListImageDrawer.vue'
+import { useRemindStore } from '@/stores/Remind'
 export default {
   components: {
     ListImageDrawer,
@@ -95,6 +238,36 @@ export default {
   },
 
   methods: {
+    onFinish() {
+      this.submitz()
+    },
+    async submitz() {
+      var obj = this.formState
+      try {
+        obj.EventDateTime = dayjs(obj.EventDateTime).format('YYYY-MM-DD')
+        obj.RepeatEndDate = dayjs(obj.RepeatEndDate).format('YYYY-MM-DDTHH:mm:ssZ')
+        console.log(obj.RepeatEndDate)
+      } catch (error) {
+        message.error('Các trường dữ liệu thời gian trống')
+        return
+      }
+      if (this.mayForm == 0) {
+        const store = await useRemindStore()
+        const result = await store.AddNewRemind(obj)
+        console.log(result.status)
+        let chuSoA = Math.floor(result.status / 100)
+        if (chuSoA != 2) {
+          message.error('Hãy kiểm tra lại input của bạn!')
+          return
+        }
+        this.openz = !this.openz
+      } else {
+        console.log('loghere', obj)
+        const store = await useRemindStore()
+        const result = await store.updateRemind(obj)
+        console.log('sssss', result)
+      }
+    },
     filterOption(input, option) {
       return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0
     },
@@ -166,7 +339,7 @@ export default {
       const mdStore = useMedicalRecordStore()
       var response = await mdStore.updateDP(id, obj)
       console.log(response)
-      message.success("Lưu thành công")
+      message.success('Lưu thành công')
       this.stageEditor = true
     },
     edit(key) {
@@ -184,6 +357,10 @@ export default {
     },
     cancel(key) {
       delete this.editableData[key]
+    },
+    onClosez() {
+      this.formStatez.Title = this.formState.title
+      this.openz = !this.openz
     }
   },
   watch: {
@@ -203,6 +380,61 @@ export default {
   },
   data() {
     return {
+      rules: {
+        Title: [
+          {
+            required: true,
+            message: 'Hãy nhập tiêu đề sự kiện'
+          }
+        ],
+        EventDateTime: [
+          {
+            required: true,
+            message: 'Bắt buộc phải nhập thời gian '
+          }
+        ],
+        StartTime: [
+          {
+            required: true,
+            message: 'Trường này bắt buộc'
+          }
+        ],
+        RepeatEndDate: [
+          {
+            required: true,
+            message: 'Trường này bắt buộc nhập'
+          }
+        ],
+        EndTime: [
+          {
+            required: true,
+            message: 'Trường này bắt buộc nhập'
+          }
+        ],
+        offsetUnit: [
+          {
+            required: true,
+            message: 'Trường này bắt buộc nhập'
+          }
+        ]
+      },
+      formStatez: reactive({
+        Title: 'Thụy',
+        EventDateTime: '2024-11-06',
+        StartTime: '04:04:26',
+        EndTime: '04:04:26',
+        Location: '',
+        RepeatFrequency: 1,
+        RepeatEndDate: '2024-11-08',
+        Description: '',
+        ReminderOffsets: [
+          {
+            offsetUnit: 1,
+            offsetValue: 1
+          }
+        ]
+      }),
+      openz: ref(false),
       options: [
         { value: 'Phòng bệnh lao' },
         { value: 'Phòng viêm gan B' },

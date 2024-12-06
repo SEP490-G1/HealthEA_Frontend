@@ -152,8 +152,7 @@ export default {
   methods: {
     beforeUpload(file) {
       const isPNG = file.type === 'image/png'
-      const isJPG = file.type === 'image/jpg'
-
+      const isJPG = file.type === 'image/jpeg'
       if (!(isPNG || isJPG)) {
         message.error(`Chỉ chấp nhận file png và jpg`)
       }
