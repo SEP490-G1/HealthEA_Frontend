@@ -9,7 +9,8 @@ import {
   setSessionStogare,
   setLocalStoregare,
   getSessionStogare,
-  clearUser
+  clearUser,
+  putData
 } from '@/service/main'
 
 const API_URL = `${import.meta.env.VITE_API_URL_JAVA}/identity`
@@ -124,6 +125,10 @@ export const useUserStore = defineStore('user', {
 
         return false
       }
+    },
+    async UpdateUser(bodyParameters, userId){
+      const response = await putData(API_URL + '/users/' + userId, bodyParameters, headers)
+      return response
     }
   }
 })
