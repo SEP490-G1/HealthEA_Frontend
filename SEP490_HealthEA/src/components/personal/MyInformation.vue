@@ -84,7 +84,7 @@
           <a-row>
             <a-col :span="24">
               <a-form-item label="Email" name="email">
-                <a-input v-model:value="formState.email" placeholder="Nhập email" />
+                <a-input disabled v-model:value="formState.email" placeholder="Nhập email" />
               </a-form-item>
             </a-col>
           </a-row>
