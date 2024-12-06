@@ -288,7 +288,6 @@ export default {
       var response = await mdStore.removeDP(id)
       console.log(response)
     },
-    cancelLolipop() {},
     changeEditorTitle() {
       this.stageEditor = !this.stageEditor
     },
@@ -297,8 +296,13 @@ export default {
       const mdStore = useMedicalRecordStore()
       var response = await mdStore.getOneDP(id)
       const storeUser = useUserStore()
-
-      this.editMode = !(storeUser.user.id.toLowerCase() == response.data.data.userId.toLowerCase())
+      let isUser = null
+      try {
+        isUser = storeUser.user.id.toLowerCase()
+      } catch {
+        console.log("chill guy")
+      }
+      this.editMode = !(isUser == response.data.data.userId.toLowerCase())
       this.listImg = response.data.data.image
       var obj = JSON.parse(response.data.data.contentMedical)
       this.dataSource = obj.drug == null ? [] : obj.drug
