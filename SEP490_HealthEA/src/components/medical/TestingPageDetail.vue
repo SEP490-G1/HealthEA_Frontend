@@ -56,7 +56,7 @@
         </div>
         <a-table :columns="columns" :data-source="dataSource" bordered>
           <template #bodyCell="{ column, text, record }">
-            <template v-if="['name', 'value', 'unit', 'result'].includes(column.dataIndex)">
+            <template v-if="['name', 'value', 'unit', 'reference'].includes(column.dataIndex)">
               <div>
                 <a-input
                   v-if="editableData[record.key]"
@@ -64,10 +64,38 @@
                   style="margin: -5px 0"
                 />
                 <template v-else>
-                  {{ text }}
-                  <a-popover :title="text" v-if="description[text]">
+                  {{
+                    ['value', 'reference'].includes(column.dataIndex) ? checkTrueFalse(text) : text
+                  }}
+
+                  <a-popover
+                    title="Cảnh báo chỉ số"
+                    v-if="
+                      ['value'].includes(column.dataIndex) &&
+                      checkIndex(checkTrueFalse(record.value), checkTrueFalse(record.reference))
+                    "
+                  >
                     <template #content>
-                      <p v-html="description[text]"></p>
+                      {{
+                        record.value == null
+                          ? 'Bạn cần nhập chỉ số ở đây'
+                          : description[record.name]
+                            ? description[record.name].Warning
+                            : 'Chỉ số ở mức nguy hiểm'
+                      }}
+                      <br />
+                      <a-typography-text v-if="record.value != null" type="secondary">
+                        Bạn có thể tư vấn bằng AI hoặc đặt lịch khám với bác sĩ để có thể biết thêm
+                      </a-typography-text>
+                    </template>
+                    <WarningTwoTone two-tone-color="#FF0000" />
+                  </a-popover>
+                  <a-popover
+                    :title="description[text].Title"
+                    v-if="description[text] && ['name'].includes(column.dataIndex)"
+                  >
+                    <template #content>
+                      <p v-html="description[text].Description"></p>
                     </template>
                     <InfoCircleOutlined />
                   </a-popover>
@@ -102,34 +130,80 @@
   </div>
 </template>
 <script>
-import mappingIndex from '@/resource/DescriptionTitle'
 import { cloneDeep } from 'lodash-es'
 import { reactive, ref } from 'vue'
 import dayjs from 'dayjs'
-import { InfoCircleOutlined } from '@ant-design/icons-vue'
+import { InfoCircleOutlined, WarningTwoTone } from '@ant-design/icons-vue'
 import { useMedicalRecordStore } from '@/stores/medicalRecord'
 import ListImageDrawer from '@/components/medical/ListImageDrawer.vue'
 import { message } from 'ant-design-vue'
+const valueIndex = {
+  LEU: {
+    Description: 'Là dấu hiệu giúp phát hiện tình trạng nhiễm trùng đường niệu. ',
+    Title: 'Chỉ số bạch cầu trong máu',
+    Notice: 'Hệ số an toàn: âm tính haowjc',
+    Warning: 'Bạn đang có thể bị nhiễm nấm hoặc nhiễm khuẩn'
+  },
+  NIT: {
+    Description: 'Cho thấy tình trạng nhiễm khuẩn đường tiểu',
+    Title: 'Nitrite - sản phẩm do vi khuẩn tạo ra',
+    Notice:
+      'Kết quả bình thường: Kết quả âm tính. Kết quả cao: NIT > 0.05 - 0.1 mg/dL thường do nhiễm trùng đường tiểu do chúng tạo ra loại enzyme chuyển hóa nitrat trong nước tiểu thành Nitrite.',
+    Warning:
+      'Bạn đang có thể bị nhiễm trùng nhiễm trùng đường tiểu do vi khuẩn tạo ra loại enzyme chuyển hóa nitrat trong nước tiểu thành Nitrite.'
+  }
+}
+
 export default {
   components: {
     ListImageDrawer,
-    InfoCircleOutlined
+    InfoCircleOutlined,
+    WarningTwoTone
   },
   mounted() {
-    console.log(mappingIndex['NIT']);
-    
     this.loadDate()
     this.stageEditor = true
   },
 
   methods: {
+    isDouble(str) {
+      const num = parseFloat(str)
+      return !isNaN(num)
+    },
+    checkIndex(value, ref) {
+      if (value == null) {
+        return true
+      }
+      var array = ref.split('/')
+      var res = false
+      array.forEach((element) => {
+        if (['Dương tính', 'Âm tính', 'Negative', 'Positive'].includes(value)) {
+          res = false
+        }
+        if (this.isDouble(value)) {
+          res = true
+        }
+      })
+
+      console.log(value, ref, res)
+      return res
+    },
+    checkTrueFalse(test) {
+      if (test == false) {
+        return 'Âm tính'
+      }
+      if (test == true) {
+        return 'Dương tính'
+      }
+      return test
+    },
     add() {
       const maxKey = this.dataSource.reduce((max, item) => Math.max(max, item.key), 0)
       this.dataSource.push({
         key: maxKey + 1,
         name: '',
         value: 0,
-        result: '',
+        reference: '',
         unit: ''
       })
       this.edit(maxKey + 1)
@@ -161,8 +235,6 @@ export default {
       var id = this.$route.params.idD
       const mdStore = useMedicalRecordStore()
       var response = await mdStore.getOneDP(id)
-      console.log(response);
-      
       this.listImg = response.data.data.image
       var obj = JSON.parse(response.data.data.contentMedical)
       this.dataSource = obj.drug == null ? [] : obj.drug
@@ -230,14 +302,22 @@ export default {
     dataSource: {
       handler(newValue) {
         this.stageEditor = false
-        console.log('ssss', newValue)
+        console.log('list', newValue)
       },
       deep: true // This is crucial for watching nested changes
     }
   },
   data() {
     return {
-      description: mappingIndex,
+      description: {
+        'Leukocytes (LEU-BLO)': valueIndex['LEU'],
+        Leukocytes: valueIndex['LEU'],
+        BLO: valueIndex['LEU'],
+        LEU: valueIndex['LEU'],
+        'NIT (Nitrite)': valueIndex['NIT'],
+        NIT: valueIndex['NIT'],
+        Nitrite: valueIndex['NIT']
+      },
       listImg: ref([]),
       childrenDrawer: ref(false),
       open: ref(false),
@@ -273,8 +353,8 @@ export default {
         },
         {
           title: 'Tham chiếu',
-          dataIndex: 'result',
-          key: 'result',
+          dataIndex: 'reference',
+          key: 'reference',
           width: 150
         },
         {
