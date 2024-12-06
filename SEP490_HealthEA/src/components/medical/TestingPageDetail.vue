@@ -177,11 +177,66 @@ export default {
       var array = ref.split('/')
       var res = false
       array.forEach((element) => {
-        if (['Dương tính', 'Âm tính', 'Negative', 'Positive'].includes(value)) {
-          res = false
+        try {
+          if (['dương tính', 'âm tính', 'negative', 'positive'].includes(value.toLowerCase())) {
+            if (
+              (value.toLowerCase() == 'positive' || value.toLowerCase() == 'dương Tính') &&
+              (element.toLowerCase() == 'dương tính' || element.toLowerCase() == 'positive')
+            ) {
+              res = false
+              return
+            }
+            if (
+              (value.toLowerCase() == 'âm tính' || value.toLowerCase() == 'negative') &&
+              (element.toLowerCase() == 'âm tính' || element.toLowerCase() == 'negative')
+            ) {
+              res = false
+              return
+            }
+            if (
+              element.includes('<') &&
+              (value.toLowerCase() == 'âm tính' || value.toLowerCase() == 'negative')
+            ) {
+              res = false
+              return
+            }
+            res = true
+            return
+          }
+        } catch {
+          console.log('skip')
         }
-        if (this.isDouble(value)) {
-          res = true
+        try {
+          if (this.isDouble(value)) {
+            if (element.includes('-')) {
+              let num = element.split('-')
+              let val = parseFloat(value)
+              let num1 = parseFloat(num[0])
+              let num2 = parseFloat(num[1])
+              if (num1 <= val && val <= num2) {
+                res = false
+                return
+              }
+              res = true
+            }
+            if (
+              element.includes('<') ||
+              element.includes('>') ||
+              element.includes('<=') ||
+              element.includes('>=')
+            ) {
+              let newStr = `${value} ${element}`
+              if (eval(newStr)) {
+                res = false
+                return
+              } else {
+                res = true
+                return
+              }
+            }
+          }
+        } catch {
+          console.log('skip')
         }
       })
 
