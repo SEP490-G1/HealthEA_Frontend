@@ -58,6 +58,7 @@ export const useUserStore = defineStore('user', {
         headers.headers.Authorization = `Bearer ${await this.token}`
         const response = await getData(API_URL + '/users/myinfo', headers)
         var data = response.data.result
+
         var obj = {
           id: data.id,
           email: data.email,
@@ -65,13 +66,14 @@ export const useUserStore = defineStore('user', {
           userFirstName: data.firstName,
           userLastName: data.lastName,
           userName: data.userName,
-          imageSrc: data.imageSrc,
+          imageSrc: data.avatar,
           gender: data.gender,
           role: data.role,
           status: data.status == 'ACTIVE' ? true : false,
           auth: true
         }
-        // this.user = obj
+
+         this.user = obj
         return obj
       } catch (error) {
         // this.ClearUser()
@@ -126,7 +128,7 @@ export const useUserStore = defineStore('user', {
         return false
       }
     },
-    async UpdateUser(bodyParameters, userId){
+    async UpdateUser(bodyParameters, userId) {
       const response = await putData(API_URL + '/users/' + userId, bodyParameters, headers)
       return response
     }

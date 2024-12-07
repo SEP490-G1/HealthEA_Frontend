@@ -75,7 +75,7 @@ export default {
   methods: {
     handleClickCard(id) {
       console.log(id)
-      this.$router.push(`detail/${id}`)
+      this.$router.push(`/listDoctor/${id}`)
     },
     async loadData() {
       const store = doctorManagementStore()
