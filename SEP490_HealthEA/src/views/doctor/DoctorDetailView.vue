@@ -157,6 +157,7 @@
   </ContentFooter>
 </template>
 
+
 <script>
 import {
   Avatar,
@@ -211,6 +212,9 @@ export default {
       },
       deleteScheduleId: null,
       isDoctor: false,
+      profiles: [],
+      selectedProfileId: null,
+      isProfilesLoading: false,
       daysWithScedules: []
     }
   },
@@ -234,6 +238,30 @@ export default {
         console.error('Lỗi khi lấy thông tin bác sĩ:', error)
         this.$router.push('/error/404')
         return
+      }
+    },
+    async getProfiles() {
+      if (this.isProfilesLoading || this.profiles.length > 0) return
+
+      this.isProfilesLoading = true
+
+      try {
+        const userStore = useUserStore()
+        const response = await axios.get(`${API_URL}/api/ProfileShares`, {
+          headers: { Authorization: `Bearer ${userStore.token}` }
+        })
+
+        this.profiles = response.data
+      } catch (error) {
+        console.error('Có lỗi xảy ra khi lấy dữ liệu hồ sơ sức khỏe:', error)
+      } finally {
+        this.isProfilesLoading = false
+      }
+    },
+
+    handleDropdownVisibleChange(isVisible) {
+      if (isVisible && this.profiles.length === 0 && !this.isProfilesLoading) {
+        this.getProfiles()
       }
     },
     async checkIfUserIsDoctor() {
