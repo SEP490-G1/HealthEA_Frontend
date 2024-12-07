@@ -2,7 +2,7 @@
   <div>
     <a-page-header
       style="border: 1px solid rgb(235, 237, 240)"
-      :title="this.healthProfie.fullName"
+      title="Quay lại"
       @back="back"
     />
     <slot></slot>
