@@ -199,10 +199,18 @@ export default {
     },
 
     isValid(record) {
-      if (record.status !== 'Approved') return false
-      const now = new Date()
-      const appointmentDate = new Date(`${record.date} ${record.endTime}`)
-      return appointmentDate > now
+      if (record.status !== 'Approved') {
+        return false
+      }
+      var now = new Date()
+      var current = new Date(record.date)
+      const [hours, minutes, seconds] = record.endTime.split(':').map(Number)
+      current.setHours(hours, minutes, seconds)
+      console.log('Now: ' + now + ' Current: ' + current)
+      if (current < now) {
+        return false
+      }
+      return true
     }
   }
 }
