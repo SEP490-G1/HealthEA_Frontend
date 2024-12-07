@@ -131,6 +131,19 @@
           <a-form-item label="Mô tả">
             <a-input v-model:value="appointmentData.description" placeholder="Nhập mô tả" />
           </a-form-item>
+          <a-form-item label="Hồ sơ sức khỏe">
+            <a-select
+              v-model:value="selectedProfileId"
+              :placeholder="'Chọn hồ sơ sức khỏe'"
+              @dropdownVisibleChange="handleDropdownVisibleChange"
+              :loading="isProfilesLoading"
+            >
+              <a-select-option v-for="profile in profiles" :key="profile.id" :value="profile.id">
+                {{ profile.name }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+
           <a-form-item label="Loại">
             <a-select v-model:value="appointmentData.type" placeholder="Chọn loại cuộc hẹn">
               <a-select-option value="Online">Online</a-select-option>
@@ -194,7 +207,10 @@ export default {
         startTime: ''
       },
       deleteScheduleId: null,
-      isDoctor: false
+      isDoctor: false,
+      profiles: [],
+      selectedProfileId: null,
+      isProfilesLoading: false
     }
   },
   methods: {
@@ -215,6 +231,30 @@ export default {
       } catch (error) {
         console.error('Lỗi khi lấy thông tin bác sĩ:', error)
         this.$router.push('/error/404')
+      }
+    },
+    async getProfiles() {
+      if (this.isProfilesLoading || this.profiles.length > 0) return
+
+      this.isProfilesLoading = true
+
+      try {
+        const userStore = useUserStore()
+        const response = await axios.get(`${API_URL}/api/ProfileShares`, {
+          headers: { Authorization: `Bearer ${userStore.token}` }
+        })
+
+        this.profiles = response.data
+      } catch (error) {
+        console.error('Có lỗi xảy ra khi lấy dữ liệu hồ sơ sức khỏe:', error)
+      } finally {
+        this.isProfilesLoading = false
+      }
+    },
+
+    handleDropdownVisibleChange(isVisible) {
+      if (isVisible && this.profiles.length === 0 && !this.isProfilesLoading) {
+        this.getProfiles()
       }
     },
     async checkIfUserIsDoctor() {
