@@ -4,7 +4,7 @@ import { ref } from 'vue'
 <template>
   <div>
     <a-drawer
-    width="500px"
+      width="500px"
       v-model:open="open"
       class="custom-class"
       root-class-name="root-class-name"
@@ -65,7 +65,8 @@ import { ref } from 'vue'
           @click="sendThis('Hãy tư vấn giúp tôi các chỉ số này')"
           style="width: 100%; margin-top: 10px"
           >Tư vấn với tài liệu này</a-button
-        > <a-button
+        >
+        <a-button
           :loading="loading"
           type="primary"
           ghost
@@ -101,6 +102,9 @@ export default {
     }
   },
   methods: {
+    apointMent() {
+      this.$router.push('/listDoctor')
+    },
     async sendThis(msg) {
       this.value = ''
       this.loading = true

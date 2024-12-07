@@ -11,7 +11,7 @@ import chatDoccument from './chatDoccument.vue'
       justify-content: center;
     "
   >
-    <chatDoccument :idDoc="this.$route.params.idD"/>
+    <chatDoccument v-if="!editMode" :idDoc="this.$route.params.idD"/>
     <div style="width: 100%; display: flex; margin: 10px; justify-content: space-between">
       <div>
         <a-button style="margin: 10px" type="primary" @click="viewImage">Xem ảnh thực tế </a-button>
