@@ -2,6 +2,8 @@
 import ContentFooter from '@/components/layout/ContentFooter'
 import { useDailyMetricStore } from '@/stores/DailyMetricView'
 import { ref } from 'vue'
+
+import { CommentOutlined } from '@ant-design/icons-vue'
 </script>
 <template lang="">
   <a-float-button @click="toChat" :badge="{ dot: true }">
