@@ -74,9 +74,21 @@
             <a-date-picker
               v-model:value="selectedDate"
               @change="fetchAvailableHours"
+              :disabledDate="disablePastDates"
               placeholder="Chọn ngày"
               class="w-100 mb-3"
-            />
+            >
+              <template #dateRender="{ current }">
+                <div
+                  class="ant-picker-cell-inner"
+                  :class="{
+                    'text-decoration-underline font-weight-bold': isDateWithSchedule(current)
+                  }"
+                >
+                  {{ current.date() }}
+                </div>
+              </template>
+            </a-date-picker>
             <div v-if="availableHours.length > 0" class="d-flex flex-wrap gap-2">
               <a-button
                 v-for="(hour, index) in availableHours"
@@ -163,7 +175,6 @@ import { useUserStore } from '@/stores/user'
 
 import ContentFooter from '@/components/layout/ContentFooter'
 const API_URL = import.meta.env.VITE_API_URL_DOTNET
-
 export default {
   components: {
     ContentFooter,
@@ -199,7 +210,8 @@ export default {
         startTime: ''
       },
       deleteScheduleId: null,
-      isDoctor: false
+      isDoctor: false,
+      daysWithScedules: []
     }
   },
   methods: {
@@ -217,9 +229,11 @@ export default {
           this.workHistory = []
         }
         this.checkIfUserIsDoctor()
+        this.getDaysWithSchedules()
       } catch (error) {
         console.error('Lỗi khi lấy thông tin bác sĩ:', error)
         this.$router.push('/error/404')
+        return
       }
     },
     async checkIfUserIsDoctor() {
@@ -235,6 +249,21 @@ export default {
       } catch (error) {
         console.error('Lỗi khi kiểm tra người dùng:', error)
         this.isDoctor = false
+      }
+    },
+    async getDaysWithSchedules() {
+      const doctorId = this.$route.params.id
+      const userStore = useUserStore()
+      try {
+        const response = await axios.get(`${API_URL}/api/Schedules/doctor/${doctorId}`, {
+          headers: { Authorization: `Bearer ${userStore.token}` }
+        })
+        if (response.status === 200) {
+          this.daysWithScedules = response.data
+          console.log(this.daysWithScedules)
+        }
+      } catch (error) {
+        console.error('Lỗi khi lay ngay:', error)
       }
     },
     googleMapsLink(address, city) {
@@ -319,6 +348,12 @@ export default {
         console.error('Lỗi khi tạo cuộc hẹn:', error)
         this.$message.error('Không thể tạo cuộc hẹn. Vui lòng thử lại sau.')
       }
+    },
+    isDateWithSchedule(currentDate) {
+      return this.daysWithScedules.includes(currentDate.format('YYYY-MM-DD'))
+    },
+    disablePastDates(current) {
+      return current && current.isBefore(new Date(), 'day')
     }
   },
   created() {
