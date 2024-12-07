@@ -6,7 +6,7 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
     <a-typography-title :level="2" style="margin-top: 30px"
       >Danh sách xét nghiệm</a-typography-title
     >
-    <a-dropdown :trigger="['click']" v-if="editMode">
+    <a-dropdown :trigger="['click']">
       <template #overlay>
         <a-menu>
           <a-menu-item @click="addNew" key="1"> Thêm một tài liệu trống </a-menu-item>
