@@ -312,12 +312,10 @@ export default {
       return res
     },
     checkTrueFalse(test) {
-      if (test == false) {
-        return 'Âm tính'
+      if (test == 0) {
+        return ''
       }
-      if (test == true) {
-        return 'Dương tính'
-      }
+
       return test
     },
     add() {
