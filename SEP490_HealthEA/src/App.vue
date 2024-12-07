@@ -4,8 +4,8 @@ import TheHeader from '@/components/common/TheHeader'
 //Firebase
 import axios from 'axios'
 import { onMounted } from 'vue'
-import { getToken, messaging } from './firebase';
-import { useUserStore } from './stores/user';
+import { getToken, messaging } from './firebase'
+import { useUserStore } from './stores/user'
 
 const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
@@ -36,15 +36,19 @@ async function registerDeviceToken() {
         console.log('Device Token:', deviceToken)
         const userStore = useUserStore()
         // Send deviceToken to backend to register
-        await axios.post(`${API_URL}/api/Notification/register-token`, {
-          userId: '47863E73-E00C-4EBF-8F2A-1E8753359C4D',
-          deviceToken: deviceToken,
-          deviceType: 'web'
-        }, {
-          headers: {
-            Authorization: `Bearer ${userStore.token}`
+        await axios.post(
+          `${API_URL}/api/Notification/register-token`,
+          {
+            userId: '47863E73-E00C-4EBF-8F2A-1E8753359C4D',
+            deviceToken: deviceToken,
+            deviceType: 'web'
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userStore.token}`
+            }
           }
-        })
+        )
 
         console.log('Device token registered successfully.')
       } else {
@@ -82,7 +86,7 @@ export default {
     return {}
   },
   mounted() {
-    this.requestPermissionAndGetToken();
+    this.requestPermissionAndGetToken()
   },
   methods: {
     async requestPermissionAndGetToken() {
@@ -112,7 +116,7 @@ export default {
 </script>
 <style scoped>
 .layout {
-  height: calc(100vh - 64px);
+  min-height: calc(100vh - 64px);
 }
 .site-layout-content {
   min-height: 280px;

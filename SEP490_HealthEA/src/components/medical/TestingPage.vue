@@ -77,6 +77,7 @@ import dayjs from 'dayjs'
 import { DownOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import axios from 'axios'
+import { useUserStore } from '@/stores/user'
 const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
@@ -94,6 +95,31 @@ export default {
       }
       // Nếu không thuộc trường hợp nào trên, trả về null hoặc một giá trị mặc định khác
       return null
+    },
+    handleRefer(list) {
+      list.forEach((element) => {
+        let str = ''
+        if (element.reference.type == 'range') {
+          if (element.reference.max == null || element.reference.min == null) {
+            if (element.reference.max == element.reference.min) {
+              str = ''
+            }
+            if (element.reference.min == null) {
+              str = ` < ${element.reference.max}`
+            }
+            if (element.reference.max == null) {
+              str = ` > ${element.reference.max}`
+            }
+          } else {
+            str = `${element.reference.min} - ${element.reference.max}`
+          }
+        }
+        if (element.reference.type == 'value') {
+          str = element.reference.value
+        }
+        element.reference = str
+      })
+      return list
     },
     async handleSubmit() {
       if (this.fileList.length === 0) {
@@ -114,7 +140,6 @@ export default {
       // Set loading to true to disable the button and show loading indicator
       this.loading = true
       const uploadMessage1 = message.loading('Scan images...', 0)
-      const uploadMessage2 = message.loading('Upload images...', 0)
       var obj = {
         image: [],
         type: 3,
@@ -136,7 +161,7 @@ export default {
           doctor: '',
           image: [],
           title: 'Xét nghiệm scan từ ảnh',
-          drug: response.data
+          drug: this.handleRefer(response.data)
         }
         obj.contentMedical = JSON.stringify(object)
         uploadMessage1()
@@ -147,7 +172,7 @@ export default {
         console.error('Scan failed:', error)
         return
       }
-
+      const uploadMessage2 = message.loading('Upload images...', 0)
       try {
         const objUpload = await axios.post(`${API_URL}/api/Images`, formData2, {
           headers: {
@@ -156,13 +181,11 @@ export default {
         })
         uploadMessage2()
         obj.image = [`${objUpload.data[0].id}`]
-        console.log('Res IMGAE', obj.image)
         message.success('Upload successful!')
       } catch (err) {
         uploadMessage2() // Hide the loading message
         message.error('Upload failed. Please try again.')
         console.error('Upload failed:', err)
-        return
       }
       try {
         const res = useMedicalRecordStore()
@@ -236,6 +259,10 @@ export default {
     },
     async loadData() {
       const res = useMedicalRecordStore()
+      const userStore = useUserStore()
+      if (userStore.user == null) {
+        this.editMode = false
+      }
       var listnew = []
       var list = await res.getListAType(this.idHP, 3)
       list.data.data.forEach((element) => {
@@ -252,6 +279,7 @@ export default {
   },
   data() {
     return {
+      editMode: ref(false),
       loading: ref(false),
       fileList: ref([]),
       open: ref(false),
