@@ -8,7 +8,7 @@
             <a-avatar
               :size="150"
               :src="doctor?.user?.avatar || 'https://via.placeholder.com/150'"
-              class="me-3"
+              class="me-3 flex-shrink-0"
             />
             <div>
               <a-typography-title level="1" class="mb-1">
