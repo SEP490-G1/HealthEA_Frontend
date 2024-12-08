@@ -144,6 +144,21 @@
             <a-form-item label="Mô tả">
               <a-input v-model:value="appointmentData.description" placeholder="Nhập mô tả" />
             </a-form-item>
+            <a-form-item label="Hồ sơ sức khỏe">
+              <a-select
+                v-model:value="selectedProfileId"
+                :placeholder="'Chọn hồ sơ sức khỏe'"
+                @dropdownVisibleChange="handleDropdownVisibleChange"
+                :loading="isProfilesLoading"
+              >
+                <template v-if="profiles.length === 0">
+                  <a-select-option disabled>Không có hồ sơ nào</a-select-option>
+                </template>
+                <a-select-option v-for="profile in profiles" :key="profile.id" :value="profile.id">
+                  {{ profile.name }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
             <a-form-item label="Loại">
               <a-select v-model:value="appointmentData.type" placeholder="Chọn loại cuộc hẹn">
                 <a-select-option value="Online">Online</a-select-option>
@@ -156,7 +171,6 @@
     </div>
   </ContentFooter>
 </template>
-
 
 <script>
 import {
@@ -356,13 +370,15 @@ export default {
     async createAppointment() {
       const doctorId = this.$route.params.id
       const userStore = useUserStore()
+      console.log('prosile id', this.selectedProfileId)
       const appointment = {
         doctorId,
         title: this.appointmentData.title,
         description: this.appointmentData.description,
         type: this.appointmentData.type,
         date: this.selectedDate.format('YYYY-MM-DD'),
-        startTime: this.appointmentData.startTime
+        startTime: this.appointmentData.startTime,
+        selectedProfileId: this.selectedProfileId
       }
 
       try {
