@@ -120,7 +120,6 @@
           </a-card>
         </div>
 
-        <!-- Confirmation Modal for Deleting Schedule -->
         <a-modal
           v-model:visible="isDeleteModalVisible"
           title="Xác nhận xoá lịch"
@@ -130,7 +129,6 @@
           <p>Bạn có chắc chắn muốn xoá lịch hẹn này?</p>
         </a-modal>
 
-        <!-- Appointment Confirmation Modal -->
         <a-modal
           v-model:visible="isModalVisible"
           title="Xác nhận cuộc hẹn"
@@ -286,7 +284,7 @@ export default {
           headers: { Authorization: `Bearer ${userStore.token}` }
         })
         if (response.status === 200) {
-          this.isDoctor = true // User is the doctor
+          this.isDoctor = true
         }
       } catch (error) {
         console.error('Lỗi khi kiểm tra người dùng:', error)
