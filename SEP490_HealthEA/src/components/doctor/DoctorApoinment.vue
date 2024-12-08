@@ -15,6 +15,9 @@
             :text="record.status"
           />
         </template>
+        <template v-if="column.dataIndex === 'date'">
+          <span>{{ formatDate(record.date) }}</span>
+        </template>
 
         <template v-if="column.dataIndex === 'uri'">
           <a :href="getFullUri(record.uri)" target="_blank" rel="noopener noreferrer">
@@ -100,7 +103,13 @@ export default {
         { title: 'Tên bệnh nhân', dataIndex: 'nameCustomer', key: 'nameCustomer', width: 150 },
         { title: 'Tiêu đề', dataIndex: 'title', key: 'title', width: 350 },
         { title: 'Mô tả', dataIndex: 'description', key: 'description', width: 450 },
-        { title: 'Ngày hẹn', dataIndex: 'date', key: 'date', width: 150 },
+        {
+          title: 'Ngày hẹn',
+          dataIndex: 'date',
+          key: 'date',
+          width: 170
+        },
+
         { title: 'Giờ bắt đầu', dataIndex: 'startTime', key: 'startTime', width: 100 },
         { title: 'Giờ kết thúc', dataIndex: 'endTime', key: 'endTime', width: 100 },
         { title: 'Vị trí', dataIndex: 'location', key: 'location', width: 300 },
@@ -146,6 +155,14 @@ export default {
   },
 
   methods: {
+    formatDate(date) {
+      if (!date) return ''
+      const d = new Date(date)
+      const day = String(d.getDate()).padStart(2, '0')
+      const month = String(d.getMonth() + 1).padStart(2, '0')
+      const year = d.getFullYear()
+      return `${day}-${month}-${year}`
+    },
     async showUserInfo(customerId) {
       try {
         const response = await axios.get(`${API_URL}/api/Infors/${customerId}`)
