@@ -77,6 +77,7 @@ import dayjs from 'dayjs'
 import { DownOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import axios from 'axios'
+import { useUserStore } from '@/stores/user'
 const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
@@ -258,6 +259,10 @@ export default {
     },
     async loadData() {
       const res = useMedicalRecordStore()
+      const userStore = useUserStore()
+      if (userStore.user == null) {
+        this.editMode = false
+      }
       var listnew = []
       var list = await res.getListAType(this.idHP, 3)
       list.data.data.forEach((element) => {
@@ -274,6 +279,7 @@ export default {
   },
   data() {
     return {
+      editMode: ref(false),
       loading: ref(false),
       fileList: ref([]),
       open: ref(false),

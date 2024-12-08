@@ -11,7 +11,7 @@ import chatDoccument from './chatDoccument.vue'
       justify-content: center;
     "
   >
-    <chatDoccument v-if="!editMode" :idDoc="this.$route.params.idD"/>
+    <chatDoccument v-if="!editMode" :idDoc="this.$route.params.idD" />
     <div style="width: 100%; display: flex; margin: 10px; justify-content: space-between">
       <div>
         <a-button style="margin: 10px" type="primary" @click="viewImage">Xem ảnh thực tế </a-button>
@@ -148,10 +148,39 @@ import ListImageDrawer from '@/components/medical/ListImageDrawer.vue'
 import { message } from 'ant-design-vue'
 import { useUserStore } from '@/stores/user'
 const valueIndex = {
+  MCV: {
+    Description:
+      'Là chỉ số thể hiện kích thước trung bình của các tế bào hồng cầu trong máu. Nó cho biết hồng cầu của bạn có kích thước lớn, nhỏ hay bình thường.',
+    Title: 'Thể tích trung bình hồng cầu (MCV)',
+    Notice: '80 - 100 fL (femtoliter)',
+    Warning:
+      'Chỉ số nguy hiểm, cho thấy hồng cầu có kích thước nhỏ hơn bình thường, thường gặp trong các trường hợp thiếu máu do thiếu sắt hoặc các bệnh về tủy xương. '
+  },
+  HCT: {
+    Description:
+      'Là tỷ lệ phần trăm thể tích hồng cầu so với tổng thể tích máu. Chỉ số này cho biết phần trăm máu của bạn chứa các tế bào hồng cầu.',
+    Title: 'Hematocrit',
+    Notice: '13.5 - 17.5%',
+    Warning: 'Chỉ số nguy hiểm, tình trạng mất nước, đa hồng cầu hoặc các bệnh về tim phổi. '
+  },
+  HB: {
+    Description:
+      'hay còn gọi là Hb là một loại protein đặc biệt có trong hồng cầu, đóng vai trò vô cùng quan trọng trong việc vận chuyển oxy từ phổi đến các tế bào trong cơ thể và vận chuyển khí carbon dioxide từ các tế bào trở lại phổi để thải ra ngoài.',
+    Title: 'Huyết sắc tố (Hemoglobin)',
+    Notice: 'Hệ số an toàn: 13.5 - 17.5 g/dL',
+    Warning: 'Chỉ số nguy hiểm, bạn đang có thể bị thiếu máu, máu hồng cầu hình liềm... '
+  },
+  RBC: {
+    Description:
+      'là chỉ số đo lường số lượng hồng cầu trong máu. Đây là một trong ba tế bào máu bên cạnh bạch cầu, tiểu cầu và là tế bào máu có số lượng nhiều nhất. Hồng cầu được sản xuất ra trong tủy xương, nhờ huyết sắc tố trong hồng cầu mà máu có màu đỏ.',
+    Title: 'RBC (tên đầy đủ là Red Blood Cell)',
+    Notice: 'Hệ số an toàn: 4.32 - 5.72 Tera/L',
+    Warning: 'Bạn đang có thể bị mất nước, bệnh về phổi hoặc tim hoặc đa hồng cầu'
+  },
   LEU: {
     Description: 'Là dấu hiệu giúp phát hiện tình trạng nhiễm trùng đường niệu. ',
     Title: 'Chỉ số bạch cầu trong máu',
-    Notice: 'Hệ số an toàn: âm tính haowjc',
+    Notice: 'Hệ số an toàn: âm tính hoặc',
     Warning: 'Bạn đang có thể bị nhiễm nấm hoặc nhiễm khuẩn'
   },
   NIT: {
@@ -161,6 +190,36 @@ const valueIndex = {
       'Kết quả bình thường: Kết quả âm tính. Kết quả cao: NIT > 0.05 - 0.1 mg/dL thường do nhiễm trùng đường tiểu do chúng tạo ra loại enzyme chuyển hóa nitrat trong nước tiểu thành Nitrite.',
     Warning:
       'Bạn đang có thể bị nhiễm trùng nhiễm trùng đường tiểu do vi khuẩn tạo ra loại enzyme chuyển hóa nitrat trong nước tiểu thành Nitrite.'
+  },
+  MCH: {
+    Description:
+      'Là chỉ số thể hiện lượng huyết sắc tố trung bình có trong mỗi tế bào hồng cầu. Huyết sắc tố là một loại protein giúp hồng cầu vận chuyển oxy.',
+    Title: 'Lượng huyết sắc tố trung bình trong hồng cầu (MCH)',
+    Notice: '27 - 33 picogram (pg) trên mỗi tế bào',
+    Warning:
+      'cho thấy hồng cầu chứa ít huyết sắc tố hơn bình thường, thường gặp trong các bệnh như thiếu máu do thiếu sắt, hoặc b12, axitfolic'
+  },
+  'RDW-CV': {
+    Description: 'Độ phân bố rộng của tế bào hồng cầu - Hệ số biến thiên.',
+    Title: 'Độ phân bố rộng của tế bào hồng cầu',
+    Notice: '11.9 - 14.3%',
+    Warning: 'cho thấy thiếu máu tan máu, thiếu máu do thiếu B12 hoặc folate'
+  },
+  MCHC: {
+    Description:
+      'là một chỉ số xét nghiệm máu dùng để đo lượng hemoglobin trung bình có trong mỗi tế bào hồng cầu. Nói một cách đơn giản, nó cho biết mức độ đậm đặc của hemoglobin bên trong hồng cầu.',
+    Title: 'MCHC (Mean Corpuscular Hemoglobin Concentration)',
+    Notice: '32-36 g/dL',
+    Warning:
+      'MCHC giảm thường gặp trong các trường hợp thiếu máu do thiếu hemoglobin, điển hình là thiếu máu do thiếu sắt và thiếu máu tan máu, cũng như một số bệnh lý về gan và thận.'
+  },
+  'RDW-SD': {
+    Description:
+      ' là một chỉ số xét nghiệm máu dùng để đánh giá sự phân bố kích thước của các tế bào hồng cầu. Nói cách khác, nó cho biết các hồng cầu trong máu có kích thước đồng đều hay khác biệt nhau.',
+    Title: 'RDW-SD (Red Cell Distribution Width - Standard Deviation)',
+    Notice: '37-54',
+    Warning:
+      'Nguyên nhân làm tăng RDW-SD bao gồm sự sản xuất hồng cầu không đồng đều trong các loại thiếu máu (thiếu sắt, thiếu vitamin B12, folate), sự phá hủy hồng cầu nhanh chóng (tan máu) và một số bệnh lý khác như ung thư, bệnh thận và viêm nhiễm.'
   }
 }
 
@@ -253,12 +312,10 @@ export default {
       return res
     },
     checkTrueFalse(test) {
-      if (test == false) {
-        return 'Âm tính'
+      if (test == 0) {
+        return ''
       }
-      if (test == true) {
-        return 'Dương tính'
-      }
+
       return test
     },
     add() {
@@ -303,7 +360,7 @@ export default {
       try {
         isUser = storeUser.user.id.toLowerCase()
       } catch {
-        console.log("chill guy")
+        console.log('chill guy')
       }
       this.editMode = !(isUser == response.data.data.userId.toLowerCase())
       this.listImg = response.data.data.image
@@ -382,13 +439,29 @@ export default {
       openChat: ref(false),
       editMode: ref(true),
       description: {
+        RBC: valueIndex['RBC'],
+        'Số lượng hồng cầu (RBC)': valueIndex['RBC'],
         'Leukocytes (LEU-BLO)': valueIndex['LEU'],
         Leukocytes: valueIndex['LEU'],
         BLO: valueIndex['LEU'],
         LEU: valueIndex['LEU'],
         'NIT (Nitrite)': valueIndex['NIT'],
         NIT: valueIndex['NIT'],
-        Nitrite: valueIndex['NIT']
+        Nitrite: valueIndex['NIT'],
+        'Huyết sắc tố (Hb)': valueIndex['HB'],
+        Hb: valueIndex['HB'],
+        'Thể tích khối hồng cầu (HCT)': valueIndex['HCT'],
+        HCT: valueIndex['HCT'],
+        'Thể tích trung bình HC (MCV)': valueIndex['MCV'],
+        MCV: valueIndex['MCV'],
+        'Lượng Hb trung bình HC (MCH)': valueIndex['MCH'],
+        MCH: valueIndex['MCH'],
+        'Độ phân bố HC (RDW-CV)': valueIndex['RDW-CV'],
+        'RDW-CV': valueIndex['RDW-CV'],
+        MCHC: valueIndex['MCHC'],
+        'Nồng độ Hb trung bình HC (MCHC)': valueIndex['MCHC'],
+        'RDW-SD': valueIndex['RDW-SD'],
+        'Độ phân bố HC (RDW-SD)': valueIndex['RDW-SD']
       },
       listImg: ref([]),
       childrenDrawer: ref(false),

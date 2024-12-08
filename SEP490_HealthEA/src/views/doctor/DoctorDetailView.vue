@@ -120,7 +120,6 @@
           </a-card>
         </div>
 
-        <!-- Confirmation Modal for Deleting Schedule -->
         <a-modal
           v-model:visible="isDeleteModalVisible"
           title="Xác nhận xoá lịch"
@@ -130,7 +129,6 @@
           <p>Bạn có chắc chắn muốn xoá lịch hẹn này?</p>
         </a-modal>
 
-        <!-- Appointment Confirmation Modal -->
         <a-modal
           v-model:visible="isModalVisible"
           title="Xác nhận cuộc hẹn"
@@ -143,6 +141,21 @@
             </a-form-item>
             <a-form-item label="Mô tả">
               <a-input v-model:value="appointmentData.description" placeholder="Nhập mô tả" />
+            </a-form-item>
+            <a-form-item label="Hồ sơ sức khỏe">
+              <a-select
+                v-model:value="selectedProfileId"
+                :placeholder="'Chọn hồ sơ sức khỏe'"
+                @dropdownVisibleChange="handleDropdownVisibleChange"
+                :loading="isProfilesLoading"
+              >
+                <template v-if="profiles.length === 0">
+                  <a-select-option disabled>Không có hồ sơ nào</a-select-option>
+                </template>
+                <a-select-option v-for="profile in profiles" :key="profile.id" :value="profile.id">
+                  {{ profile.name }}
+                </a-select-option>
+              </a-select>
             </a-form-item>
             <a-form-item label="Loại">
               <a-select v-model:value="appointmentData.type" placeholder="Chọn loại cuộc hẹn">
@@ -211,6 +224,9 @@ export default {
       },
       deleteScheduleId: null,
       isDoctor: false,
+      profiles: [],
+      selectedProfileId: null,
+      isProfilesLoading: false,
       daysWithScedules: []
     }
   },
@@ -236,6 +252,30 @@ export default {
         return
       }
     },
+    async getProfiles() {
+      if (this.isProfilesLoading || this.profiles.length > 0) return
+
+      this.isProfilesLoading = true
+
+      try {
+        const userStore = useUserStore()
+        const response = await axios.get(`${API_URL}/api/ProfileShares`, {
+          headers: { Authorization: `Bearer ${userStore.token}` }
+        })
+
+        this.profiles = response.data
+      } catch (error) {
+        console.error('Có lỗi xảy ra khi lấy dữ liệu hồ sơ sức khỏe:', error)
+      } finally {
+        this.isProfilesLoading = false
+      }
+    },
+
+    handleDropdownVisibleChange(isVisible) {
+      if (isVisible && this.profiles.length === 0 && !this.isProfilesLoading) {
+        this.getProfiles()
+      }
+    },
     async checkIfUserIsDoctor() {
       const doctorId = this.$route.params.id
       const userStore = useUserStore()
@@ -244,7 +284,7 @@ export default {
           headers: { Authorization: `Bearer ${userStore.token}` }
         })
         if (response.status === 200) {
-          this.isDoctor = true // User is the doctor
+          this.isDoctor = true
         }
       } catch (error) {
         console.error('Lỗi khi kiểm tra người dùng:', error)
@@ -328,13 +368,15 @@ export default {
     async createAppointment() {
       const doctorId = this.$route.params.id
       const userStore = useUserStore()
+      console.log('prosile id', this.selectedProfileId)
       const appointment = {
         doctorId,
         title: this.appointmentData.title,
         description: this.appointmentData.description,
         type: this.appointmentData.type,
         date: this.selectedDate.format('YYYY-MM-DD'),
-        startTime: this.appointmentData.startTime
+        startTime: this.appointmentData.startTime,
+        selectedProfileId: this.selectedProfileId
       }
 
       try {

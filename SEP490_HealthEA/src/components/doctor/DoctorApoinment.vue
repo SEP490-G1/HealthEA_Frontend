@@ -15,6 +15,15 @@
             :text="record.status"
           />
         </template>
+        <template v-if="column.dataIndex === 'date'">
+          <span>{{ formatDate(record.date) }}</span>
+        </template>
+
+        <template v-if="column.dataIndex === 'uri'">
+          <a :href="getFullUri(record.uri)" target="_blank" rel="noopener noreferrer">
+            {{ record[column.dataIndex] }}
+          </a>
+        </template>
 
         <template v-if="column.dataIndex === 'action' && record.status === 'Pending'">
           <div class="editable-cell">
@@ -94,11 +103,18 @@ export default {
         { title: 'Tên bệnh nhân', dataIndex: 'nameCustomer', key: 'nameCustomer', width: 150 },
         { title: 'Tiêu đề', dataIndex: 'title', key: 'title', width: 350 },
         { title: 'Mô tả', dataIndex: 'description', key: 'description', width: 450 },
-        { title: 'Ngày hẹn', dataIndex: 'date', key: 'date', width: 150 },
+        {
+          title: 'Ngày hẹn',
+          dataIndex: 'date',
+          key: 'date',
+          width: 170
+        },
+
         { title: 'Giờ bắt đầu', dataIndex: 'startTime', key: 'startTime', width: 100 },
         { title: 'Giờ kết thúc', dataIndex: 'endTime', key: 'endTime', width: 100 },
         { title: 'Vị trí', dataIndex: 'location', key: 'location', width: 300 },
         { title: 'Trạng thái', dataIndex: 'status', key: 'status', width: 100 },
+        { title: 'Hồ sơ sức khỏe', dataIndex: 'uri', key: 'uri', width: 100 },
         { title: 'Hành động', dataIndex: 'action', key: 'action', width: 200 },
         { title: 'Call', dataIndex: 'call', key: 'call', width: 200 }
       ]
@@ -139,6 +155,14 @@ export default {
   },
 
   methods: {
+    formatDate(date) {
+      if (!date) return ''
+      const d = new Date(date)
+      const day = String(d.getDate()).padStart(2, '0')
+      const month = String(d.getMonth() + 1).padStart(2, '0')
+      const year = d.getFullYear()
+      return `${day}-${month}-${year}`
+    },
     async showUserInfo(customerId) {
       try {
         const response = await axios.get(`${API_URL}/api/Infors/${customerId}`)
@@ -192,7 +216,10 @@ export default {
         this.listApointment.push(...response.data.items)
       }
     },
-
+    getFullUri(uri) {
+      const baseUrl = import.meta.env.VITE_URL_FE || 'http://localhost:5173'
+      return `${baseUrl}${uri}`
+    },
     handleCall(customerId, doctorId) {
       const url = `https://manhvv15.github.io/DoctorCall/?doctorId=${doctorId}&customerId=${customerId}`
       window.open(url, '_blank')
