@@ -16,6 +16,12 @@
           />
         </template>
 
+        <template v-if="column.dataIndex === 'uri'">
+          <a :href="getFullUri(record.uri)" target="_blank" rel="noopener noreferrer">
+            {{ record[column.dataIndex] }}
+          </a>
+        </template>
+
         <template v-if="column.dataIndex === 'action' && record.status === 'Pending'">
           <div class="editable-cell">
             <a-popconfirm
@@ -99,6 +105,7 @@ export default {
         { title: 'Giờ kết thúc', dataIndex: 'endTime', key: 'endTime', width: 100 },
         { title: 'Vị trí', dataIndex: 'location', key: 'location', width: 300 },
         { title: 'Trạng thái', dataIndex: 'status', key: 'status', width: 100 },
+        { title: 'Hồ sơ sức khỏe', dataIndex: 'uri', key: 'uri', width: 100 },
         { title: 'Hành động', dataIndex: 'action', key: 'action', width: 200 },
         { title: 'Call', dataIndex: 'call', key: 'call', width: 200 }
       ]
@@ -192,7 +199,10 @@ export default {
         this.listApointment.push(...response.data.items)
       }
     },
-
+    getFullUri(uri) {
+      const baseUrl = import.meta.env.VITE_URL_FE || 'http://localhost:5173'
+      return `${baseUrl}${uri}`
+    },
     handleCall(customerId, doctorId) {
       const url = `https://manhvv15.github.io/DoctorCall/?doctorId=${doctorId}&customerId=${customerId}`
       window.open(url, '_blank')
