@@ -74,7 +74,7 @@ import chatDoccument from './chatDoccument.vue'
                 />
                 <template v-else>
                   {{
-                    ['value', 'reference'].includes(column.dataIndex) ? checkTrueFalse(text) : text
+                    ['value', 'reference'].includes(column.dataIndex) && text != '' ? checkTrueFalse(text) : text
                   }}
 
                   <a-popover
