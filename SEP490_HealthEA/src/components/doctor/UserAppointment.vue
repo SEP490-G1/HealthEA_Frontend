@@ -13,6 +13,10 @@
               :text="record.status"
             />
           </template>
+          <template v-if="column.dataIndex === 'date'">
+            <span>{{ formatDate(record.date) }}</span>
+          </template>
+
           <template v-if="column.dataIndex === 'call'">
             <button
               :disabled="!isValid(record)"
@@ -42,6 +46,14 @@ export default {
     this.loadData()
   },
   methods: {
+    formatDate(date) {
+      if (!date) return ''
+      const d = new Date(date)
+      const day = String(d.getDate()).padStart(2, '0')
+      const month = String(d.getMonth() + 1).padStart(2, '0')
+      const year = d.getFullYear()
+      return `${day}-${month}-${year}`
+    },
     async loadData() {
       const user = useApointment()
       var res = await user.getAppointmentUser(1, 10)
