@@ -38,7 +38,7 @@ export default {
       storeUser: useUserStore(),
       pathActive: '',
       role: ref(''),
-      listHeader: ref([])
+      listHeader: ref([{ path: '/about', text: 'Về chúng tôi' }])
     }
   },
   watch: {
@@ -82,6 +82,7 @@ export default {
       } catch (error) {
         this.listHeader = [{ path: '/about', text: 'Về chúng tôi' }]
       }
+
       if (this.listHeader.length <= 0) {
         this.listHeader = [{ path: '/about', text: 'Về chúng tôi' }]
       }
