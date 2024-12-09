@@ -5,8 +5,8 @@ import CommonLayout from '@/components/common/TheModal'
 <template lang="">
   <ContentFooter>
     <a-typography-title :level="2">Danh sách hồ sơ sức khỏe của bạn</a-typography-title>
-    <div style="margin: 10px">
-      <a-button type="primary" @click="showModal"><PlusOutlined />Thêm hồ sơ</a-button>
+    <div style="margin-bottom : 50px">
+      <a-button style="height: 50px; width: 200px; font-size: 20px" type="primary" @click="showModal"><PlusOutlined />Thêm hồ sơ</a-button>
     </div>
     <a-row :gutter="[16, 16]" justify="start">
       <a-col v-for="item in info" :key="item.id" class="gutter-row" :span="6">
@@ -23,7 +23,7 @@ import CommonLayout from '@/components/common/TheModal'
                     />
                     <FolderOpenFilled v-else style="font-size: 30px; margin-right: 15px" />
                   </div>
-                  <a-typography-title style="margin-bottom: 0px" :level="3">{{
+                  <a-typography-title style="margin-bottom: 0px" :level="4">{{
                     item.fullName
                   }}</a-typography-title>
                 </div>

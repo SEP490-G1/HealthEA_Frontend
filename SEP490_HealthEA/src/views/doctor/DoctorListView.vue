@@ -1,23 +1,18 @@
 <template>
   <a-layout style="padding: 30px 50px">
     <a-layout-content
-      :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '10px' }"
+      :style="{ background: '#fff', padding: '35px', margin: 0, minHeight: '10px' }"
     >
       <div class="doctor-list-container">
         <!-- Banner Section -->
-        <div class="banner text-white text-center py-4">
-          <h1>Chào mừng đến với Dịch vụ Bác sĩ</h1>
-          <p>Chúng tôi giúp bạn tìm bác sĩ phù hợp nhất cho nhu cầu của bạn</p>
-        </div>
 
         <!-- Search Header -->
-        <div class="search-header text-center mt-4">
-          <h2>Tìm kiếm bác sĩ</h2>
-          <p>Điền thông tin dưới đây để tìm bác sĩ bạn cần</p>
+        <div  style="margin-bottom: 30px">
+          <a-typography-title :level="2">Danh sách bác sĩ</a-typography-title>
         </div>
 
         <!-- Centered Search Filters -->
-        <div class="search-container mt-3">
+        <div>
           <a-form layout="inline" @submit.prevent="fetchDoctors" class="search-form">
             <a-form-item>
               <a-input

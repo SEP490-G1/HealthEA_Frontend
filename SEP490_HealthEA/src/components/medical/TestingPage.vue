@@ -15,9 +15,8 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
           <a-menu-item @click="scanImage" key="4"> Scan ảnh của bạn </a-menu-item>
         </a-menu>
       </template>
-      <a-button>
+      <a-button type="primary" size="large">
         Thêm mới
-        <DownOutlined />
       </a-button>
     </a-dropdown>
     <div>
@@ -74,7 +73,6 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
 <script>
 import { ref } from 'vue'
 import dayjs from 'dayjs'
-import { DownOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import axios from 'axios'
 import { useUserStore } from '@/stores/user'

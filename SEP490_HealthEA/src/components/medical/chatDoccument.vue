@@ -14,7 +14,7 @@ import { ref } from 'vue'
     >
       <div
         style="
-          height: 80%;
+          height: 70%;
           border:
             1px,
             rgba(10, 20, 20, 0.1) solid;
@@ -44,7 +44,7 @@ import { ref } from 'vue'
         <a-input-search
           :loading="loading"
           v-model:value="value"
-          placeholder="input search text"
+          placeholder="Nhập câu hỏi của bạn..."
           size="large"
           @search="onSearch"
         >

@@ -2,10 +2,12 @@
 <template lang="">
   <div>
     <a-button type="primary" @click="changeView">Change View</a-button>
-    <div class="output-group">
-      <a-typography-title :level="2" align="center">Tiền sử bệnh</a-typography-title>
-      <a-typography-title class="Title" :level="3">I.Thông tin hành chính</a-typography-title>
-      <a-typography-title :level="4">1.Thông tin chung</a-typography-title>
+    <div style="padding-left: 100px">
+      <a-typography-title :level="2" align="left">Tiền sử bệnh</a-typography-title>
+      <a-typography style='color: gray; font-size: 18px' align="left">Lần cuối thay đổi</a-typography>
+      
+      <a-typography-title class="Title" :level="3">I. Thông tin hành chính</a-typography-title>
+      <a-typography-title :level="4">1. Thông tin chung</a-typography-title>
       <a-row>
         <a-col class="Truong" :span="12">
           <div>
