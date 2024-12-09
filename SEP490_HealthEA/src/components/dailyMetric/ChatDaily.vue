@@ -44,7 +44,8 @@ export default {
   },
   methods: {
     formatMessage(message) {
-      return message.replace(/\n/g, '<br />'); // Thay thế '\n' thành <br />
+        return message
+    //   return message.replace(/\n/g, '<br />'); // Thay thế '\n' thành <br />
     },
     async sendMessage() {
         const userStore = useUserStore();
