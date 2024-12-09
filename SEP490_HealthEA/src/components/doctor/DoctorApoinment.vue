@@ -4,50 +4,62 @@
     <a-table :dataSource="listApointment" :columns="columns">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'nameCustomer'">
-          <span style="color: blue; cursor: pointer" @click="showUserInfo(record.customerId)">
+          <span style="color: blue; cursor: pointer" @click="showUserInfo(record)">
             {{ record[column.dataIndex] }}
           </span>
         </template>
 
         <template v-if="column.dataIndex === 'status'">
           <a-badge
-            :status="record.status === 'Pending' ? 'processing' : 'success'"
-            :text="record.status"
+            :status="
+              record.status === 'Approved'
+                ? 'success'
+                : record.status === 'Pending'
+                  ? 'processing'
+                  : 'error'
+            "
+            :text="
+              record.status === 'Approved'
+                ? 'Chấp nhận'
+                : record.status === 'Pending'
+                  ? 'Đang xử lí'
+                  : 'Từ chối'
+            "
           />
         </template>
         <template v-if="column.dataIndex === 'date'">
           <span>{{ formatDate(record.date) }}</span>
         </template>
 
-        <template v-if="column.dataIndex === 'uri'">
-          <a :href="getFullUri(record.uri)" target="_blank" rel="noopener noreferrer">
-            {{ record[column.dataIndex] }}
-          </a>
-        </template>
-
         <template v-if="column.dataIndex === 'action' && record.status === 'Pending'">
           <div class="editable-cell">
-            <a-popconfirm
-              v-if="record.status === 'Pending'"
-              title="Bạn có xác nhận là chấp nhận lịch hẹn không?"
-              @confirm="approve(record.appointmentId)"
-            >
-              <a-typography-link>Chấp nhận</a-typography-link>
-            </a-popconfirm>
-            <a-popconfirm
-              v-if="record.status === 'Pending'"
-              title="Bạn có xác nhận là từ chối lịch hẹn không?"
-              @confirm="reject(record.appointmentId)"
-            >
-              <a-typography-link>Từ chối</a-typography-link>
-            </a-popconfirm>
+            <div>
+              <a-popconfirm
+                v-if="record.status === 'Pending'"
+                title="Bạn có xác nhận là chấp nhận lịch hẹn không?"
+                @confirm="approve(record.appointmentId)"
+                class="text-success"
+              >
+                <a-typography-link>Chấp nhận</a-typography-link>
+              </a-popconfirm>
+            </div>
+            <div>
+              <a-popconfirm
+                v-if="record.status === 'Pending'"
+                title="Bạn có xác nhận là từ chối lịch hẹn không?"
+                @confirm="reject(record.appointmentId)"
+                class="text-danger"
+              >
+                <a-typography-link>Từ chối</a-typography-link>
+              </a-popconfirm>
+            </div>
           </div>
         </template>
 
         <template v-if="column.dataIndex === 'call'">
           <button
             :disabled="!isValid(record)"
-            class="btn btn-success"
+            class="btn btn-primary"
             @click="handleCall(record.customerId, record.doctorId)"
           >
             Gọi
@@ -77,6 +89,12 @@
       <a-form-item label="Số điện thoại"
         ><a-input v-model:value="userInfo.phone" disabled
       /></a-form-item>
+      <div>
+        <router-link v-if="currentRecord.uri != null" :to="currentRecord.uri" class="btn btn-primary">
+            Xem hồ sơ sức khỏe của bệnh nhân
+          </router-link>
+          <div v-else class="text-danger">Bệnh nhân không đính kèm hồ sơ sức khỏe!</div>
+      </div>
     </a-form>
   </a-modal>
 </template>
@@ -97,9 +115,9 @@ export default {
     return {
       listApointment: [],
       userInfo: null,
+      currentRecord: null,
       isModalVisible: false,
       columns: [
-        { title: 'STT', dataIndex: 'key', key: 'key', width: 40 },
         { title: 'Tên bệnh nhân', dataIndex: 'nameCustomer', key: 'nameCustomer', width: 150 },
         { title: 'Tiêu đề', dataIndex: 'title', key: 'title', width: 350 },
         { title: 'Mô tả', dataIndex: 'description', key: 'description', width: 450 },
@@ -112,10 +130,9 @@ export default {
 
         { title: 'Giờ bắt đầu', dataIndex: 'startTime', key: 'startTime', width: 100 },
         { title: 'Giờ kết thúc', dataIndex: 'endTime', key: 'endTime', width: 100 },
-        { title: 'Vị trí', dataIndex: 'location', key: 'location', width: 300 },
-        { title: 'Trạng thái', dataIndex: 'status', key: 'status', width: 100 },
-        { title: 'Hồ sơ sức khỏe', dataIndex: 'uri', key: 'uri', width: 100 },
-        { title: 'Hành động', dataIndex: 'action', key: 'action', width: 200 },
+        // { title: 'Vị trí', dataIndex: 'location', key: 'location', width: 300 },
+        { title: 'Trạng thái', dataIndex: 'status', key: 'status', width: 200 },
+        { title: 'Hành động', dataIndex: 'action', key: 'action', width: 250 },
         { title: 'Call', dataIndex: 'call', key: 'call', width: 200 }
       ]
     }
@@ -163,10 +180,11 @@ export default {
       const year = d.getFullYear()
       return `${day}-${month}-${year}`
     },
-    async showUserInfo(customerId) {
+    async showUserInfo(record) {
       try {
-        const response = await axios.get(`${API_URL}/api/Infors/${customerId}`)
+        const response = await axios.get(`${API_URL}/api/Infors/${record.customerId}`)
         this.userInfo = response.data
+        this.currentRecord = record
         this.isModalVisible = true
       } catch {
         message.error('Không thể lấy thông tin người dùng.')
