@@ -1,7 +1,3 @@
-<script setup>
-import doctorList from '@/components/doctor/doctorList'
-</script>
-
 <template>
   <div style="display: flex; align-items: center">
     <a-layout-content
@@ -22,9 +18,7 @@ import doctorList from '@/components/doctor/doctorList'
           justify-content: center;
         "
       >
-        <a-typography-title style="color: aliceblue" :level="2"
-          >Chào mừng bạn đến với HEALTH EA
-        </a-typography-title>
+        <a-typography-title style="color: aliceblue" :level="2">{{ Title }} </a-typography-title>
       </div>
 
       <a-typography-title
@@ -37,3 +31,21 @@ import doctorList from '@/components/doctor/doctorList'
     </a-layout-content>
   </div>
 </template>
+<script>
+import doctorList from '@/components/doctor/doctorList'
+import { useUserStore } from '@/stores/user'
+export default {
+  components: {
+    doctorList
+  },
+  mounted() {
+    const store = useUserStore()
+    console.log(store.user)
+  },
+  data() {
+    return {
+      Title: 'Chào mừng bạn đến với Health EA'
+    }
+  }
+}
+</script>
