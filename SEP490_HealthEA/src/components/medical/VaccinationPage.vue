@@ -6,7 +6,7 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
     <a-typography-title :level="2" style="margin-top: 30px"
       >Danh sách tiêm chủng</a-typography-title
     >
-    <a-button type="primary" @click="addNew">Thêm mới</a-button>
+    <a-button type="primary" size="large" @click="addNew">Thêm mới</a-button>
     <div>
       <a-list item-layout="horizontal" :data-source="listPre">
         <template #renderItem="{ item }">
@@ -48,7 +48,7 @@ export default {
     },
     getTitle(value) {
       var obj = JSON.parse(value.contentMedical)
-      if (undefined == obj.title) {
+      if (undefined == obj.title || obj.title == '') {
         return `Lịch tiêm ngày ${dayjs(obj.date).format('DD-MM-YYYY')}`
       }
       return obj.title
