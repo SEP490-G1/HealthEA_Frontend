@@ -161,11 +161,6 @@ const routes = [
         component: () => import('@/components/medical/DiagnosticImaging')
       },
       {
-        path: 'history_examination',
-        name: 'History Examination',
-        component: () => import('@/components/medical/HistoryExamination')
-      },
-      {
         path: 'information/:id',
         name: 'Information Page',
         component: () => import('@/components/medical/InformationPage')
