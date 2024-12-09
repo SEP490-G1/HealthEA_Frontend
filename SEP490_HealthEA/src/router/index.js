@@ -143,7 +143,7 @@ const routes = [
   {
     path: '/chat',
     name: 'chat',
-    component: () => import('@/components/dailymetric/ChatAI')
+    component: () => import('@/components/dailymetric/ChatDaily')
   },
   {
     path: '/callVideo',
