@@ -4,8 +4,8 @@ import { RouterLink } from 'vue-router'
 <template>
   <div>
     <div style="display: flex; width: 100%">
-      <div style="width: 100px;">
-        <RouterLink class="text-decoration-none" style="top: 10px"><img src="/public/HealthEAHP.png" width="100%"></RouterLink>
+      <div style="width: 120px;">
+        <RouterLink to="/" class="text-decoration-none" style="top: 10px"><img src="/public/LOGOHD@3x.png" width="100%"></RouterLink>
       </div>
       <a-menu theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }" style="width: 100%">
         <a-flex style="padding: 0 10px; width: 100%" justify="space-between">
@@ -46,7 +46,6 @@ export default {
   },
   mounted() {
     this.listHeader = ref([
-      { path: '/', text: 'Trang chủ' },
       { path: '/about', text: 'Về chúng tôi' }
     ])
     this.checkRole()
@@ -56,7 +55,6 @@ export default {
       const store = useUserStore()
       if (store.token === null) {
         this.listHeader = [
-          { path: '/', text: 'Trang chủ' },
           { path: '/about', text: 'Về chúng tôi' }
         ]
         return
@@ -85,13 +83,11 @@ export default {
         }
       } catch (error) {
         this.listHeader = [
-          { path: '/', text: 'Trang chủ' },
           { path: '/about', text: 'Về chúng tôi' }
         ]
       }
       if (this.listHeader.length <= 0) {
         this.listHeader = [
-          { path: '/', text: 'Trang chủ' },
           { path: '/about', text: 'Về chúng tôi' }
         ]
       }
