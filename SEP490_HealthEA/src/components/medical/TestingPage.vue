@@ -15,9 +15,7 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
           <a-menu-item @click="scanImage" key="4"> Scan ảnh của bạn </a-menu-item>
         </a-menu>
       </template>
-      <a-button type="primary" size="large">
-        Thêm mới
-      </a-button>
+      <a-button type="primary" size="large"> Thêm mới </a-button>
     </a-dropdown>
     <div>
       <a-list item-layout="horizontal" :data-source="listPre">
@@ -35,7 +33,7 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
         </template>
       </a-list>
     </div>
-    <a-drawer
+    <a-modal
       v-model:open="open"
       class="custom-class"
       root-class-name="root-class-name"
@@ -43,22 +41,26 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
       style="color: red"
       title="Scan ảnh với AI"
       placement="right"
+      @ok="handleSubmit"
+      ok-text="Quét kết quả xét nghiệm"
+      cancel-text="Hủy"
+      :okButtonProps="{ disabled: loading }"
     >
       <a-upload
         v-model:file-list="fileList"
         list-type="picture-card"
         beforeUpload="beforeUpload"
+        accept=".png,.jpg"
         @preview="handlePreview"
       >
         <div v-if="fileList.length < 1">
           <plus-outlined />
-          <div style="margin-top: 8px">Upload</div>
+          <div style="margin-top: 8px">Tải ảnh lên</div>
         </div>
       </a-upload>
-      <a-modal :open="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
-        <img alt="example" style="width: 100%" :src="previewImage" />
-      </a-modal>
-      <a-button
+      <div style="margin-top: 8px">Chỉ chấp nhận ảnh png và jpg</div>
+
+      <!-- <a-button
         type="primary"
         class="submit-button"
         :loading="loading"
@@ -66,8 +68,8 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
         @click="handleSubmit"
       >
         Quét kết quả xét nghiệm
-      </a-button>
-    </a-drawer>
+      </a-button> -->
+    </a-modal>
   </div>
 </template>
 <script>
@@ -168,6 +170,7 @@ export default {
         uploadMessage1() // Hide the loading message
         message.error('Scan failed. Please try again.')
         console.error('Scan failed:', error)
+        this.loading = false
         return
       }
       const uploadMessage2 = message.loading('Upload images...', 0)

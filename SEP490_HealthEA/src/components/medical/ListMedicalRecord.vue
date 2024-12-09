@@ -1,12 +1,13 @@
 <script setup>
 import ContentFooter from '@/components/layout/ContentFooter'
 import CommonLayout from '@/components/common/TheModal'
+import { EllipsisOutlined } from '@ant-design/icons-vue'
 </script>
 <template lang="">
   <ContentFooter>
     <a-typography-title :level="2">Danh sách hồ sơ sức khỏe của bạn</a-typography-title>
-    <div style="margin-bottom : 50px">
-      <a-button style="height: 50px; width: 200px; font-size: 20px" type="primary" @click="showModal"><PlusOutlined />Thêm hồ sơ</a-button>
+    <div style="margin-bottom: 50px">
+      <a-button size="large" type="primary" @click="showModal"><PlusOutlined />Thêm hồ sơ</a-button>
     </div>
     <a-row :gutter="[16, 16]" justify="start">
       <a-col v-for="item in info" :key="item.id" class="gutter-row" :span="6">
@@ -30,7 +31,7 @@ import CommonLayout from '@/components/common/TheModal'
               </template>
               <template v-if="!loading" #extra>
                 <a-dropdown :trigger="['click']">
-                  <a class="ant-dropdown-link" @click.prevent> More </a>
+                  <a class="ant-dropdown-link" @click.prevent> <EllipsisOutlined style="font-size: 20px"/> </a>
                   <template #overlay v-if="!loading">
                     <a-menu>
                       <a-menu-item @click="Delete(item.id)" key="1">Xóa</a-menu-item>
@@ -43,7 +44,7 @@ import CommonLayout from '@/components/common/TheModal'
                 </a-dropdown>
               </template>
               <template v-if="!loading" #tabBarExtraContent>
-                <a href="#">more</a>
+                <a href="#"><EllipsisOutlined /></a>
               </template>
               <div style="backgroundcolor: blue">
                 <a-typography-text type="secondary" style="display: flex"
@@ -277,15 +278,14 @@ export default {
       }
       if (this.stageForm == 0) {
         await store.addNewHealthProfile(this.userData)
-        
       }
-      
+
       if (this.stageForm == 1) {
-        console.log(this.userData);
-        console.log(this.idModi);
-        
+        console.log(this.userData)
+        console.log(this.idModi)
+
         let res = await store.updateHealthProfile(this.idModi, this.userData)
-        console.log(res);
+        console.log(res)
       }
       this.open = false
       await store.loadHealthProfile()

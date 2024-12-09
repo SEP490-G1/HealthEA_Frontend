@@ -4,8 +4,10 @@
     <a-button type="primary" @click="changeView">Change View</a-button>
     <div style="padding-left: 100px">
       <a-typography-title :level="2" align="left">Tiền sử bệnh</a-typography-title>
-      <a-typography style='color: gray; font-size: 18px' align="left">Lần cuối thay đổi</a-typography>
-      
+      <a-typography style="color: gray; font-size: 18px" align="left"
+        >Lần cuối thay đổi {{ medicalDocument.lastModifyDate }}</a-typography
+      >
+
       <a-typography-title class="Title" :level="3">I. Thông tin hành chính</a-typography-title>
       <a-typography-title :level="4">1. Thông tin chung</a-typography-title>
       <a-row>
@@ -65,6 +67,8 @@
 <script>
 import { useMedicalRecordStore } from '@/stores/medicalRecord'
 import { ref } from 'vue'
+import dayjs from 'dayjs'
+
 export default {
   data() {
     return {
@@ -80,6 +84,11 @@ export default {
     this.loadData()
   },
   methods: {
+    formatDate() {
+      this.medicalDocument.lastModifyDate = dayjs(this.medicalDocument.lastModifyDate).format(
+        'HH:mm:ss DD/MM/YYYY'
+      )
+    },
     async loadData() {
       const store = useMedicalRecordStore()
       var response = await store.getListAType(this.idHP, 4)
@@ -97,6 +106,7 @@ export default {
       }
       console.log(list[0])
       this.medicalDocument = list[0]
+      this.formatDate()
     },
     changeView() {
       this.viewMode = !this.viewMode

@@ -3,22 +3,27 @@ import { RouterLink } from 'vue-router'
 </script>
 <template>
   <div>
-    <a-menu theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
-      <a-flex style="padding: 0 10px; width: 100%" justify="space-between">
-        <div>
-          <a-menu-item
-            v-for="(item, index) in listHeader"
-            :class="item.path == pathActive ? 'ant-menu-item-selected' : ''"
-            :key="index"
-          >
-            <RouterLink class="text-decoration-none" :to="item.path">{{ item.text }}</RouterLink>
-          </a-menu-item>
-        </div>
-        <div class="flex horizon">
-          <UserHeader v-model:role="role" />
-        </div>
-      </a-flex>
-    </a-menu>
+    <div style="display: flex; width: 100%">
+      <div style="width: 100px;">
+        <RouterLink class="text-decoration-none" style="top: 10px"><img src="/public/HealthEAHP.png" width="100%"></RouterLink>
+      </div>
+      <a-menu theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }" style="width: 100%">
+        <a-flex style="padding: 0 10px; width: 100%" justify="space-between">
+          <div>
+            <a-menu-item
+              v-for="(item, index) in listHeader"
+              :class="item.path == pathActive ? 'ant-menu-item-selected' : ''"
+              :key="index"
+            >
+              <RouterLink class="text-decoration-none" :to="item.path">{{ item.text }}</RouterLink>
+            </a-menu-item>
+          </div>
+          <div class="flex horizon">
+            <UserHeader v-model:role="role" />
+          </div>
+        </a-flex>
+      </a-menu>
+    </div>
   </div>
 </template>
 <script>
