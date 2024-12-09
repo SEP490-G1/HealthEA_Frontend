@@ -5,7 +5,7 @@ import { RouterLink } from 'vue-router'
   <div>
     <div style="display: flex; width: 100%">
       <div style="width: 120px;">
-        <RouterLink to="/" class="text-decoration-none" style="top: 10px"><img src="/public/LOGOHD@3x.png" width="100%"></RouterLink>
+        <RouterLink to="/" class="text-decoration-none" style="top: 10px"><img src="@/assets/LOGOHD@3x.png" width="100%"></RouterLink>
       </div>
       <a-menu theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }" style="width: 100%">
         <a-flex style="padding: 0 10px; width: 100%" justify="space-between">
