@@ -1,14 +1,13 @@
-##### Dockerfile #####
-## build stage ##
-FROM node:22-alpine as build
+# Build stage
+FROM node:20-alpine AS builder
 WORKDIR /app
-COPY . .
+COPY package*.json ./
 RUN npm install
+COPY . .
 RUN npm run build
 
-## run stage ##
+# Production stage
 FROM nginx:alpine
-RUN rm -rf /run
-RUN mkdir /run
-COPY --from=build /app/dist /run
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
