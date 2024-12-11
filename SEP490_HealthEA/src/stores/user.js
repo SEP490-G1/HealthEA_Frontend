@@ -11,7 +11,7 @@ import {
   getSessionStogare,
   clearUser,
   putData
-} from '@/service/main'
+} from '@/service/serviceIndex'
 
 const API_URL = `${import.meta.env.VITE_API_URL_JAVA}/identity`
 const headers = {

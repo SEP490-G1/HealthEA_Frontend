@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { message } from 'ant-design-vue'
-import { getAppointment } from '@/service/main'
+import { getAppointment } from '@/service/serviceIndex'
 import { useUserStore } from '@/stores/user'
 
 const headers = {

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { deleteData, getData, postData, putData } from '@/service/main'
+import { deleteData, getData, postData, putData } from '@/service/serviceIndex'
 import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue'
 const API_URL = `${import.meta.env.VITE_API_URL_DOTNET}/api/Events`

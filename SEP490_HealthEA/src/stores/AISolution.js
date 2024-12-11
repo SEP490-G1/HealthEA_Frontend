@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { postData } from '@/service/main'
+import { postData } from '@/service/serviceIndex'
 const API_URL = `${import.meta.env.VITE_API_URL_DOTNET}/api/Scan`
 
 const headers = {

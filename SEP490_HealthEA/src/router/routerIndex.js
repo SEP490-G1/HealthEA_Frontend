@@ -29,15 +29,15 @@ const routes = [
   },
   {
     path: '/alldoctor',
-    component: () => import('@/views/DoctorView.vue'),
+    component: DoctorView ,
     children: [
       {
         path: 'list',
-        component: () => import('@/components/doctor/doctorList')
+        component: DoctorList 
       },
       {
         path: 'detail/:id',
-        component: () => import('@/components/doctor/doctorDetail')
+        component: DoctorDetail
       }
     ]
   },
@@ -72,15 +72,15 @@ const routes = [
     children: [
       {
         path: 'myInfo',
-        component: () => import('@/components/personal/MyInformation.vue')
+        component: MyInformation
       },
       {
         path: 'password',
-        component: () => import('@/components/personal/Password.vue')
+        component: Password
       },
       {
         path: 'notification',
-        component: () => import('@/views/notifications/NotificationListView')
+        component: NotificationListView
       }
     ]
   },
@@ -113,15 +113,15 @@ const routes = [
   {
     path: '/doctor',
     name: 'doctorPage',
-    component: () => import('@/views/doctor/DoctorMain.vue'),
+    component: DoctorMain,
     children: [
       {
         path: 'apoinemnt',
-        component: () => DoctorApoinment
+        component: DoctorApoinment
       },
       {
         path: 'profile',
-        component: () => import('@/components/doctor/doctorList')
+        component: DoctorList
       }
     ]
   },
@@ -144,7 +144,7 @@ const routes = [
   {
     path: '/callVideo',
     name: 'videoCall',
-    component: () => import('@/views/VideoCallView.vue')
+    component: VideoCallView
   },
   {
     path: '/profileHealth/medical_record',
@@ -154,47 +154,47 @@ const routes = [
       {
         path: 'diagnostic_image/:id',
         name: 'Diagnostic Imageing',
-        component: () => import('@/components/medical/DiagnosticImaging')
+        component: DiagnosticImaging
       },
       {
         path: 'information/:id',
         name: 'Information Page',
-        component: () => import('@/components/medical/InformationPage')
+        component: InformationPage
       },
       {
         path: 'Prehistoric/:id',
         name: 'Prehistoric',
-        component: () => import('@/components/medical/PrehistoricPage')
+        component: PrehistoricPage
       },
       {
         path: 'prescription/:id',
         name: 'prescription',
-        component: () => import('@/components/medical/PrescriptionPage')
+        component: PrescriptionPage
       },
       {
         path: 'prescription/:id/detail/:idD',
         name: 'prescriptionDetail',
-        component: () => import('@/components/medical/PrescriptionDetail')
+        component: PrescriptionDetail
       },
       {
         path: 'testing/:id',
         name: 'tesing result',
-        component: () => import('@/components/medical/TestingPage')
+        component: TestingPage
       },
       {
         path: 'testing/:id/detail/:idD',
         name: 'tesing result detail',
-        component: () => import('@/components/medical/TestingPageDetail')
+        component: TestingPageDetail
       },
       {
         path: 'vaccination/:id',
         name: 'Vaccination',
-        component: () => import('@/components/medical/VaccinationPage')
+        component: VaccinationPage
       },
       {
         path: 'vaccination/:id/detail/:idD',
         name: 'VaccinationDetail',
-        component: () => import('@/components/medical/VaccinationDetailPage')
+        component: VaccinationDetailPage
       }
     ]
   },
@@ -334,6 +334,22 @@ import NotificationListView from '@/views/notifications/NotificationListView.vue
 import CustomerCall from '@/views/CustomerCall.vue'
 import DoctorCall from '@/views/DoctorCall.vue'
 import UserAppointment from '@/components/doctor/UserAppointment.vue'
+import DoctorView from '@/views/DoctorView.vue'
+import DoctorList from '@/components/doctor/doctorList.vue'
+import DoctorDetail from '@/components/doctor/doctorDetail.vue'
+import MyInformation from '@/components/personal/MyInformation.vue'
+import Password from '@/components/personal/Password.vue'
+import DoctorMain from '@/views/doctor/DoctorMain.vue'
+import VideoCallView from '@/views/VideoCallView.vue'
+import DiagnosticImaging from '@/components/medical/DiagnosticImaging.vue'
+import InformationPage from '@/components/medical/InformationPage.vue'
+import PrehistoricPage from '@/components/medical/PrehistoricPage.vue'
+import PrescriptionPage from '@/components/medical/PrescriptionPage.vue'
+import PrescriptionDetail from '@/components/medical/PrescriptionDetail.vue'
+import TestingPage from '@/components/medical/TestingPage.vue'
+import TestingPageDetail from '@/components/medical/TestingPageDetail.vue'
+import VaccinationPage from '@/components/medical/VaccinationPage.vue'
+import VaccinationDetailPage from '@/components/medical/VaccinationDetailPage.vue'
 function exitUser() {
   // gọi store
   const userStore = useUserStore()

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { message } from 'ant-design-vue'
-import { deleteData, getData, patchData, postData, putData } from '@/service/main'
+import { deleteData, getData, patchData, postData, putData } from '@/service/serviceIndex'
 import { useUserStore } from '@/stores/user'
 const API_URL = `${import.meta.env.VITE_API_URL_DOTNET}/api/DailyMetric`
 

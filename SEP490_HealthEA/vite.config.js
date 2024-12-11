@@ -12,6 +12,10 @@ export default defineConfig({
     extensions: ['.js', '.vue', '.json'],
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
+    },
+    base: './',
+    build: {
+      sourcemap: true
     }
   }
 })

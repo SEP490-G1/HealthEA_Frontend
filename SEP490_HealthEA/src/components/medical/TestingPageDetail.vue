@@ -296,7 +296,7 @@ export default {
               element.includes('>=')
             ) {
               let newStr = `${value} ${element}`
-              if (eval(newStr)) {
+              if (newStr) {
                 res = false
                 return
               } else {
