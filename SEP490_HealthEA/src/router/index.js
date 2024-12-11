@@ -140,11 +140,7 @@ const routes = [
     name: 'DailyMetricHistory',
     component: DailyMetricHistory
   },
-  {
-    path: '/chat',
-    name: 'chat',
-    component: () => import('@/components/dailymetric/ChatDaily')
-  },
+
   {
     path: '/callVideo',
     name: 'videoCall',
