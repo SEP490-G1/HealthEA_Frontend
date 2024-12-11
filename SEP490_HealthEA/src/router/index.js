@@ -143,7 +143,7 @@ const routes = [
   {
     path: '/chat',
     name: 'chat',
-    component: () => import('@/components/dailymetric/Chat')
+    component: () => import('@/components/dailymetric/ChatDaily')
   },
   {
     path: '/callVideo',
@@ -159,11 +159,6 @@ const routes = [
         path: 'diagnostic_image/:id',
         name: 'Diagnostic Imageing',
         component: () => import('@/components/medical/DiagnosticImaging')
-      },
-      {
-        path: 'history_examination',
-        name: 'History Examination',
-        component: () => import('@/components/medical/HistoryExamination')
       },
       {
         path: 'information/:id',

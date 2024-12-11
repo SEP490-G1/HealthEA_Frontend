@@ -7,10 +7,21 @@
       <a-table :dataSource="listApointment" :columns="columns">
         <template #bodyCell="{ column, record }">
           <template v-if="column.dataIndex === 'status'">
-            <!-- status: success | processing | default | error | warning -->
             <a-badge
-              :status="record.status == 'Pending' ? 'processing' : 'success'"
-              :text="record.status"
+              :status="
+                record.status === 'Approved'
+                  ? 'success'
+                  : record.status === 'Pending'
+                    ? 'processing'
+                    : 'error'
+              "
+              :text="
+                record.status === 'Approved'
+                  ? 'Chấp nhận'
+                  : record.status === 'Pending'
+                    ? 'Đang xử lí'
+                    : 'Từ chối'
+              "
             />
           </template>
           <template v-if="column.dataIndex === 'date'">
@@ -20,11 +31,18 @@
           <template v-if="column.dataIndex === 'call'">
             <button
               :disabled="!isValid(record)"
-              class="btn btn-success"
+              class="btn btn-primary"
               @click="handleCall(record.customerId, record.doctorId)"
             >
               Gọi
             </button>
+          </template>
+
+          <template v-if="column.dataIndex === 'uri'">
+            <router-link v-if="record.uri != null" :to="record.uri" class="btn btn-primary">
+              Xem
+            </router-link>
+            <div v-else>Không có</div>
           </template>
         </template>
       </a-table>
@@ -85,12 +103,6 @@ export default {
       listApointment: ref([]),
       columns: [
         {
-          title: 'STT',
-          dataIndex: 'key',
-          key: 'key',
-          width: 40
-        },
-        {
           title: 'Tiêu đề',
           dataIndex: 'title',
           key: 'title',
@@ -120,17 +132,12 @@ export default {
           key: 'endTime',
           width: 100
         },
-        {
-          title: 'Vị trí',
-          dataIndex: 'location',
-          key: 'location',
-          width: 300
-        },
+        { title: 'Hồ sơ sức khỏe', dataIndex: 'uri', key: 'uri', width: 100 },
         {
           title: 'Trạng thái',
           dataIndex: 'status',
           key: 'status',
-          width: 100
+          width: 200
         },
         {
           title: 'Call',

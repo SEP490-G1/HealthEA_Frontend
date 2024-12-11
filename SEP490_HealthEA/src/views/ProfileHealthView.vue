@@ -78,15 +78,6 @@ export default {
               label: h(RouterLink, { to: `/profileHealth/medical_record/testing/${this.$route.params.id}` }, 'Xét Nghiệm'),
               title: 'Xét nghiệm'
             },
-            {
-              key: '6',
-              label: h(
-                RouterLink,
-                { to: `/profileHealth/medical_record/diagnostic_image/${this.$route.params.id}` },
-                'Hình ảnh khác'
-              ),
-              title: 'Danh sách ảnh của hồ sơ'
-            }
           ]
         }
       ]

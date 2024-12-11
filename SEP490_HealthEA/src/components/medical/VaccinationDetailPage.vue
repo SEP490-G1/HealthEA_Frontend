@@ -10,7 +10,7 @@
     "
   >
     <a-drawer
-      title="Tạo lịch nhắc uống thuốc"
+      title="Tạo nhắc nhở lịch tiêm"
       :width="720"
       :open="openz"
       :body-style="{ paddingBottom: '80px' }"
@@ -242,7 +242,7 @@ export default {
       this.submitz()
     },
     async submitz() {
-      var obj = this.formState
+      var obj = this.formStatez
       try {
         obj.EventDateTime = dayjs(obj.EventDateTime).format('YYYY-MM-DD')
         obj.RepeatEndDate = dayjs(obj.RepeatEndDate).format('YYYY-MM-DDTHH:mm:ssZ')
@@ -251,22 +251,16 @@ export default {
         message.error('Các trường dữ liệu thời gian trống')
         return
       }
-      if (this.mayForm == 0) {
-        const store = await useRemindStore()
-        const result = await store.AddNewRemind(obj)
-        console.log(result.status)
-        let chuSoA = Math.floor(result.status / 100)
-        if (chuSoA != 2) {
-          message.error('Hãy kiểm tra lại input của bạn!')
-          return
-        }
-        this.openz = !this.openz
-      } else {
-        console.log('loghere', obj)
-        const store = await useRemindStore()
-        const result = await store.updateRemind(obj)
-        console.log('sssss', result)
+      const store = await useRemindStore()
+      const result = await store.AddNewRemind(obj)
+
+      console.log('Kết quả', result)
+      let chuSoA = Math.floor(result.status / 100)
+      if (chuSoA != 2) {
+        message.error('Hãy kiểm tra lại input của bạn!')
+        return
       }
+      this.openz = !this.openz
     },
     filterOption(input, option) {
       return option.value.toUpperCase().indexOf(input.toUpperCase()) >= 0
@@ -306,7 +300,7 @@ export default {
       this.dataSource = obj.drug == null ? '' : obj.drug
       this.formState = {
         title:
-          obj.title != null
+          obj.title != null && obj.title != ''
             ? obj.title
             : `${this.formState.title} ngày ${dayjs(obj.date).format('DD-MM-YYYY')}`,
         date: dayjs(obj.date),
@@ -318,7 +312,8 @@ export default {
     },
     async exportSave() {
       var title = `${this.formState.doctor}`
-      this.formState.title = title
+      this.formState.title =
+        title == null ? `Lịch tiêm ngày ${dayjs(obj.date).format('DD-MM-YYYY')}` : title
       var content = {
         title: title,
         date: this.formState.date,
@@ -360,7 +355,23 @@ export default {
     },
     onClosez() {
       this.formStatez.Title = this.formState.title
+      this.formStatez.RepeatEndDate = this.addOneDay(this.formState.date)
+      this.formStatez.EventDateTime = this.formState.date
+      this.formStatez.Location = this.formState.doctorRecomend
       this.openz = !this.openz
+    },
+    addOneDay(dateString) {
+      // Chuyển đổi chuỗi thành đối tượng Date
+      const date = new Date(dateString)
+
+      // Cộng thêm 1 ngày
+      date.setDate(date.getDate() + 1)
+
+      // Chuyển đổi lại thành chuỗi theo định dạng YYYY-MM-DD
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0') // Tháng bắt đầu từ 0 nên cộng 1 và thêm 0 đằng trước nếu cần
+      const day = String(date.getDate()).padStart(2, '0')
+      return `${year}-${month}-${day}`
     }
   },
   watch: {
@@ -419,13 +430,13 @@ export default {
         ]
       },
       formStatez: reactive({
-        Title: 'Thụy',
-        EventDateTime: '2024-11-06',
-        StartTime: '04:04:26',
-        EndTime: '04:04:26',
+        Title: '',
+        EventDateTime: '',
+        StartTime: '08:00:00',
+        EndTime: '12:00:00',
         Location: '',
         RepeatFrequency: 1,
-        RepeatEndDate: '2024-11-08',
+        RepeatEndDate: '',
         Description: '',
         ReminderOffsets: [
           {

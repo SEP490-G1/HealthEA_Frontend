@@ -1,7 +1,3 @@
-<script setup>
-import doctorList from '@/components/doctor/doctorList'
-</script>
-
 <template>
   <div style="display: flex; align-items: center">
     <a-layout-content
@@ -19,17 +15,17 @@ import doctorList from '@/components/doctor/doctorList'
           height: 50vh;
           display: flex;
           align-items: center;
-          justify-content: center;
+          justify-content: flex-start;
         "
       >
-        <a-typography-title style="color: aliceblue" :level="2"
-          >Chào mừng bạn đến với HEALTH EA
+        <a-typography-title style="margin-left: 200px; color: aliceblue" :level="2"
+          >{{ Title }}
         </a-typography-title>
       </div>
 
       <a-typography-title
         style="display: flex; align-items: center; justify-content: center"
-        :level="2"
+        :level="1"
       >
         Danh sách bác sĩ nổi bật
       </a-typography-title>
@@ -37,3 +33,36 @@ import doctorList from '@/components/doctor/doctorList'
     </a-layout-content>
   </div>
 </template>
+<script>
+import doctorList from '@/components/doctor/doctorList'
+import { useUserStore } from '@/stores/user'
+export default {
+  components: {
+    doctorList
+  },
+  mounted() {
+    try {
+      const store = useUserStore()
+      var name = store.user.userFirstName + ' ' + store.user.userLastName
+      let now = new Date()
+      let hours = now.getHours()
+      console.log('user', hours)
+      var str = `Chào buổi sáng`
+      if (hours > 12) {
+        str = 'Chào buổi chiều'
+      }
+      if (hours > 18) {
+        str = 'Chào buổi tối'
+      }
+      this.Title = `${str} ${name},`
+    } catch   {
+      console.log('Chill day')
+    }
+  },
+  data() {
+    return {
+      Title: 'Chào mừng bạn đến với Health EA'
+    }
+  }
+}
+</script>

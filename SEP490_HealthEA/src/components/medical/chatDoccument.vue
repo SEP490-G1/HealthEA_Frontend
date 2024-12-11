@@ -14,7 +14,7 @@ import { ref } from 'vue'
     >
       <div
         style="
-          height: 80%;
+          height: 70%;
           border:
             1px,
             rgba(10, 20, 20, 0.1) solid;
@@ -44,7 +44,7 @@ import { ref } from 'vue'
         <a-input-search
           :loading="loading"
           v-model:value="value"
-          placeholder="input search text"
+          placeholder="Nhập câu hỏi của bạn..."
           size="large"
           @search="onSearch"
         >
@@ -56,7 +56,7 @@ import { ref } from 'vue'
         </a-input-search>
 
         <a-typography-title :level="4" style="width: 100%; margin-top: 20px"
-          >Một số gới ý</a-typography-title
+          >Một số gợi ý</a-typography-title
         >
         <a-button
           :loading="loading"
@@ -65,6 +65,13 @@ import { ref } from 'vue'
           @click="sendThis('Hãy tư vấn giúp tôi các chỉ số này')"
           style="width: 100%; margin-top: 10px"
           >Tư vấn với tài liệu này</a-button
+        ><a-button
+          :loading="loading"
+          type="primary"
+          ghost
+          @click="sendThis('Tôi nên điều chỉnh ăn uống như thế nào?')"
+          style="width: 100%; margin-top: 10px"
+          >Tôi nên điều chỉnh ăn uống như thế nào?</a-button
         >
         <a-button
           :loading="loading"

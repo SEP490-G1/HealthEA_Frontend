@@ -30,7 +30,7 @@
             </a-menu-item>
             <a-menu-item key="2">
               <a-badge :dot="hasUnreadNotifications" :offset="[10, 0]">
-                <a @click="viewNotifications">Notification</a>
+                <a @click="viewNotifications">Thông báo</a>
               </a-badge>
             </a-menu-item>
             <a-menu-item key="3">

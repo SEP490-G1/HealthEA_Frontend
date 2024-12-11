@@ -3,22 +3,29 @@ import { RouterLink } from 'vue-router'
 </script>
 <template>
   <div>
-    <a-menu theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
-      <a-flex style="padding: 0 10px; width: 100%" justify="space-between">
-        <div>
-          <a-menu-item
-            v-for="(item, index) in listHeader"
-            :class="item.path == pathActive ? 'ant-menu-item-selected' : ''"
-            :key="index"
-          >
-            <RouterLink class="text-decoration-none" :to="item.path">{{ item.text }}</RouterLink>
-          </a-menu-item>
-        </div>
-        <div class="flex horizon">
-          <UserHeader v-model:role="role" />
-        </div>
-      </a-flex>
-    </a-menu>
+    <div style="display: flex; width: 100%">
+      <div style="width: 120px">
+        <RouterLink to="/" class="text-decoration-none" style="top: 10px"
+          ><img src="@/assets/LOGOHD@3x.png" width="100%"
+        /></RouterLink>
+      </div>
+      <a-menu theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }" style="width: 100%">
+        <a-flex style="padding: 0 10px; width: 100%" justify="space-between">
+          <div>
+            <a-menu-item
+              v-for="(item, index) in listHeader"
+              :class="item.path == pathActive ? 'ant-menu-item-selected' : ''"
+              :key="index"
+            >
+              <RouterLink class="text-decoration-none" :to="item.path">{{ item.text }}</RouterLink>
+            </a-menu-item>
+          </div>
+          <div class="flex horizon">
+            <UserHeader v-model:role="role" />
+          </div>
+        </a-flex>
+      </a-menu>
+    </div>
   </div>
 </template>
 <script>
@@ -31,7 +38,7 @@ export default {
       storeUser: useUserStore(),
       pathActive: '',
       role: ref(''),
-      listHeader: ref([])
+      listHeader: ref([{ path: '/about', text: 'Về chúng tôi' }])
     }
   },
   watch: {
@@ -40,20 +47,14 @@ export default {
     }
   },
   mounted() {
-    this.listHeader = ref([
-      { path: '/', text: 'Trang chủ' },
-      { path: '/about', text: 'Về chúng tôi' }
-    ])
+    this.listHeader = ref([{ path: '/about', text: 'Về chúng tôi' }])
     this.checkRole()
   },
   methods: {
     async checkRole() {
       const store = useUserStore()
       if (store.token === null) {
-        this.listHeader = [
-          { path: '/', text: 'Trang chủ' },
-          { path: '/about', text: 'Về chúng tôi' }
-        ]
+        this.listHeader = [{ path: '/about', text: 'Về chúng tôi' }]
         return
       }
       try {
@@ -79,16 +80,11 @@ export default {
           // this.listHeader.push({ path: '/doctors/call', text: 'Video Call' })
         }
       } catch (error) {
-        this.listHeader = [
-          { path: '/', text: 'Trang chủ' },
-          { path: '/about', text: 'Về chúng tôi' }
-        ]
+        this.listHeader = [{ path: '/about', text: 'Về chúng tôi' }]
       }
+
       if (this.listHeader.length <= 0) {
-        this.listHeader = [
-          { path: '/', text: 'Trang chủ' },
-          { path: '/about', text: 'Về chúng tôi' }
-        ]
+        this.listHeader = [{ path: '/about', text: 'Về chúng tôi' }]
       }
     }
   }

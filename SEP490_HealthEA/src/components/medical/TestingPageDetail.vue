@@ -13,9 +13,7 @@ import chatDoccument from './chatDoccument.vue'
   >
     <chatDoccument v-if="!editMode" :idDoc="this.$route.params.idD" />
     <div style="width: 100%; display: flex; margin: 10px; justify-content: space-between">
-      <div>
-        <a-button style="margin: 10px" type="primary" @click="viewImage">Xem ảnh thực tế </a-button>
-      </div>
+      <div></div>
       <div v-if="!editMode">
         <a-button style="margin: 10px" type="primary" @click="exportSave" :disabled="stageEditor"
           >Lưu thay đổi</a-button
@@ -29,9 +27,10 @@ import chatDoccument from './chatDoccument.vue'
         </a-popconfirm>
       </div>
     </div>
-    <div class="ThePage">
-      <div class="Content_ThePage">
+    <div style="margin: 0 100px">
+      <div>
         <a-typography-title v-model:content="formState.title" :level="2" :editable="!editMode" />
+        <a-button type="primary" @click="viewImage" style="margin-bottom: 40px; margin-top: 30px;" >Xem ảnh tài liệu </a-button>
 
         <div style="width: 100%">
           <a-form style="width: 100%" :model="formState" name="basic" autocomplete="off">
@@ -74,7 +73,9 @@ import chatDoccument from './chatDoccument.vue'
                 />
                 <template v-else>
                   {{
-                    ['value', 'reference'].includes(column.dataIndex) ? checkTrueFalse(text) : text
+                    ['value', 'reference'].includes(column.dataIndex) && text != ''
+                      ? checkTrueFalse(text)
+                      : text
                   }}
 
                   <a-popover
@@ -104,7 +105,7 @@ import chatDoccument from './chatDoccument.vue'
                     v-if="description[text] && ['name'].includes(column.dataIndex)"
                   >
                     <template #content>
-                      <p v-html="description[text].Description"></p>
+                      <p style="width: 500px" v-html="description[text].Description"></p>
                     </template>
                     <InfoCircleOutlined />
                   </a-popover>
@@ -120,8 +121,8 @@ import chatDoccument from './chatDoccument.vue'
                   </a-popconfirm>
                 </span>
                 <span v-else>
-                  <a @click="edit(record.key)">Edit</a>
-                  <a @click="remove(record.key)">Delete</a>
+                  <a @click="edit(record.key)">Chỉnh sửa</a>
+                  <a @click="remove(record.key)">Xóa</a>
                 </span>
               </div>
             </template>
@@ -312,12 +313,10 @@ export default {
       return res
     },
     checkTrueFalse(test) {
-      if (test == false) {
-        return 'Âm tính'
+      if (test == 0) {
+        return ''
       }
-      if (test == true) {
-        return 'Dương tính'
-      }
+
       return test
     },
     add() {
@@ -499,10 +498,10 @@ export default {
           ellipsis: 150
         },
         {
-          title: 'Tham chiếu',
+          title: 'Khoảng bình thường',
           dataIndex: 'reference',
           key: 'reference',
-          width: 150
+          width: 200
         },
         {
           title: 'Đơn vị',
