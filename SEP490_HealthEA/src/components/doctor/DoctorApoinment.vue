@@ -90,10 +90,15 @@
         ><a-input v-model:value="userInfo.phone" disabled
       /></a-form-item>
       <div>
-        <router-link v-if="currentRecord.uri != null" :to="currentRecord.uri" class="btn btn-primary">
-            Xem hồ sơ sức khỏe của bệnh nhân
-          </router-link>
-          <div v-else class="text-danger">Bệnh nhân không đính kèm hồ sơ sức khỏe!</div>
+        <a
+          v-if="currentRecord.uri != null"
+          :href="currentRecord.uri"
+          class="btn btn-primary"
+          target="_blank"
+        >
+          Xem hồ sơ sức khỏe của bệnh nhân
+        </a>
+        <div v-else class="text-danger">Bệnh nhân không đính kèm hồ sơ sức khỏe!</div>
       </div>
     </a-form>
   </a-modal>
