@@ -2,15 +2,10 @@
 import ContentFooter from '@/components/layout/ContentFooter'
 import { useDailyMetricStore } from '@/stores/DailyMetricView'
 import { ref } from 'vue'
-
-import { CommentOutlined } from '@ant-design/icons-vue'
+import ChatDailyz from './ChatDaily.vue'
 </script>
 <template lang="">
-  <a-float-button @click="toChat" :badge="{ dot: true }">
-    <template #icon>
-      <CommentOutlined />
-    </template>
-  </a-float-button>
+  <ChatDaily/>
   <ContentFooter style="">
     <a-typography-title style="display: flex; justify-content: center">
       Lịch sử nhập chỉ số sức khỏe
@@ -49,7 +44,8 @@ import DailyMetricList from './DailyMetricList.vue'
 export default {
   components: {
     apexchart: VueApexCharts,
-    listMetric: DailyMetricList
+    listMetric: DailyMetricList,
+    ChatDaily: ChatDailyz,
   },
   watch: {
     'formState.rangePicker': function () {
