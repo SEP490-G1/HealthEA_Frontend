@@ -33,3 +33,4 @@ EXPOSE 5173
 
 # Khởi động ứng dụng
 CMD ["serve", "-n", "-s", "dist", "-l", "5173", "--no-clipboard"]
+#///commit again
