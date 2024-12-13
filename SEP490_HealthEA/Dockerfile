@@ -18,7 +18,7 @@ RUN npm run build
 
 # Bắt đầu một giai đoạn mới để phục vụ ứng dụng
 FROM node:20-alpine AS production 
-RUN apk update && apk add -y xsel
+RUN apk update && apk add xsel
 # Đặt thư mục làm việc trong container
 WORKDIR /app
 
