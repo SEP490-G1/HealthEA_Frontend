@@ -1,11 +1,11 @@
 # Sử dụng hình ảnh Node.js phiên bản 20
-FROM node:20 AS build
+FROM node:20-alpine AS build
 
 # Đặt thư mục làm việc trong container
 WORKDIR /app
 
 # Sao chép package.json và package-lock.json vào container
-COPY package.json package-lock.json ./
+COPY package.json ./
 
 # Cài đặt các phụ thuộc
 RUN npm install --force
@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Bắt đầu một giai đoạn mới để phục vụ ứng dụng
-FROM node:20 AS production
+FROM node:20-alpine AS production
 
 # Đặt thư mục làm việc trong container
 WORKDIR /app
