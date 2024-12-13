@@ -17,8 +17,8 @@ COPY . .
 RUN npm run build
 
 # Bắt đầu một giai đoạn mới để phục vụ ứng dụng
-FROM node:20-alpine AS production
-
+FROM node:20-alpine AS production 
+RUN apt-get update && apt-get install -y xsel
 # Đặt thư mục làm việc trong container
 WORKDIR /app
 
@@ -26,7 +26,7 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 
 # Cài đặt serve để phục vụ các tệp đã xây dựng
-RUN npm install -g serve
+RUN npm install -g -n serve
 
 # Mở cổng 5173
 EXPOSE 5173
