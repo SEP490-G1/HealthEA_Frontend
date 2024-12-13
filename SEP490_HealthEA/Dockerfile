@@ -32,4 +32,4 @@ RUN npm install -g -n serve
 EXPOSE 5173
 
 # Khởi động ứng dụng
-CMD ["serve", "-s", "dist", "-l", "5173"]
+CMD ["serve", "-n", "-s", "dist", "-l", "5173", "--no-clipboard"]
