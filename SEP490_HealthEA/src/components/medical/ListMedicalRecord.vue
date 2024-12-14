@@ -31,7 +31,9 @@ import { EllipsisOutlined } from '@ant-design/icons-vue'
               </template>
               <template v-if="!loading" #extra>
                 <a-dropdown :trigger="['click']">
-                  <a class="ant-dropdown-link" @click.prevent> <EllipsisOutlined style="font-size: 20px"/> </a>
+                  <a class="ant-dropdown-link" @click.prevent>
+                    <EllipsisOutlined style="font-size: 20px" />
+                  </a>
                   <template #overlay v-if="!loading">
                     <a-menu>
                       <a-menu-item @click="Delete(item.id)" key="1">Xóa</a-menu-item>
@@ -111,7 +113,9 @@ import { EllipsisOutlined } from '@ant-design/icons-vue'
         </a-col>
         <a-col :span="12">
           <a-input-group compact style="display: flex">
-            <a-input :value="`/profileHealth/medical_record/information/${userData.id}`" />
+            <a-input
+              :value="`${pathGoc}/profileHealth/medical_record/information/${userData.id}`"
+            />
             <a-tooltip title="copy url">
               <a-button> </a-button>
             </a-tooltip>
@@ -186,6 +190,7 @@ const store = useMedicalRecordStore()
 export default {
   data() {
     return {
+      pathGoc: `${window.location.host}/#`,
       userData: {
         //0 add , 1 edit
         stageForm: '0',
@@ -232,17 +237,16 @@ export default {
       this.idModi = id
       var ss = await store.getHealthProfileByID(id)
       var st = ss.data.data
-      
+
       this.userData.fullName = st.fullName
       this.userData.gender = `${st.gender}`
       this.userData.residence = st.residence
       this.userData.dateOfBirth = st.dateOfBirth
       this.userData.note = st.note
       this.userData.sharedStatus = `${st.sharedStatus}`
-      console.log(this.userData);
-      
+      console.log(this.userData)
+
       this.open = true
-      
     },
     handleCancel() {
       this.open = false
@@ -309,6 +313,7 @@ export default {
     }
   },
   async mounted() {
+
     try {
       await store.loadHealthProfile()
       this.info = await store.storeHealthProfile

@@ -89,15 +89,22 @@
       <a-form-item label="Số điện thoại"
         ><a-input v-model:value="userInfo.phone" disabled
       /></a-form-item>
-      <div>
-        <a
+        <div>
+        <a-button
           v-if="currentRecord.uri != null"
-          :href="currentRecord.uri"
+          type="primary"
+          
+          @click="handleClick(currentRecord.uri)"
+          >Xem hồ sơ sức khỏe</a-button
+        >
+        <!-- <a
+          v-if="currentRecord.uri != null"
+          :href="handleUri(currentRecord.uri)"
           class="btn btn-primary"
           target="_blank"
         >
           Xem hồ sơ sức khỏe của bệnh nhân
-        </a>
+        </a> -->
         <div v-else class="text-danger">Bệnh nhân không đính kèm hồ sơ sức khỏe!</div>
       </div>
     </a-form>
@@ -177,6 +184,13 @@ export default {
   },
 
   methods: {
+    handleClick(link) {
+      console.log(link)
+      window.open(this.handleUri(link))
+    },
+    handleUri(url) {
+      return `${window.location.host}/#${url}`
+    },
     formatDate(date) {
       if (!date) return ''
       const d = new Date(date)
@@ -189,6 +203,7 @@ export default {
       try {
         const response = await axios.get(`${API_URL}/api/Infors/${record.customerId}`)
         this.userInfo = response.data
+
         this.currentRecord = record
         this.isModalVisible = true
       } catch {
@@ -239,10 +254,7 @@ export default {
         this.listApointment.push(...response.data.items)
       }
     },
-    getFullUri(uri) {
-      const baseUrl = import.meta.env.VITE_URL_FE || 'http://localhost:5173'
-      return `${baseUrl}${uri}`
-    },
+
     handleCall(customerId, doctorId) {
       const url = `https://manhvv15.github.io/DoctorCall/?doctorId=${doctorId}&customerId=${customerId}`
       window.open(url, '_blank')
