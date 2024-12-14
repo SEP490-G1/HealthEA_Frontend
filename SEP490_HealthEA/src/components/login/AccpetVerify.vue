@@ -1,8 +1,11 @@
 <template>
-  <a-result :title="title">
-    {{ this.token }}
-    <template #extra> </template>
-  </a-result>
+  <a-layout-content>
+    <a-result :title="title">
+      <template #extra>
+        <a-button @click="toLogin" type="primary">Đăng nhập ngay</a-button>
+      </template>
+    </a-result>
+  </a-layout-content>
 </template>
 <script>
 import { useUserStore } from '@/stores/user'
@@ -18,15 +21,17 @@ export default {
     this.ValidateThat()
   },
   methods: {
+    toLogin() {
+      this.$router.push('login')
+    },
     async ValidateThat() {
       const store = useUserStore()
       const response = await store.verifyById(this.token)
-      console.log('ssssssss',response)
+      console.log('ssssssss', response)
       if (response.data.code == 0) {
         this.title = response.data.result
         return
       }
-
     }
   }
 }

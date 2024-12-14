@@ -140,9 +140,12 @@ export default {
           headers: { Authorization: `Bearer ${userStore.token}` }
         })
         this.isDoctor = true
+        console.log(response);
+        
       } catch (error) {
-      } finally {
-      }
+        console.log(error);
+        
+      } 
     }
   },
   watch: {

@@ -11,7 +11,7 @@ import {
   getSessionStogare,
   clearUser,
   putData
-} from '@/service/main'
+} from '@/service/serviceIndex'
 
 const API_URL = `${import.meta.env.VITE_API_URL_JAVA}/identity`
 const headers = {
@@ -97,6 +97,7 @@ export const useUserStore = defineStore('user', {
       }
       const response = await postData(API_URL + '/auth/token', body)
       try {
+        console.log('Login', response);
         if (response.data.code == 0) {
           this.token = await response.data.result.token
           this.user = await this.getUser()
@@ -116,6 +117,8 @@ export const useUserStore = defineStore('user', {
           return true
         }
       } catch (error) {
+        console.log(error);
+        
         if (response.response.data.code == 1020) {
           message.info('Hãy xác thực email tải khoàn của bạn', 10)
           return 1020

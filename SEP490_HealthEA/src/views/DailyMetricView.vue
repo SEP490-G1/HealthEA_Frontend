@@ -2,14 +2,11 @@
 import ContentFooter from '@/components/layout/ContentFooter'
 import { useDailyMetricStore } from '@/stores/DailyMetricView'
 import { message } from 'ant-design-vue'
+import ChatDaily from '@/components/dailyMetric/ChatDaily.vue'
 </script>
 <template lang="">
   <ContentFooter>
-    <a-float-button @click="toChat" :badge="{ dot: true }">
-      <template #icon>
-        <CommentOutlined />
-      </template>
-    </a-float-button>
+    <ChatDaily/>
     <a-typography-title style="display: flex; justify-content: center">
       Chỉ số sức khỏe của bạn
     </a-typography-title>
@@ -115,8 +112,10 @@ import { message } from 'ant-design-vue'
 
 <script>
 import CommonLayout from '@/components/common/TheModal'
-import {  CommentOutlined } from '@ant-design/icons-vue'
 export default {
+  components: {
+      ChatDaily: ChatDaily,
+    },
   data() {
     return {
       form: {
