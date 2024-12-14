@@ -124,7 +124,7 @@ import { EllipsisOutlined } from '@ant-design/icons-vue'
       :handleOk="handleOk"
       :open="open"
       title="Tạo mới hồ sơ sức khỏe"
-      :okText="this.stageForm == 0 ? 'Tạo mới' : 'Lưu thay đổi'"
+      :okText="stageForm == '0' ? 'Tạo mới' : 'Lưu thay đổi'"
       cancelText="Hủy"
       :width="sizeForm"
     >
