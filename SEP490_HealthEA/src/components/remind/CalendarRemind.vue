@@ -304,7 +304,7 @@ export default {
         console.log(obj)
 
         obj.EventDateTime = dayjs(obj.EventDateTime).format('YYYY-MM-DD')
-        obj.RepeatEndDate = dayjs(obj.RepeatEndDate).format('YYYY-MM-DDTHH:mm:ssZ')
+        obj.RepeatEndDate = dayjs(obj.RepeatEndDate).format('YYYY-MM-DD')
         console.log(obj.RepeatEndDate)
       } catch (error) {
         message.error('Các trường dữ liệu thời gian trống')
@@ -336,7 +336,7 @@ export default {
         Title: obj.title,
         EventDateTime: obj.eventDateTime,
         StartTime: obj.startTime,
-        EndTime: obj.startTime,
+        EndTime: obj.endTime,
         Location: obj.location,
         RepeatFrequency: obj.repeatFrequency,
         RepeatEndDate: obj.repeatEndDate,
@@ -384,13 +384,15 @@ export default {
       this.rangeDate = [firstMonday, sixSundaysLater]
     },
     convertDateStart(date) {
-      return dayjs(date).format('YYYY-MM-DDT00:00:00')
+      // return dayjs(date).format('YYYY-MM-DDT00:00:00')
+      return dayjs(date).format('YYYY-MM-DD')
     },
     onClose() {
       this.open = false
     },
     convertEndDate(date) {
-      return dayjs(date).endOf('day').format('YYYY-MM-DDT23:59:59')
+      // return dayjs(date).endOf('day').format('YYYY-MM-DDT23:59:59')
+      return dayjs(date).endOf('day').format('YYYY-MM-DD')
     },
     async getListEvent() {
       try {
