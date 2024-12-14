@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import PageNotFound from '@/views/common/NotFoundView'
 import ClientView from '@/views/ClientView'
@@ -300,10 +300,11 @@ const routes = [
   { path: '/:pathMatch(.*)*', redirect: '/error/404' }
 ]
 
-const history = createWebHistory(import.meta.env.BASE_URL)
+const history = createWebHashHistory(import.meta.env.BASE_URL)
 
 const router = createRouter({
   history: history,
+  mode: 'hash',
   routes
 })
 
