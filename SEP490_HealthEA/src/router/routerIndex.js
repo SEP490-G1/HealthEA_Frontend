@@ -214,62 +214,62 @@ const routes = [
   {
     path: '/listDoctor',
     name: 'doctors',
-    component: () => DoctorListView
+    component: DoctorListView
   },
   {
     path: '/listDoctor/:id',
     name: 'Doctor Detail',
-    component: () => DoctorDetailView
+    component: DoctorDetailView
   },
   {
     path: '/doctors/update',
     name: 'Update doctor details',
-    component: () => DoctorUpdateView
+    component: DoctorUpdateView
   },
   {
     path: '/doctors/schedules/add',
     name: 'Add Schedules',
-    component: () => DoctorCreateScheduleView
+    component: DoctorCreateScheduleView
   },
   {
     path: '/report',
     name: 'Report',
-    component: () => ReportView
+    component: ReportView
   },
   {
     path: '/admin/reports',
     name: 'Report Lists',
-    component: () => ReportListView
+    component: ReportListView
   },
   {
     path: '/admin/reports/:id',
     name: 'Report Details',
-    component: () => ReportDetailsView
+    component: ReportDetailsView
   },
   {
     path: '/admin/news/create',
     name: 'Create News',
-    component: () => CreateNewsView
+    component: CreateNewsView
   },
   {
     path: '/news/:id',
     name: 'News',
-    component: () => NewsView
+    component: NewsView
   },
   {
     path: '/news',
     name: 'News List',
-    component: () => NewsListView
+    component: NewsListView
   },
   {
     path: '/doctors/me',
     name: 'Doctor Info',
-    component: () => DoctorRedirectView
+    component: DoctorRedirectView
   },
   {
     path: '/doctors/call',
     name: 'Doctor Call',
-    component: () => DoctorCall
+    component: DoctorCall
   },
   {
     path: '/remind',
@@ -285,12 +285,12 @@ const routes = [
   {
     path: '/call',
     name: 'Video Call ',
-    component: () => CustomerCall
+    component: CustomerCall
   },
   {
     path: '/notifications',
     name: 'Notifications',
-    component: () => NotificationListView
+    component: NotificationListView
   },
   {
     path: '/error/404',
