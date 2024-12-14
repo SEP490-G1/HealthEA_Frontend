@@ -97,6 +97,7 @@ export const useUserStore = defineStore('user', {
       }
       const response = await postData(API_URL + '/auth/token', body)
       try {
+        console.log('Login', response);
         if (response.data.code == 0) {
           this.token = await response.data.result.token
           this.user = await this.getUser()
