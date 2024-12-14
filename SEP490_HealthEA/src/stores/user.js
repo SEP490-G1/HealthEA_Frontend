@@ -116,6 +116,8 @@ export const useUserStore = defineStore('user', {
           return true
         }
       } catch (error) {
+        console.log(error);
+        
         if (response.response.data.code == 1020) {
           message.info('Hãy xác thực email tải khoàn của bạn', 10)
           return 1020

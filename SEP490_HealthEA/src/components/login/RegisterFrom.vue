@@ -64,11 +64,11 @@
           name="password"
           :rules="[
             { required: true, message: 'Mật khẩu không được để trống!' },
-            { min: 8, max: 25, message: 'Độ dài mật khẩu phải từ 8 - 25 chữ số' },
+            { min: 8, max: 25, message: 'Độ dài mật khẩu phải từ 8 - 25 chữ số.' },
             {
               pattern: /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,25}/,
               message:
-                'Mật khẩu phải có ít nhất một chữ hoa một chữ thường một số, một ký tự đặc biệt'
+                'Mật khẩu phải có ít nhất một chữ hoa, một chữ thường một số, một ký tự đặc biệt.'
             }
           ]"
         >
@@ -95,6 +95,7 @@
         </a-form-item>
         <a-form-item align="center" style="width: 100%; margin: 0; display: flex">
           <a-button
+            :disabled="!formState.acp"
             :loading="loadingBTN"
             size="large"
             style="width: 100%"
@@ -169,6 +170,8 @@ export default {
           str = 'Email đã tồn tại'
         }
         message.error(str, 4)
+
+        this.loadingBTN = false
         return
       }
       console.log(newValue)

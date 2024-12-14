@@ -95,6 +95,8 @@ export default {
       if (response == 1020) {
         this.$router.push('/client/verifyEmail')
       }
+      console.log(response);
+      
       return
     },
     async registerDeviceToken() {
