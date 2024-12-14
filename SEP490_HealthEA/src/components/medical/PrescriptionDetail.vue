@@ -272,7 +272,7 @@ export default {
       var obj = this.formState
       try {
         obj.EventDateTime = dayjs(obj.EventDateTime).format('YYYY-MM-DD')
-        obj.RepeatEndDate = dayjs(obj.RepeatEndDate).format('YYYY-MM-DDTHH:mm:ssZ')
+        obj.RepeatEndDate = dayjs(obj.RepeatEndDate).format('YYYY-MM-DD')
         console.log(obj.RepeatEndDate)
       } catch (error) {
         message.error('Các trường dữ liệu thời gian trống')
