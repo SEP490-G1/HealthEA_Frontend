@@ -92,7 +92,7 @@
       <div>
         <a
           v-if="currentRecord.uri != null"
-          :href="currentRecord.uri"
+          :href="getFullUri(currentRecord.uri)"
           class="btn btn-primary"
           target="_blank"
         >
