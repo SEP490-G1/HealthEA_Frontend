@@ -57,13 +57,13 @@
         </template>
 
         <template v-if="column.dataIndex === 'call'">
-          <button
+          <a-button
+            type="primary"
             :disabled="!isValid(record)"
-            class="btn btn-primary"
             @click="handleCall(record.customerId, record.doctorId)"
           >
             Gọi
-          </button>
+          </a-button>
         </template>
       </template>
     </a-table>
@@ -78,26 +78,33 @@
     width="600px"
   >
     <a-form :model="userInfo" layout="vertical">
-      <a-form-item label="Tên"><a-input v-model:value="userInfo.name" disabled /></a-form-item>
+      <a-form-item label="Họ và tên người dùng"
+        ><a-input style="color: black" v-model:value="userInfo.name" disabled
+      /></a-form-item>
       <a-form-item label="Giới tính"
-        ><a-input :value="userInfo.gender || 'Không xác định'" disabled
+        ><a-input style="color: black" :value="userInfo.gender || 'Không xác định'" disabled
       /></a-form-item>
       <a-form-item label="Ngày sinh"
-        ><a-input v-model:value="formattedDob" disabled placeholder="YYYY/mm/dd"
+        ><a-input style="color: black" v-model:value="formattedDob" disabled placeholder="Trống"
       /></a-form-item>
-      <a-form-item label="Email"><a-input v-model:value="userInfo.email" disabled /></a-form-item>
+      <a-form-item label="Email"
+        ><a-input style="color: black" v-model:value="userInfo.email" disabled
+      /></a-form-item>
       <a-form-item label="Số điện thoại"
-        ><a-input v-model:value="userInfo.phone" disabled
+        ><a-input style="color: black" v-model:value="userInfo.phone" disabled
       /></a-form-item>
       <div>
-        <a
+        <router-link v-if="currentRecord.uri != null" target="_blank" :to="currentRecord.uri">
+          <a-button type="primary">Xem hồ sơ sức khỏe</a-button>
+        </router-link>
+        <!-- <a
           v-if="currentRecord.uri != null"
-          :href="currentRecord.uri"
+          :href="handleUri(currentRecord.uri)"
           class="btn btn-primary"
           target="_blank"
         >
           Xem hồ sơ sức khỏe của bệnh nhân
-        </a>
+        </a> -->
         <div v-else class="text-danger">Bệnh nhân không đính kèm hồ sơ sức khỏe!</div>
       </div>
     </a-form>
@@ -109,6 +116,7 @@ import { useApointment } from '@/stores/ApointmentManagement'
 import { useUserStore } from '@/stores/user'
 import { message } from 'ant-design-vue'
 import axios from 'axios'
+import dayjs from 'dayjs'
 
 const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
@@ -130,13 +138,48 @@ export default {
           title: 'Ngày hẹn',
           dataIndex: 'date',
           key: 'date',
-          width: 170
+          width: 170,
+          defaultSortOrder: 'descend',
+          sorter: (a, b) => {
+            // Chuyển đổi các chuỗi ngày thành đối tượng Date
+            const date1 = new Date(a.date)
+            const date2 = new Date(b.date)
+
+            // So sánh thời gian bằng getTime()
+            if (date1.getTime() < date2.getTime()) {
+              return -1 // date1 trước date2
+            } else if (date1.getTime() > date2.getTime()) {
+              return 1 // date1 sau date2
+            } else {
+              return 0 // date1 bằng date2
+            }
+          }
         },
 
         { title: 'Giờ bắt đầu', dataIndex: 'startTime', key: 'startTime', width: 100 },
         { title: 'Giờ kết thúc', dataIndex: 'endTime', key: 'endTime', width: 100 },
         // { title: 'Vị trí', dataIndex: 'location', key: 'location', width: 300 },
-        { title: 'Trạng thái', dataIndex: 'status', key: 'status', width: 200 },
+        {
+          title: 'Trạng thái',
+          dataIndex: 'status',
+          key: 'status',
+          width: 200,
+          filters: [
+            {
+              text: 'Từ chối',
+              value: 'Rejected'
+            },
+            {
+              text: 'Đang xử lý',
+              value: 'Pending'
+            },
+            {
+              text: 'Chấp nhận',
+              value: 'Approved'
+            }
+          ],
+          onFilter: (value, record) => record.status === value
+        },
         { title: 'Hành động', dataIndex: 'action', key: 'action', width: 250 },
         { title: 'Call', dataIndex: 'call', key: 'call', width: 200 }
       ]
@@ -177,6 +220,33 @@ export default {
   },
 
   methods: {
+    compareDates(dateString1, dateString2) {
+      // Chuyển đổi các chuỗi ngày thành đối tượng Date
+      const date1 = new Date(dateString1)
+      const date2 = new Date(dateString2)
+
+      // So sánh thời gian bằng getTime()
+      if (date1.getTime() < date2.getTime()) {
+        return -1 // date1 trước date2
+      } else if (date1.getTime() > date2.getTime()) {
+        return 1 // date1 sau date2
+      } else {
+        return 0 // date1 bằng date2
+      }
+    },
+    setDateToday(day) {
+      if (dayjs(day).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD')) {
+        return true
+      }
+      return false
+    },
+    handleClick(link) {
+      console.log(link)
+      window.open(this.handleUri(link))
+    },
+    handleUri(url) {
+      return `${window.location.host}/#${url}`
+    },
     formatDate(date) {
       if (!date) return ''
       const d = new Date(date)
@@ -189,6 +259,7 @@ export default {
       try {
         const response = await axios.get(`${API_URL}/api/Infors/${record.customerId}`)
         this.userInfo = response.data
+
         this.currentRecord = record
         this.isModalVisible = true
       } catch {
@@ -239,10 +310,7 @@ export default {
         this.listApointment.push(...response.data.items)
       }
     },
-    getFullUri(uri) {
-      const baseUrl = import.meta.env.VITE_URL_FE || 'http://localhost:5173'
-      return `${baseUrl}${uri}`
-    },
+
     handleCall(customerId, doctorId) {
       const url = `https://manhvv15.github.io/DoctorCall/?doctorId=${doctorId}&customerId=${customerId}`
       window.open(url, '_blank')

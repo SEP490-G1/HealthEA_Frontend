@@ -15,7 +15,7 @@ import ChatDailyz from './ChatDaily.vue'
     </div>
     <div class="container-chart">
       <div class="controller-chart">
-        <a-form-item name="range-picker" label="RangePicker" v-bind="rangeConfig">
+        <a-form-item name="range-picker" label="Khoảng thời gian:" v-bind="rangeConfig">
           <a-range-picker v-model:value="formState.rangePicker" value-format="YYYY-MM-DD" />
         </a-form-item>
       </div>
@@ -57,7 +57,7 @@ export default {
       rangeConfig: {},
       listValue: {},
       formState: {
-        rangePicker: [this.subtractDay(this.getTodayInYYYYMMDD(), 7), this.getTodayInYYYYMMDD()]
+        rangePicker: [this.subtractDay(this.getTodayInYYYYMMDD(), -8), this.getTodayInYYYYMMDD()]
       },
       series: [],
       chartOptions: ref({

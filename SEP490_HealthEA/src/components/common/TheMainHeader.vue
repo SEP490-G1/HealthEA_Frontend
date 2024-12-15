@@ -61,7 +61,7 @@ export default {
         const role = await (await store.getUser()).role
         if (role == 'CUSTOMER') {
           this.listHeader.push({ path: '/profileHealth', text: 'Hồ sơ sức khỏe' })
-          this.listHeader.push({ path: '/dailymetric', text: 'Chỉ số sức khỏe định kỳ' })
+          this.listHeader.push({ path: '/dailymetric', text: 'Chỉ số sức khỏe hàng ngày' })
           this.listHeader.push({ path: '/remind/calendar', text: 'Lịch của bạn' })
           this.listHeader.push({ path: '/appointments', text: 'Lịch hẹn khám của bạn' })
           this.listHeader.push({ path: '/listDoctor', text: 'Danh sách bác sĩ' })

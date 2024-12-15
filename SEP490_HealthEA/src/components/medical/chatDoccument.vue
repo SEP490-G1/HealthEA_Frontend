@@ -4,7 +4,7 @@ import { ref } from 'vue'
 <template>
   <div>
     <a-drawer
-      width="500px"
+      width="600px"
       v-model:open="open"
       class="custom-class"
       root-class-name="root-class-name"
@@ -54,6 +54,10 @@ import { ref } from 'vue'
             </a-button>
           </template>
         </a-input-search>
+        <a-typography-link style="width: 100%; margin-top: 20px" target="_blank"
+          >Thông tin chỉ mang tính tham khảo, không thay thế các chỉ định của bác
+          sĩ!</a-typography-link
+        >
 
         <a-typography-title :level="4" style="width: 100%; margin-top: 20px"
           >Một số gợi ý</a-typography-title

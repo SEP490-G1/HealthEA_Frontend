@@ -34,7 +34,7 @@
               </a-badge>
             </a-menu-item>
             <a-menu-item key="3">
-              <a @click="logOut">Đăng Xuất</a>
+              <a @click="logOut">Đăng xuất</a>
             </a-menu-item>
           </a-menu>
         </template>
@@ -42,9 +42,9 @@
     </div>
     <div v-else>
       <a-button type="primary" shape="round" style="margin-right: 10px" @click="gotoLogin">
-        Login now
+        Đăng nhập ngay
       </a-button>
-      <a-button shape="round" @click="gotoRegister"> Register </a-button>
+      <a-button shape="round" @click="gotoRegister"> Đăng ký </a-button>
     </div>
   </div>
 </template>

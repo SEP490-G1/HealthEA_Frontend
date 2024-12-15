@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <a-typography-title :level="3">Today plan</a-typography-title>
+    <a-typography-title :level="3">Kế hoạch trong ngày:</a-typography-title>
     <div class="carcontainer">
       <a-list
         class="demo-loadmore-list"
@@ -20,7 +20,7 @@
             <template #actions v-if="item.type == 1">
               <a-dropdown :trigger="['click']">
                 <a class="ant-dropdown-link" key="list-loadmore-more" @click.prevent
-                  >Option <DownOutlined
+                  >Tùy chọn <DownOutlined
                 /></a>
                 <template #overlay>
                   <a-menu>

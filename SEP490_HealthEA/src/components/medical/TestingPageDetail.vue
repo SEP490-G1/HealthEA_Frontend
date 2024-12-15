@@ -128,7 +128,7 @@ import chatDoccument from './chatDoccument.vue'
             </template>
           </template>
         </a-table>
-        <a-button v-if="!editMode" style="width: 100%" type="dashed" @click="add">Add new</a-button>
+        <a-button v-if="!editMode" style="width: 100%" type="dashed" @click="add">Thêm chỉ số mới</a-button>
       </div>
     </div>
     <a-drawer v-model:open="open" style="color: black" :width="1000" title="Ảnh của tài liệu này">

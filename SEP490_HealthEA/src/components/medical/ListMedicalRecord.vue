@@ -31,7 +31,9 @@ import { EllipsisOutlined } from '@ant-design/icons-vue'
               </template>
               <template v-if="!loading" #extra>
                 <a-dropdown :trigger="['click']">
-                  <a class="ant-dropdown-link" @click.prevent> <EllipsisOutlined style="font-size: 20px"/> </a>
+                  <a class="ant-dropdown-link" @click.prevent>
+                    <EllipsisOutlined style="font-size: 20px" />
+                  </a>
                   <template #overlay v-if="!loading">
                     <a-menu>
                       <a-menu-item @click="Delete(item.id)" key="1">Xóa</a-menu-item>
@@ -65,8 +67,8 @@ import { EllipsisOutlined } from '@ant-design/icons-vue'
       </a-col>
     </a-row>
     <CommonLayout
-      :handleCancel="() => (this.openShare = !this.openShare)"
-      :handleOk="() => (this.openShare = !this.openShare)"
+      :handleCancel="() => (openShare = !openShare)"
+      :handleOk="() => (openShare = !openShare)"
       :open="openShare"
       title="Quản lý chia sẻ hồ sơ"
       okText="Đồng ý"
@@ -74,12 +76,12 @@ import { EllipsisOutlined } from '@ant-design/icons-vue'
       :width="sizeForm"
       height="500px"
     >
-      <a-typography-title :level="3">{{ this.userData.fullName }}</a-typography-title>
+      <a-typography-title :level="3">{{ userData.fullName }}</a-typography-title>
       <a-form-item
         label="Chia sẻ hồ sơ với"
         :rules="[{ required: true, message: 'Please chosse a value' }]"
       >
-        <a-radio-group v-model:value="this.userData.sharedStatus">
+        <a-radio-group v-model:value="userData.sharedStatus">
           <a-radio-button :value="3">Tất cả mọi người</a-radio-button>
           <a-radio-button :value="2">Tất cả người dùng khác</a-radio-button>
           <a-radio-button :value="1">Chỉ bác sĩ</a-radio-button>
@@ -97,21 +99,23 @@ import { EllipsisOutlined } from '@ant-design/icons-vue'
               type="primary"
               @click="
                 () => {
-                  this.qr.Status = !this.qr.Status
-                  this.qr.Name = this.qr.Status == true ? 'Ẩn' : 'Lấy'
+                  qr.Status = !qr.Status
+                  qr.Name = qr.Status == true ? 'Ẩn' : 'Lấy'
                 }
               "
-              >{{ this.qr.Name }} QRCode</a-button
+              >{{ qr.Name }} QRCode</a-button
             >
             <TheQRCode
-              v-if="this.qr.Status"
-              :LINK="`/profileHealth/medical_record/information/${this.userData.id}`"
+              v-if="qr.Status"
+              :LINK="`/profileHealth/medical_record/information/${userData.id}`"
             />
           </a-form-item>
         </a-col>
         <a-col :span="12">
           <a-input-group compact style="display: flex">
-            <a-input :value="`/profileHealth/medical_record/information/${this.userData.id}`" />
+            <a-input
+              :value="`${pathGoc}/profileHealth/medical_record/information/${userData.id}`"
+            />
             <a-tooltip title="copy url">
               <a-button> </a-button>
             </a-tooltip>
@@ -186,6 +190,7 @@ const store = useMedicalRecordStore()
 export default {
   data() {
     return {
+      pathGoc: `${window.location.host}/#`,
       userData: {
         //0 add , 1 edit
         stageForm: '0',
@@ -228,18 +233,20 @@ export default {
     },
     async Modified(id) {
       const store = useMedicalRecordStore()
-      this.stageForm = 1
-      console.log(id)
+      this.userData.stageForm = 1
       this.idModi = id
+      var ss = await store.getHealthProfileByID(id)
+      var st = ss.data.data
 
-      var st = await store.getHealthProfileByID(id)
-      this.open = true
       this.userData.fullName = st.fullName
       this.userData.gender = `${st.gender}`
       this.userData.residence = st.residence
       this.userData.dateOfBirth = st.dateOfBirth
       this.userData.note = st.note
       this.userData.sharedStatus = `${st.sharedStatus}`
+      console.log(this.userData)
+
+      this.open = true
     },
     handleCancel() {
       this.open = false
@@ -306,6 +313,7 @@ export default {
     }
   },
   async mounted() {
+
     try {
       await store.loadHealthProfile()
       this.info = await store.storeHealthProfile
