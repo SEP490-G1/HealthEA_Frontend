@@ -97,11 +97,11 @@
         <a-col :span="6">
           <a-form-item label="Kiểu lặp" name="RepeatFrequency">
             <a-select v-model:value="formState.RepeatFrequency">
-              <a-select-option :value="1">No repeat</a-select-option>
-              <a-select-option :value="2">Daily</a-select-option>
-              <a-select-option :value="3">Weekly</a-select-option>
-              <a-select-option :value="4">Monthly</a-select-option>
-              <a-select-option :value="5">Yearly</a-select-option>
+              <a-select-option :value="1">Không</a-select-option>
+              <a-select-option :value="2">Hàng ngày</a-select-option>
+              <a-select-option :value="3">Hàng tuần</a-select-option>
+              <a-select-option :value="4">Hàng tháng</a-select-option>
+              <a-select-option :value="5">Hàng năm</a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
@@ -356,7 +356,7 @@ export default {
         StartTime: '',
         EndTime: '',
         Location: '',
-        RepeatFrequency: 0,
+        RepeatFrequency: 1,
         RepeatEndDate: '',
         Description: '',
         ReminderOffsets: []
