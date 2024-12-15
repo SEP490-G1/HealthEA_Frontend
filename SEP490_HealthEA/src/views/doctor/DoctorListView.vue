@@ -7,7 +7,7 @@
         <!-- Banner Section -->
 
         <!-- Search Header -->
-        <div  style="margin-bottom: 30px">
+        <div style="margin-bottom: 30px">
           <a-typography-title :level="2">Danh sách bác sĩ</a-typography-title>
         </div>
 
@@ -31,6 +31,15 @@
               />
             </a-form-item>
             <a-form-item>
+              <a-select
+                ref="select"
+                v-model:value="filters.specialization"
+                style="width: 300px"
+                :options="options"
+                size="large"
+              ></a-select>
+            </a-form-item>
+            <a-form-item>
               <a-button type="primary" @click="fetchDoctors" size="large"> Tìm kiếm </a-button>
             </a-form-item>
             <router-link v-if="isDoctor" to="/doctors/me">Thông tin của bạn</router-link>
@@ -39,7 +48,7 @@
 
         <!-- Display number of results found -->
         <p class="results-count mt-4" v-if="doctors.length > 0">
-          Found {{ doctors.length }} results
+          Tìm thấy <strong>{{ doctors.length }}</strong> kết quả
         </p>
 
         <!-- Doctor Cards Section -->
@@ -95,14 +104,21 @@ export default {
     return {
       filters: {
         name: '',
-        city: ''
+        city: '',
+        specialization: ''
       },
       doctors: [],
       displayedDoctors: [],
       loading: false,
       currentPage: 1,
       pageSize: 8,
-      isDoctor: false
+      isDoctor: false,
+      options: [
+        {
+          value: '',
+          label: '--Chọn chuyên khoa--'
+        }
+      ]
     }
   },
   methods: {
@@ -113,7 +129,8 @@ export default {
         const response = await axios.get(`${API_URL}/api/Doctor`, {
           params: {
             name: this.filters.name,
-            city: this.filters.city
+            city: this.filters.city,
+            specialization: this.filters.specialization
           },
           headers: { Authorization: `Bearer ${userStore.token}` }
         })
@@ -140,12 +157,34 @@ export default {
           headers: { Authorization: `Bearer ${userStore.token}` }
         })
         this.isDoctor = true
-        console.log(response);
-        
+        console.log(response)
       } catch (error) {
-        console.log(error);
-        
-      } 
+        console.log(error)
+      }
+    },
+    async getSpecializations() {
+      const userStore = useUserStore()
+      try {
+        const response = await axios.get(`${API_URL}/api/Doctor/specializations`, {
+          headers: { Authorization: `Bearer ${userStore.token}` }
+        })
+        const data = response.data
+        const formattedOptions = data.map((item) => ({
+          value: item,
+          label: item
+        }))
+        this.options = [
+          {
+            value: '',
+            label: '--Chọn chuyên khoa--'
+          },
+          ...formattedOptions
+        ]
+      } catch (error) {
+        console.error('Lỗi khi lấy danh sách chuyên khoa:', error)
+      } finally {
+        this.loading = false
+      }
     }
   },
   watch: {
@@ -156,6 +195,7 @@ export default {
   },
   created() {
     this.fetchDoctors()
+    this.getSpecializations()
     this.checkUserIsDoctor()
   }
 }
