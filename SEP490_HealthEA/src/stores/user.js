@@ -73,7 +73,7 @@ export const useUserStore = defineStore('user', {
           auth: true
         }
 
-         this.user = obj
+        this.user = obj
         return obj
       } catch (error) {
         // this.ClearUser()
@@ -97,7 +97,12 @@ export const useUserStore = defineStore('user', {
       }
       const response = await postData(API_URL + '/auth/token', body)
       try {
-        console.log('Login', response);
+        if (response.status == 401) {
+          if (response.response.data.code == 1006) {
+            message.error('Mật khẩu sai', 5)
+            return
+          }
+        }
         if (response.data.code == 0) {
           this.token = await response.data.result.token
           this.user = await this.getUser()
@@ -117,8 +122,8 @@ export const useUserStore = defineStore('user', {
           return true
         }
       } catch (error) {
-        console.log(error);
-        
+        console.log(error)
+
         if (response.response.data.code == 1020) {
           message.info('Hãy xác thực email tải khoàn của bạn', 10)
           return 1020
