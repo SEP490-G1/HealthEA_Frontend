@@ -1,18 +1,32 @@
 <template>
-  <div style="width: 100%; display: flex; justify-content: center">
+  <div style="width: 100%; display: flex; justify-content: center; flex-direction: column; align-items: center">
+    <div
+      style="
+        background-image: linear-gradient(to top, #00c6fb 0%, #005bea 100%);
+        width: 100%;
+        height: 50vh;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      "
+    >
+      <a-typography-title style="margin-left: 200px; color: aliceblue" :level="2"
+        >Về chúng tôi
+      </a-typography-title>
+    </div>
     <div class="aboutus">
       <div>
         <a-typography-title
-          style="display: flex; align-items: center; justify-content: center"
+          style="display: flex; margin: 50px; align-items: center; justify-content: center"
           :level="1"
         >
-          Health EA
+          Sản phẩm của chúng tôi
         </a-typography-title>
         <a-typography style="display: flex; align-items: center; justify-content: center">
           Đua ra một giải pháp hoàn chỉnh
         </a-typography>
       </div>
-      <div style="margin-top: 30px;">
+      <div style="margin-top: 50px">
         <a-typography-title
           style="display: flex; align-items: center; justify-content: center"
           :level="2"
