@@ -75,7 +75,7 @@
               <div class="editable-row-operations">
                 <span v-if="editableData[record.key]">
                   <a-typography-link @click="save(record.key)">Lưu</a-typography-link>
-                  <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.key)">
+                  <a-popconfirm title="Bạn chắc chắn muốn hủy?" @confirm="cancel(record.key)">
                     <a>Hủy</a>
                   </a-popconfirm>
                 </span>
