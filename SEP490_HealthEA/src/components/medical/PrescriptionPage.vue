@@ -38,7 +38,7 @@ import { PlusOutlined } from '@ant-design/icons-vue'
           <a-menu-item @click="scanImage" key="3"> Scan ảnh đơn thuốc </a-menu-item>
         </a-menu>
       </template>
-      <a-button v-if="author" type="primary" size="large"> Thêm mới </a-button>
+      <a-button type="primary" size="large"> Thêm mới </a-button>
     </a-dropdown>
     <div>
       <a-list item-layout="horizontal" :data-source="listPre">

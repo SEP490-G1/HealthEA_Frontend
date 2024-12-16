@@ -15,7 +15,7 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
           <a-menu-item @click="scanImage" key="4"> Scan ảnh của bạn </a-menu-item>
         </a-menu>
       </template>
-      <a-button v-if="author" type="primary" size="large"> Thêm mới </a-button>
+      <a-button type="primary" size="large"> Thêm mới </a-button>
     </a-dropdown>
     <div>
       <a-list item-layout="horizontal" :data-source="listPre">
