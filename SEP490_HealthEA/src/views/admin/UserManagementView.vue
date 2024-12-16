@@ -7,6 +7,13 @@ import { ref } from 'vue'
   <div>
     <a-page-header style="border: 1px solid rgb(235, 237, 240)" title="Quản lý người dùng" />
     <a-button type="primary" @click="btnClick">Thêm người dùng</a-button>
+    <a-input-search
+      v-model:value="searchQuery"
+      enter-button
+      @search="onSearch"
+      placeholder="Tìm kiếm người dùng"
+      style="width: 300px; margin-bottom: 20px"
+    />
     <a-table
       :columns="columns"
       :data-source="listUser"
@@ -22,7 +29,8 @@ import { ref } from 'vue'
           </span>
         </template>
         <template v-else-if="column.key === 'username'">
-          {{ record.username }} <a-tag :color="record.status === 'ACTIVE' ? 'green' : 'red'">{{ record.status }}</a-tag>
+          {{ record.username }}
+          <a-tag :color="record.status === 'ACTIVE' ? 'green' : 'red'">{{ record.status }}</a-tag>
         </template>
         <template v-else-if="column.key === 'dob'">
           {{ record.dob ? dayjs(record.dob).format('DD/MM/YYYY') : 'None' }}
@@ -33,10 +41,7 @@ import { ref } from 'vue'
       </template>
     </a-table>
     <a-drawer width="640" :open="drawerStage.open" :title="drawerStage.title" @close="onClose">
-      <a-form
-        :model="formState"
-        autocomplete="off"
-      >
+      <a-form :model="formState" autocomplete="off">
         <a-form-item
           label="ID"
           name="id"
@@ -197,6 +202,7 @@ export default {
         }
       ],
       listUser: ref([]),
+      listUserResult: ref([]),
       userId: ref(null)
     }
   },
@@ -210,8 +216,9 @@ export default {
         dob: this.formState.dob ? this.formState.dob.format('YYYY-MM-DD') : null // Convert back to string
       }
       const user = useUserStore()
+      console.log('user', user)
       console.log(payload)
-      console.log("Edit Mode: ", this.drawerStage.edit);
+      console.log('Edit Mode: ', this.drawerStage.edit)
       if (!this.drawerStage.edit) {
         let response = await user.Register(payload)
         console.log(response)
@@ -273,6 +280,19 @@ export default {
         ...user,
         dob: user.dob ? dayjs(user.dob, 'YYYY-MM-DD') : null
       }))
+      this.listUserResult = this.listUser
+      console.log(this.listUser)
+    },
+    async onSearch() {
+      const filteredUsers = this.listUserResult.filter((user) => {
+        return user.username.toLowerCase().includes(this.searchQuery.toLowerCase())
+        //  ||
+        // user.email.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        // (user.firstName && user.firstName.toLowerCase().includes(this.searchQuery.toLowerCase())) ||
+        // (user.lastName && user.lastName.toLowerCase().includes(this.searchQuery.toLowerCase()))
+      })
+
+      this.listUser = filteredUsers
       console.log(this.listUser)
     }
   }
