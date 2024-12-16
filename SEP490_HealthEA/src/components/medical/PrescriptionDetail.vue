@@ -59,7 +59,7 @@
         </div>
         <a-table :columns="columns" :data-source="dataSource" bordered>
           <template #bodyCell="{ column, text, record }">
-            <template v-if="['name', 'dosage', 'quantity', 'unit'].includes(column.dataIndex)">
+            <template v-if="['name', 'frequency', 'amount', 'unit'].includes(column.dataIndex)">
               <div>
                 <a-input
                   v-if="editableData[record.key]"
@@ -74,14 +74,14 @@
             <template v-else-if="column.dataIndex === 'operation'">
               <div class="editable-row-operations">
                 <span v-if="editableData[record.key]">
-                  <a-typography-link @click="save(record.key)">Save</a-typography-link>
+                  <a-typography-link @click="save(record.key)">Lưu</a-typography-link>
                   <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.key)">
-                    <a>Cancel</a>
+                    <a>Hủy</a>
                   </a-popconfirm>
                 </span>
                 <span v-else>
-                  <a @click="edit(record.key)">Edit</a>
-                  <a @click="remove(record.key)">Delete</a>
+                  <a @click="edit(record.key)">Chỉnh sửa</a>
+                  <a @click="remove(record.key)">Xóa</a>
                 </span>
               </div>
             </template>
@@ -513,14 +513,14 @@ export default {
         },
         {
           title: 'Liều lượng',
-          dataIndex: 'dosage',
-          key: 'dosage',
+          dataIndex: 'frequency',
+          key: 'frequency',
           ellipsis: 150
         },
         {
           title: 'Số lượng',
-          dataIndex: 'quantity',
-          key: 'quantity',
+          dataIndex: 'amount',
+          key: 'amount',
           width: 150
         },
         {

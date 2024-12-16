@@ -60,15 +60,7 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
       </a-upload>
       <div style="margin-top: 8px">Chỉ chấp nhận ảnh png và jpg</div>
 
-      <!-- <a-button
-        type="primary"
-        class="submit-button"
-        :loading="loading"
-        :disabled="loading"
-        @click="handleSubmit"
-      >
-        Quét kết quả xét nghiệm
-      </a-button> -->
+
     </a-modal>
   </div>
 </template>
@@ -139,7 +131,7 @@ export default {
 
       // Set loading to true to disable the button and show loading indicator
       this.loading = true
-      const uploadMessage1 = message.loading('Scan images...', 0)
+      const uploadMessage1 = message.loading('Đang quét ảnh...', 0)
       var obj = {
         image: [],
         type: 3,
