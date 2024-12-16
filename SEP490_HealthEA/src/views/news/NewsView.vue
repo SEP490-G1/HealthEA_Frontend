@@ -13,8 +13,8 @@
       <div class="d-flex justify-content-end mb-4">
         <div>
           <span class="fw-bold">{{ news.author }}</span>
-          <div>Created: {{ formattedCreatedAt }}</div>
-          <div>Updated: {{ formattedUpdatedAt }}</div>
+          <div>Đăng tải: {{ formattedCreatedAt }}</div>
+          <div v-if="formattedUpdatedAt">Cập nhật mới nhất: {{ formattedUpdatedAt }}</div>
           <div>
             <router-link class="btn btn-danger" :to="`/report?type=news&id=${$route.params.id}`">
               Báo cáo bài viết
