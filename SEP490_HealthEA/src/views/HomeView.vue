@@ -31,30 +31,43 @@
             <div class="right">
               <div>
                 <a-typography-title style="margin: 30px 0" :level="3"
-                  >Quản lý chỉ số sức khỏe</a-typography-title
+                  >Quản lý hồ sơ sức khỏe</a-typography-title
                 >
                 <a-typography
-                  >Hỗ trợ lưu trữ, sắp xếp hồ sơ sức khỏe của bạnHỗ trợ lưu trữ, sắp xếp hồ sơ sức
-                  khỏe của bạnHỗ trợ lưu trữ, sắp xếp hồ sơ sức khỏe của bạn</a-typography
+                  >Quản lý các hồ sơ sức khỏe cho một hoặc nhiều người, đưa ra chỉ dẫn phù hợp cũng
+                  như hỗ trợ người dùng tra cứu các chỉ số với trí tuệ nhân tạo và thư viện hỗ
+                  trợ</a-typography
                 >
               </div>
               <a-button style="width: 350px; margin-bottom: 30px" size="large" type="primary"
                 >Đến hồ sơ của bạn</a-button
               >
             </div>
-            <div class="left"><div class="Image">Contentiamge</div></div>
+            <div class="left">
+              <div class="Image">
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT51taHl0WJLBdzEVP8UR3sES3qFSo-5K-aFw&s"
+                />
+              </div>
+            </div>
           </div>
           <div class="card">
-            <div class="left"><div class="Image">Contentiamge</div></div>
+            <div class="left">
+              <div class="Image">
+                <div class="Image">
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCvmLZCmvx7c1PJg6i2oxdkr0ZdOF3t7l9Lw&s" />
+                </div>
+              </div>
+            </div>
             <div class="right">
               <div>
                 <a-typography-title style="margin: 30px 0" :level="3"
                   >Theo dõi chỉ số sức khỏe định kỳ</a-typography-title
                 >
                 <a-typography
-                  >Hỗ trợ lưu trữ, sắp xếp hồ sơ sức khỏe của bạnHỗ trợ lưu trữ, sắp xếp hồ sơ sức
-                  khỏe của bạnHỗ trợ lưu trữ, sắp xếp hồ sơ sức khỏe của bạn</a-typography
-                >
+                  >Hệ thống cung cấp biểu đồ và thống kê giúp người dùng theo dõi sự thay đổi các
+                  chỉ số sức khỏe theo thời gian, từ đó đưa ra những gợi ý cải thiện phù hợp.
+                </a-typography>
               </div>
               <a-button style="width: 350px; margin-bottom: 30px" size="large" type="primary"
                 >Đến hồ sơ của bạn</a-button
@@ -65,11 +78,11 @@
             <div class="right">
               <div>
                 <a-typography-title style="margin: 30px 0" :level="3"
-                  >Đặt lịch khám online</a-typography-title
+                  >Đặt lịch tư vấn y tế online</a-typography-title
                 >
                 <a-typography
-                  >Hỗ trợ lưu trữ, sắp xếp hồ sơ sức khỏe của bạnHỗ trợ lưu trữ, sắp xếp hồ sơ sức
-                  khỏe của bạnHỗ trợ lưu trữ, sắp xếp hồ sơ sức khỏe của bạn</a-typography
+                  >Tích hợp tính năng đặt lịch hẹn trực tuyến với các cơ sở y tế, cho phép người
+                  dùng lựa chọn bác sĩ, thời gian và nhận nhắc nhở tự động.</a-typography
                 >
               </div>
               <a-button style="width: 350px; margin-bottom: 30px" size="large" type="primary"
@@ -160,7 +173,7 @@ export default {
   overflow: hidden;
   border-radius: 20px;
 }
-.Image>img{
+.Image > img {
   width: 100%;
 }
 </style>

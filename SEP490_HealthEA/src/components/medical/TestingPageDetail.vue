@@ -30,7 +30,9 @@ import chatDoccument from './chatDoccument.vue'
     <div style="margin: 0 100px">
       <div>
         <a-typography-title v-model:content="formState.title" :level="2" :editable="!editMode" />
-        <a-button type="primary" @click="viewImage" style="margin-bottom: 40px; margin-top: 30px;" >Xem ảnh tài liệu </a-button>
+        <a-button type="primary" @click="viewImage" style="margin-bottom: 40px; margin-top: 30px"
+          >Xem ảnh tài liệu
+        </a-button>
 
         <div style="width: 100%">
           <a-form style="width: 100%" :model="formState" name="basic" autocomplete="off">
@@ -79,6 +81,7 @@ import chatDoccument from './chatDoccument.vue'
                   }}
 
                   <a-popover
+                    style="width: 500px"
                     title="Cảnh báo chỉ số"
                     v-if="
                       ['value'].includes(column.dataIndex) &&
@@ -86,16 +89,19 @@ import chatDoccument from './chatDoccument.vue'
                     "
                   >
                     <template #content>
-                      {{
-                        record.value == null
-                          ? 'Bạn cần nhập chỉ số ở đây'
-                          : description[record.name]
-                            ? description[record.name].Warning
-                            : 'Chỉ số ở mức nguy hiểm'
-                      }}
+                      <p style="width: 500px">
+                        {{
+                          record.value == null
+                            ? 'Bạn cần nhập chỉ số ở đây'
+                            : description[record.name]
+                              ? description[record.name].Warning
+                              : 'Chỉ số ở mức nguy hiểm'
+                        }}
+                      </p>
                       <br />
                       <a-typography-text v-if="record.value != null" type="secondary">
-                        Bạn có thể tư vấn bằng AI hoặc đặt lịch khám với bác sĩ để có thể biết thêm
+                        Bạn có thể tư vấn bằng AI hoặc đặt lịch tư vấn với bác sĩ để có thể biết
+                        thêm
                       </a-typography-text>
                     </template>
                     <WarningTwoTone two-tone-color="#FF0000" />
@@ -106,6 +112,7 @@ import chatDoccument from './chatDoccument.vue'
                   >
                     <template #content>
                       <p style="width: 500px" v-html="description[text].Description"></p>
+                      Chỉ số bình thường:<p style="width: 500px" v-html="description[text].Notice"></p>
                     </template>
                     <InfoCircleOutlined />
                   </a-popover>
@@ -128,7 +135,9 @@ import chatDoccument from './chatDoccument.vue'
             </template>
           </template>
         </a-table>
-        <a-button v-if="!editMode" style="width: 100%" type="dashed" @click="add">Thêm chỉ số mới</a-button>
+        <a-button v-if="!editMode" style="width: 100%" type="dashed" @click="add"
+          >Thêm chỉ số mới</a-button
+        >
       </div>
     </div>
     <a-drawer v-model:open="open" style="color: black" :width="1000" title="Ảnh của tài liệu này">
@@ -149,6 +158,52 @@ import ListImageDrawer from '@/components/medical/ListImageDrawer.vue'
 import { message } from 'ant-design-vue'
 import { useUserStore } from '@/stores/user'
 const valueIndex = {
+  PRO: {
+    Description:
+      'Đây là xét nghiệm đánh giá chức năng thận, nếu chức năng lọc của thận bình thường sẽ không có protein (chất đạm) trong nước tiểu. ',
+    Title: 'Chỉ số Protetin',
+    Notice: '<0,1',
+    Warning:
+      'Protein dương tính cao trong nước tiểu có thể do bệnh lý ở thận, nhiễm trùng, đái tháo đường, tiền sản giật (ở thai phụ), hoặc do gắng sức, stress… Cần thực hiện thêm các xét nghiệm chuyên sâu để chẩn đoán chính xác nguyên nhân.'
+  },
+  BLD: {
+    Description: 'là một chỉ số xét nghiệm máu dùng để đánh giá đường trong cơ thể',
+    Title: 'Hồng cầu',
+    Notice: '4,6-8',
+    Warning:
+      'Bình thường glucose (chất đường) sẽ được lọc và tái hấp thu tại thận, do đó trong nước tiểu không có glucose, hoặc có rất ít trong giới hạn cho phép ở phụ nữ mang thai, người ăn nhiều đồ ngọt trước khi xét nghiệm. Nếu xuất hiện nhiều glucose trong nước tiểu, nguyên nhân có thể do đái tháo đường không kiểm soát, bệnh lý ở thận, viêm tụy'
+  },
+  GLU: {
+    Description: 'là một chỉ số xét nghiệm máu dùng để đánh giá đường trong cơ thể',
+    Title: 'Đường huyết',
+    Notice: '50-100mg/L',
+    Warning:
+      'Bình thường glucose (chất đường) sẽ được lọc và tái hấp thu tại thận, do đó trong nước tiểu không có glucose, hoặc có rất ít trong giới hạn cho phép ở phụ nữ mang thai, người ăn nhiều đồ ngọt trước khi xét nghiệm. Nếu xuất hiện nhiều glucose trong nước tiểu, nguyên nhân có thể do đái tháo đường không kiểm soát, bệnh lý ở thận, viêm tụy'
+  },
+  EOS: {
+    Description:
+      'là một chỉ số xét nghiệm máu dùng để đánh giá số lượng bạch cầu ái toan trong máu. Bạch cầu ái toan có vai trò quan trọng trong việc chống lại các phản ứng dị ứng và ký sinh trùng.',
+    Title: ' Bạch cầu ái toan',
+    Notice: '2 - 4%',
+    Warning:
+      ' Chỉ số cao thì: Có thể là dấu hiệu của các bệnh dị ứng (hen suyễn, viêm mũi dị ứng), nhiễm ký sinh trùng (giun lươn, sán), bệnh da (viêm da cơ địa), một số bệnh tự miễn (viêm khớp dạng thấp), và một số loại ung thư.Chỉ số thấp thì: Có thể liên quan đến sử dụng corticosteroid kéo dài, stress nặng, hoặc suy giảm chức năng tủy xương.'
+  },
+  NEU: {
+    Description:
+      ' là một chỉ số xét nghiệm máu dùng để đánh giá số lượng bạch cầu trung tính trong máu. Bạch cầu trung tính là một loại bạch cầu hạt, đóng vai trò quan trọng trong việc tiêu diệt vi khuẩn và các tác nhân gây hại khác xâm nhập vào cơ thể.',
+    Title: ' Bạch cầu trung tính',
+    Notice: '43 - 76%',
+    Warning:
+      'Chỉ số thấp thì: Có thể là dấu hiệu của các bệnh nhiễm trùng nghiêm trọng, suy tủy xương, sử dụng corticosteroid kéo dài, một số loại ung thư máu. Chỉ số cao thì: Có thể liên quan đến các bệnh nhiễm khuẩn cấp tính (viêm phổi, viêm ruột thừa), bỏng, chấn thương, các bệnh tự miễn, một số loại ung thư.'
+  },
+  WBC: {
+    Description:
+      ' là chỉ số được dùng để đếm số lượng tế bào bạch cầu hiện có trong máu. WBC trong máu được biểu thị dưới dạng số lượng tuyệt đối hoặc tỉ lệ phần trăm của những loại tế bào bạch cầu khác nhau trong máu..',
+    Title: 'Công thức máu WBC (White Blood Cell)',
+    Notice: '4 – 10',
+    Warning:
+      'Giảm bạch cầu có thể xảy ra do nhiều nguyên nhân, trong đó có nhiễm trùng, rối loạn tủy xương, bệnh tự miễn, ung thư và tác dụng phụ của thuốc. Các bệnh như HIV/AIDS, lupus, và một số loại ung thư có thể làm suy giảm hệ thống miễn dịch, dẫn đến giảm bạch cầu.'
+  },
   MCV: {
     Description:
       'Là chỉ số thể hiện kích thước trung bình của các tế bào hồng cầu trong máu. Nó cho biết hồng cầu của bạn có kích thước lớn, nhỏ hay bình thường.',
@@ -214,6 +269,14 @@ const valueIndex = {
     Warning:
       'MCHC giảm thường gặp trong các trường hợp thiếu máu do thiếu hemoglobin, điển hình là thiếu máu do thiếu sắt và thiếu máu tan máu, cũng như một số bệnh lý về gan và thận.'
   },
+  LYM: {
+    Description:
+      'là một chỉ số xét nghiệm máu dùng để đánh giá số lượng tế bào lympho trong máu. Lympho là một loại bạch cầu có vai trò quan trọng trong hệ thống miễn dịch, giúp cơ thể chống lại các tác nhân gây bệnh.',
+    Title: 'Tế bào lympho',
+    Notice: '17-48%',
+    Warning:
+      'Có thể là dấu hiệu của các bệnh lý như nhiễm trùng mãn tính (ví dụ: lao, HIV/AIDS), suy dinh dưỡng, sử dụng corticosteroid kéo dài, một số loại ung thư (ví dụ: lymphoma).'
+  },
   'RDW-SD': {
     Description:
       ' là một chỉ số xét nghiệm máu dùng để đánh giá sự phân bố kích thước của các tế bào hồng cầu. Nói cách khác, nó cho biết các hồng cầu trong máu có kích thước đồng đều hay khác biệt nhau.',
@@ -221,6 +284,13 @@ const valueIndex = {
     Notice: '37-54',
     Warning:
       'Nguyên nhân làm tăng RDW-SD bao gồm sự sản xuất hồng cầu không đồng đều trong các loại thiếu máu (thiếu sắt, thiếu vitamin B12, folate), sự phá hủy hồng cầu nhanh chóng (tan máu) và một số bệnh lý khác như ung thư, bệnh thận và viêm nhiễm.'
+  },
+  ph: {
+    Description: ' Cung cấp thông tin về tình trạng toan kiềm của nước tiểu.',
+    Title: 'Chỉ số ph',
+    Notice: '4,6 - 8',
+    Warning:
+      'N phá hủy hồng cầu nhanh chóng (tan máu) và một số bệnh lý khác như ung thư, bệnh thận và viêm nhiễm.'
   }
 }
 
@@ -440,12 +510,25 @@ export default {
       openChat: ref(false),
       editMode: ref(true),
       description: {
+        pH: valueIndex['ph'],
+        'pH (độ pH)': valueIndex['ph'],
+        GLU: valueIndex['GLU'],
+        'GLU (Glucose - đường huyết)': valueIndex['GLU'],
+        Glucose: valueIndex['GLU'],
+
+        'đường huyết': valueIndex['GLU'],
+        PRO: valueIndex['PRO'],
+        Protetin: valueIndex['PRO'],
+        'PRO (Protein)': valueIndex['PRO'],
         RBC: valueIndex['RBC'],
+        EOS: valueIndex['EOS'],
+        NEU: valueIndex['NEU'],
         'Số lượng hồng cầu (RBC)': valueIndex['RBC'],
         'Leukocytes (LEU-BLO)': valueIndex['LEU'],
         Leukocytes: valueIndex['LEU'],
         BLO: valueIndex['LEU'],
         LEU: valueIndex['LEU'],
+        'LEU (Leukocytes)': valueIndex['LEU'],
         'NIT (Nitrite)': valueIndex['NIT'],
         NIT: valueIndex['NIT'],
         Nitrite: valueIndex['NIT'],
@@ -460,6 +543,8 @@ export default {
         'Độ phân bố HC (RDW-CV)': valueIndex['RDW-CV'],
         'RDW-CV': valueIndex['RDW-CV'],
         MCHC: valueIndex['MCHC'],
+        WBC: valueIndex['WBC'],
+        LYM: valueIndex['LYM'],
         'Nồng độ Hb trung bình HC (MCHC)': valueIndex['MCHC'],
         'RDW-SD': valueIndex['RDW-SD'],
         'Độ phân bố HC (RDW-SD)': valueIndex['RDW-SD']

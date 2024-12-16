@@ -31,7 +31,7 @@
           Sản phẩm của chúng tôi
         </a-typography-title>
         <a-typography style="display: flex; align-items: center; justify-content: center">
-          Đua ra một giải pháp hoàn chỉnh
+          Đua ra một giải pháp quản lý hồ sơ sức khỏe cho bạn và các thành viên trong gia đình bạn hoặc những người thân quen
         </a-typography>
       </div>
       <div style="margin-top: 50px">
