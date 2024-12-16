@@ -14,6 +14,7 @@ import { PlusOutlined } from '@ant-design/icons-vue'
       placement="right"
       @ok="handleSubmit"
       ok-text="Quét đơn thuốc"
+      :okButtonProps="{ disabled: loadingBtn }"
     >
       <a-upload
         v-model:file-list="fileList"
@@ -78,8 +79,10 @@ export default {
       return null
     },
     async handleSubmit() {
+      this.loadingBtn = true
       if (this.fileList.length === 0) {
         message.warning('Xin hãy chọn hình ảnh!')
+        this.loadingBtn = false
         return
       }
       const formData1 = new FormData()
@@ -126,10 +129,11 @@ export default {
         uploadMessage1() // Hide the loading message
         message.error('Quét ảnh lỗi xin hãy thử lại')
         console.error('Scan failed:', error)
-        this.loading = false
+        this.loadingBtn = false
+
         return
       }
-      const uploadMessage2 = message.loading('Upload images...', 0)
+      const uploadMessage2 = message.loading('Đang đẩy ảnh của bạn...', 0)
       try {
         const objUpload = await axios.post(`${API_URL}/api/Images`, formData2, {
           headers: {
@@ -138,10 +142,10 @@ export default {
         })
         uploadMessage2()
         obj.image = [`${objUpload.data[0].id}`]
-        message.success('Upload successful!')
+        message.success('Đẩy ảnh thành công!')
       } catch (err) {
         uploadMessage2() // Hide the loading message
-        message.error('Upload failed. Please try again.')
+        message.error('Đẩy ảnh thất bại ')
         console.error('Upload failed:', err)
       }
       try {
@@ -152,6 +156,7 @@ export default {
         console.log(err)
         message.error('Lỗi khi save vào hệ thống', 10)
       }
+      this.loadingBtn = false
     },
     async addNew() {
       var obj = {
@@ -201,6 +206,7 @@ export default {
   },
   data() {
     return {
+      loadingBtn: ref(false),
       open: ref(false),
       listPre: ref([]),
       idHP: this.$route.params.id,

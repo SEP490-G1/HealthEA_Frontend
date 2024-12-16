@@ -468,13 +468,14 @@ export default {
       }),
       author: ref(false),
       customStyle: 'background: #f7f7f7;border-radius: 4px;border: 0;overflow: hidden',
-      viewMode: ref('1'),
+      viewMode: ref('0'),
       medicalDocument: ref({})
       //1 edit, 0 view
     }
   },
   mounted() {
     this.loadData()
+    this.viewMode = '0'
   },
   methods: {
     async saveChange() {
@@ -488,7 +489,7 @@ export default {
       }
       let response = await store.updateDP(this.medicalDocument.id, obj)
       console.log(response)
-      message.success("Lưu thay đổi thành công")
+      message.success('Lưu thay đổi thành công')
       this.change = false
     },
     addContact() {
@@ -525,17 +526,15 @@ export default {
         console.log('chill guy')
       }
       this.author = list[0].userId == isUser
-      if (this.author == false) {
-        this.viewMode = '2'
-      }
       this.medicalDocument = list[0]
       this.formState = JSON.parse(this.medicalDocument.contentMedical)
       console.log(this.formState)
       this.formatDate()
       this.change = await false
+      this.viewMode = '0'
     },
     changeView() {
-      this.viewMode = !this.viewMode
+      this.viewMode = this.viewMode == '1' ? '0' : '1'
     }
   }
 }

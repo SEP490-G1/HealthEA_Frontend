@@ -115,7 +115,7 @@ export default {
     },
     async handleSubmit() {
       if (this.fileList.length === 0) {
-        message.warning('Please upload at least one image!')
+        message.warning('Xin hãy upload ảnh của bạn lên!')
         return
       }
       const formData1 = new FormData()
@@ -157,15 +157,15 @@ export default {
         }
         obj.contentMedical = JSON.stringify(object)
         uploadMessage1()
-        message.success('Scan successful!')
+        message.success('Quét thành công!')
       } catch (error) {
         uploadMessage1() // Hide the loading message
-        message.error('Scan failed. Please try again.')
+        message.error('Quét thất bại, xin hãy thử lại với ảnh xét nghiệm của bạn')
         console.error('Scan failed:', error)
         this.loading = false
         return
       }
-      const uploadMessage2 = message.loading('Upload images...', 0)
+      const uploadMessage2 = message.loading('Đẩy ảnh của bạn lên...', 0)
       try {
         const objUpload = await axios.post(`${API_URL}/api/Images`, formData2, {
           headers: {
@@ -174,10 +174,10 @@ export default {
         })
         uploadMessage2()
         obj.image = [`${objUpload.data[0].id}`]
-        message.success('Upload successful!')
+        message.success('Đẩy ảnh thành công!')
       } catch (err) {
         uploadMessage2() // Hide the loading message
-        message.error('Upload failed. Please try again.')
+        message.error('Đẩy ảnh lên hệ thống thất bại.')
         console.error('Upload failed:', err)
       }
       try {
