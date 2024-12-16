@@ -174,10 +174,10 @@ import { InfoCircleOutlined } from '@ant-design/icons-vue'
         <a-col class="Truong" :span="6"
           ><div>
             <div>Kiểu đẻ:</div>
-            <div v-if="!viewMode">
+            <div v-if="viewMode == '0'">
               <b>{{ formState.cachde }}</b>
             </div>
-            <a-radio-group v-if="viewMode" v-model:value="formState.cachde">
+            <a-radio-group v-if="viewMode == '1'" v-model:value="formState.cachde">
               <a-radio-button value="Không rõ">Không rõ</a-radio-button>
               <a-radio-button value="Đẻ mổ">Đẻ mổ</a-radio-button>
               <a-radio-button value="Để thường">Đẻ thường</a-radio-button>
@@ -247,10 +247,10 @@ import { InfoCircleOutlined } from '@ant-design/icons-vue'
         <a-col class="Truong" :span="6"
           ><div>
             <div>Hút thuốc:</div>
-            <div v-if="!viewMode">
+            <div v-if="viewMode == '0'">
               <b>{{ formState.hutthuoc }}</b>
             </div>
-            <a-radio-group v-if="viewMode" v-model:value="formState.hutthuoc">
+            <a-radio-group v-if="viewMode == '1'" v-model:value="formState.hutthuoc">
               <a-radio-button value="Không hút">Không hút</a-radio-button>
               <a-radio-button value="Thuốc lá">Thuốc lá</a-radio-button>
               <a-radio-button value="Thuốc lào">Thuốc lào</a-radio-button>
@@ -260,10 +260,10 @@ import { InfoCircleOutlined } from '@ant-design/icons-vue'
         <a-col class="Truong" :span="13"
           ><div>
             <div>Tần suất hút thuốc:</div>
-            <div v-if="!viewMode">
+            <div v-if="viewMode == '0'">
               <b>{{ formState.tansuathutthuoc }}</b>
             </div>
-            <a-radio-group v-if="viewMode" v-model:value="formState.tansuathutthuoc">
+            <a-radio-group v-if="viewMode == '1'" v-model:value="formState.tansuathutthuoc">
               <a-radio-button value="Chưa bao giờ">Chưa bao giờ</a-radio-button>
               <a-radio-button value="Thi thoảng (1 lần/tuần)"
                 >Thi thoảng (1 lần/tuần)</a-radio-button
@@ -280,7 +280,7 @@ import { InfoCircleOutlined } from '@ant-design/icons-vue'
           <div>
             <div>Đã bỏ:</div>
             <div style="display: flex; align-items: center">
-              <a-checkbox v-if="viewMode" v-model:checked="formState.bothuoc" />
+              <a-checkbox v-if="viewMode == '1'" v-model:checked="formState.bothuoc" />
               <div style="margin-left: 10px">
                 <div v-if="formState.bothuoc"><b>Đã bỏ</b></div>
                 <div v-if="!formState.bothuoc"><b>Chưa</b></div>
@@ -291,10 +291,10 @@ import { InfoCircleOutlined } from '@ant-design/icons-vue'
         <a-col class="Truong" :span="6"
           ><div>
             <div>Tần suất uống rượu bia:</div>
-            <div v-if="!viewMode">
+            <div v-if="viewMode == '0'">
               <b>{{ formState.ruoubia }}</b>
             </div>
-            <a-radio-group v-if="viewMode" v-model:value="formState.ruoubia">
+            <a-radio-group v-if="viewMode == '1'" v-model:value="formState.ruoubia">
               <a-radio-button value="Không hút">Không uống</a-radio-button>
               <a-radio-button value="Có uống">Có uống</a-radio-button>
             </a-radio-group>
@@ -303,10 +303,10 @@ import { InfoCircleOutlined } from '@ant-design/icons-vue'
         <a-col class="Truong" :span="13"
           ><div>
             <div>Tần suất sử dụng:</div>
-            <div v-if="!viewMode">
+            <div v-if="viewMode == '0'">
               <b>{{ formState.tansuatruoubia }}</b>
             </div>
-            <a-radio-group v-if="viewMode" v-model:value="formState.tansuatruoubia">
+            <a-radio-group v-if="viewMode == '1'" v-model:value="formState.tansuatruoubia">
               <a-radio-button value="Chưa bao giờ">Chưa bao giờ</a-radio-button>
               <a-radio-button value="Thi thoảng (1 lần/tuần)"
                 >Thi thoảng (1 lần/tuần)</a-radio-button
@@ -321,7 +321,7 @@ import { InfoCircleOutlined } from '@ant-design/icons-vue'
             <div>
               <div>Đã bỏ:</div>
               <div style="display: flex; align-items: center">
-                <a-checkbox v-if="viewMode" v-model:checked="formState.boruou" />
+                <a-checkbox v-if="viewMode == '1'" v-model:checked="formState.boruou" />
                 <div style="margin-left: 10px">
                   <div v-if="formState.boruou"><b>Đã bỏ</b></div>
                   <div v-if="!formState.boruous"><b>Chưa</b></div>
@@ -333,10 +333,10 @@ import { InfoCircleOutlined } from '@ant-design/icons-vue'
         <a-col class="Truong" :span="6"
           ><div>
             <div>Sử dụng ma túy:</div>
-            <div v-if="!viewMode">
+            <div v-if="viewMode == '0'">
               <b>{{ formState.matuy }}</b>
             </div>
-            <a-radio-group v-if="viewMode" v-model:value="formState.matuy">
+            <a-radio-group v-if="viewMode == '1'" v-model:value="formState.matuy">
               <a-radio-button value="Không hút">Không sử dụng</a-radio-button>
               <a-radio-button value="Có uống">Sử dụng</a-radio-button>
             </a-radio-group>
@@ -345,10 +345,10 @@ import { InfoCircleOutlined } from '@ant-design/icons-vue'
         <a-col class="Truong" :span="13"
           ><div>
             <div>Tần suất sử dụng:</div>
-            <div v-if="!viewMode">
+            <div v-if="viewMode == '0'">
               <b>{{ formState.tansuatmatuy }}</b>
             </div>
-            <a-radio-group v-if="viewMode" v-model:value="formState.tansuatmatuy">
+            <a-radio-group v-if="viewMode == '1'" v-model:value="formState.tansuatmatuy">
               <a-radio-button value="Chưa bao giờ">Chưa bao giờ</a-radio-button>
               <a-radio-button value="Thi thoảng (1 lần/tuần)"
                 >Thi thoảng (1 lần/tuần)</a-radio-button
@@ -365,7 +365,7 @@ import { InfoCircleOutlined } from '@ant-design/icons-vue'
           <div>
             <div>Đã bỏ:</div>
             <div style="display: flex; align-items: center">
-              <a-checkbox v-if="viewMode" v-model:checked="formState.bomatuy" />
+              <a-checkbox v-if="viewMode == '1'" v-model:checked="formState.bomatuy" />
               <div style="margin-left: 10px">
                 <div v-if="formState.bomatuy"><b>Đã bỏ</b></div>
                 <div v-if="!formState.bomatuy"><b>Chưa</b></div>
@@ -375,11 +375,11 @@ import { InfoCircleOutlined } from '@ant-design/icons-vue'
         ><a-col class="Truong" :span="6"
           ><div>
             <div>Hoạt động thể lực:</div>
-            <div v-if="!viewMode">
+            <div v-if="viewMode == '0'">
               <b>{{ formState.matuy }}</b>
             </div>
             <div style="display: flex; align-items: center">
-              <a-checkbox v-if="viewMode" v-model:checked="formState.hoatdong" />
+              <a-checkbox v-if="viewMode == '1'" v-model:checked="formState.hoatdong" />
               <div style="margin-left: 10px">
                 <div v-if="formState.hoatdong"><b>Có</b></div>
                 <div v-if="!formState.hoatdong"><b>Không</b></div>
@@ -390,10 +390,10 @@ import { InfoCircleOutlined } from '@ant-design/icons-vue'
         <a-col class="Truong" :span="13"
           ><div>
             <div>Tần suất (tập luyện làm việc):</div>
-            <div v-if="!viewMode">
+            <div v-if="viewMode == '0'">
               <b>{{ formState.tansuathoatdong }}</b>
             </div>
-            <a-radio-group v-if="viewMode" v-model:value="formState.tansuathoatdong">
+            <a-radio-group v-if="viewMode == '1'" v-model:value="formState.tansuathoatdong">
               <a-radio-button value="Ít khi">Ít khi</a-radio-button>
               <a-radio-button value="Thi thoảng (1 lần/tuần)"
                 >Thi thoảng (1 lần/tuần)</a-radio-button
@@ -420,10 +420,10 @@ import { InfoCircleOutlined } from '@ant-design/icons-vue'
         <a-col class="Truong" :span="13"
           ><div>
             <div>Tần suất tiếp xúc:</div>
-            <div v-if="!viewMode">
+            <div v-if="viewMode == '0'">
               <b>{{ formState.tansuatyeutonghenghiep }}</b>
             </div>
-            <a-radio-group v-if="viewMode" v-model:value="formState.tansuatyeutonghenghiep">
+            <a-radio-group v-if="viewMode == '1'" v-model:value="formState.tansuatyeutonghenghiep">
               <a-radio-button value="Ít khi">Ít khi</a-radio-button>
               <a-radio-button value="Thi thoảng (1 lần/tuần)"
                 >Thi thoảng (1 lần/tuần)</a-radio-button

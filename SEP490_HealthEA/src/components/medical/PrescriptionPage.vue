@@ -38,7 +38,7 @@ import { PlusOutlined } from '@ant-design/icons-vue'
           <a-menu-item @click="scanImage" key="3"> Scan ảnh đơn thuốc </a-menu-item>
         </a-menu>
       </template>
-      <a-button type="primary" size="large"> Thêm mới </a-button>
+      <a-button v-if="author" type="primary" size="large"> Thêm mới </a-button>
     </a-dropdown>
     <div>
       <a-list item-layout="horizontal" :data-source="listPre">
@@ -60,6 +60,7 @@ import { ref } from 'vue'
 import dayjs from 'dayjs'
 import axios from 'axios'
 import { message, Upload } from 'ant-design-vue'
+import { useUserStore } from '@/stores/user'
 const API_URL = import.meta.env.VITE_API_URL_DOTNET
 
 export default {
@@ -192,6 +193,14 @@ export default {
       const res = useMedicalRecordStore()
       var listnew = []
       var list = await res.getListAType(this.idHP, 1)
+      const storeUser = useUserStore()
+      let isUser = null
+      try {
+        isUser = storeUser.user.id.toLowerCase()
+      } catch {
+        console.log('chill guy')
+      }
+      this.author = list.data.data[0].userId == isUser
       list.data.data.forEach((element) => {
         listnew.push({
           id: element.id,
@@ -206,6 +215,7 @@ export default {
   },
   data() {
     return {
+      author: ref(false),
       loadingBtn: ref(false),
       open: ref(false),
       listPre: ref([]),

@@ -15,7 +15,7 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
           <a-menu-item @click="scanImage" key="4"> Scan ảnh của bạn </a-menu-item>
         </a-menu>
       </template>
-      <a-button type="primary" size="large"> Thêm mới </a-button>
+      <a-button v-if="author" type="primary" size="large"> Thêm mới </a-button>
     </a-dropdown>
     <div>
       <a-list item-layout="horizontal" :data-source="listPre">
@@ -258,6 +258,14 @@ export default {
       }
       var listnew = []
       var list = await res.getListAType(this.idHP, 3)
+      const storeUser = useUserStore()
+      let isUser = null
+      try {
+        isUser = storeUser.user.id.toLowerCase()
+      } catch {
+        console.log('chill guy')
+      }
+      this.author = list.data.data[0].userId == isUser
       list.data.data.forEach((element) => {
         listnew.push({
           id: element.id,
@@ -272,6 +280,7 @@ export default {
   },
   data() {
     return {
+      author: ref(false),
       editMode: ref(false),
       loading: ref(false),
       fileList: ref([]),

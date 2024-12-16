@@ -9,7 +9,10 @@
       justify-content: center;
     "
   >
-    <div style="width: 100%; display: flex; margin: 10px; justify-content: space-between">
+    <div
+      v-if="author"
+      style="width: 100%; display: flex; margin: 10px; justify-content: space-between"
+    >
       <div>
         <a-button style="margin: 10px" type="primary" @click="showDrawer"
           >Tạo lịch uống thuốc
@@ -31,18 +34,19 @@
     </div>
     <div class="ThePage">
       <div class="Content_ThePage">
-        <a-typography-title v-model:content="formState.title" :level="2" editable />
+        <a-typography-title v-model:content="formState.title" :level="2" :editable="author" />
 
         <div style="width: 100%">
           <a-form style="width: 100%" :model="formState" name="basic" autocomplete="off">
             <a-form-item label="Ngày khám:" name="date">
-              <a-date-picker :bordered="false" v-model:value="formState.date" />
+              <a-date-picker :disabled="!author" :bordered="false" v-model:value="formState.date" />
             </a-form-item>
             <a-form-item label="Bác sĩ kê đơn:" name="date">
-              <a-input :bordered="false" v-model:value="formState.doctor" />
+              <a-input :bordered="false" :disabled="!author" v-model:value="formState.doctor" />
             </a-form-item>
             <a-form-item label="Lời khuyên bác sĩ:" name="date">
               <a-textarea
+                :disabled="!author"
                 :bordered="false"
                 v-model:value="formState.doctorRecomend"
                 :auto-size="{ minRows: 2, maxRows: 5 }"
@@ -50,6 +54,7 @@
             </a-form-item>
             <a-form-item label="Chẩn đoán:" name="diagnose" style="height: 100px">
               <a-textarea
+                :disabled="!author"
                 :bordered="false"
                 v-model:value="formState.diagnose"
                 :auto-size="{ minRows: 2, maxRows: 5 }"
@@ -72,7 +77,7 @@
               </div>
             </template>
             <template v-else-if="column.dataIndex === 'operation'">
-              <div class="editable-row-operations">
+              <div v-if="author" class="editable-row-operations">
                 <span v-if="editableData[record.key]">
                   <a-typography-link @click="save(record.key)">Lưu</a-typography-link>
                   <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.key)">
@@ -87,7 +92,9 @@
             </template>
           </template>
         </a-table>
-        <a-button style="width: 100%" type="dashed" @click="add">Add new</a-button>
+        <a-button style="width: 100%" type="dashed" @click="add" v-if="author"
+          >Thêm mục mới</a-button
+        >
       </div>
     </div>
     <a-drawer
@@ -258,6 +265,7 @@ import dayjs from 'dayjs'
 import { useMedicalRecordStore } from '@/stores/medicalRecord'
 import { message } from 'ant-design-vue'
 import { useRemindStore } from '@/stores/Remind'
+import { useUserStore } from '@/stores/user'
 export default {
   mounted() {
     this.loadDate()
@@ -325,6 +333,14 @@ export default {
       var id = this.$route.params.idD
       const mdStore = useMedicalRecordStore()
       var response = await mdStore.getOneDP(id)
+      const storeUser = useUserStore()
+      let isUser = null
+      try {
+        isUser = storeUser.user.id.toLowerCase()
+      } catch {
+        console.log('chill guy')
+      }
+      this.author = response.data.data.userId == isUser
       var obj = JSON.parse(response.data.data.contentMedical)
       this.dataSource = obj.drug == null ? [] : obj.drug
       this.formState = {
@@ -428,6 +444,7 @@ export default {
   },
   data() {
     return {
+      author: ref(false),
       rules: {
         Title: [
           {

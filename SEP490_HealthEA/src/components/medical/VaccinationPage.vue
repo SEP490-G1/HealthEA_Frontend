@@ -6,7 +6,7 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
     <a-typography-title :level="2" style="margin-top: 30px"
       >Danh sách tiêm chủng</a-typography-title
     >
-    <a-button type="primary" size="large" @click="addNew">Thêm mới</a-button>
+    <a-button v-if="author" type="primary" size="large" @click="addNew">Thêm mới</a-button>
     <div>
       <a-list item-layout="horizontal" :data-source="listPre">
         <template #renderItem="{ item }">
@@ -25,6 +25,7 @@ import { useMedicalRecordStore } from '@/stores/medicalRecord'
 <script>
 import { ref } from 'vue'
 import dayjs from 'dayjs'
+import { useUserStore } from '@/stores/user'
 export default {
   async mounted() {
     this.loadData()
@@ -57,6 +58,15 @@ export default {
       const res = useMedicalRecordStore()
       var listnew = []
       var list = await res.getListAType(this.idHP, 2)
+      const storeUser = useUserStore()
+      let isUser = null
+      try {
+        isUser = storeUser.user.id.toLowerCase()
+      } catch {
+        console.log('chill guy')
+      }
+
+      this.author = list.data.data[0].userId == isUser
       list.data.data.forEach((element) => {
         listnew.push({
           id: element.id,
@@ -71,6 +81,7 @@ export default {
   },
   data() {
     return {
+      author: ref(false),
       listPre: ref([]),
       idHP: this.$route.params.id
     }
